@@ -354,6 +354,19 @@ table.mx th[scope="row"] .ic{width:34px;height:34px} table.mx th[scope="row"] .i
 .subtabs button[aria-selected="true"]{background:var(--ink);color:var(--surface)}
 .subtabs .n{font-size:.78rem;opacity:.65;font-weight:500}
 @media print{.subtabs{display:none}}
+.kchips{display:flex;flex-wrap:wrap;gap:6px;align-content:start}
+.kchip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px 4px 4px;border:1px solid var(--line);background:var(--bg);border-radius:999px;font:inherit;font-size:.85rem;color:var(--ink);cursor:pointer;min-height:0;box-shadow:none}
+.kchip:hover{border-color:var(--ink)}
+.kchip .pill{font-size:.75rem}
+.avatar.sm{width:24px;height:24px;font-size:.75rem}
+.kidpick{margin-top:6px}
+.accgrid{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-top:8px;padding-top:10px;border-top:1px dashed var(--line)}
+.accgrid .f{font-size:.85rem;display:grid;gap:4px;align-content:start;font-weight:600}
+.accgrid select,.accgrid input[type=text]{width:100%;min-width:0;font-weight:400}
+fieldset.via{border:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px 12px;grid-column:1/-1}
+fieldset.via legend{font-size:.85rem;font-weight:600;padding:0;margin-bottom:4px}
+fieldset.via label{display:flex;gap:6px;align-items:center;font-size:.9rem}
+.userow .un small+small{margin-top:1px}
 /* Navigation mobile */
 .filtbox>summary{cursor:pointer;padding:6px 0;list-style-position:inside}
 .filtbox[open]>summary{margin-bottom:8px}
@@ -403,6 +416,7 @@ function migrateColors(){ (S.kids||[]).forEach(function(k){ var i=OLD_COLORS.ind
 /* ============ Catalogue : ce que l'outil sait expliquer ============ */
 var TYPES = [["appareil","Appareils"],["compte","Comptes"],["reseau","Messageries et réseaux"],["jeu","Jeux"],["video","Vidéo"],["ecole","École et apprentissage"],["ia","Intelligence artificielle"],["achat","Achats et ventes"],["outil","Outils de contrôle"],["navigateur","Navigateurs"]];
 var FEATS = {messagerie:"Messagerie",inconnus:"Contact avec des inconnus",public:"Contenus publics",geoloc:"Localisation",achats:"Achats",ia:"IA intégrée",ephemere:"Messages éphémères",voix:"Vocal ou vidéo"};
+var STATUS_ACCT = [["","Pas de compte"],["utilise","Compte créé"],["discussion","En discussion"],["non","Pas pour l'instant"]];
 var STATUS = [["","Non utilisé"],["utilise","Utilisé"],["discussion","En discussion"],["non","Pas pour l'instant"]];
 
 var CAT = [
@@ -703,6 +717,46 @@ function band(a){ return a==null?"c":(a<11?"p":(a<15?"c":"l")); }
 function u(itemId,kidId){ return ((S.use[itemId]||{})[kidId])||{}; }
 function setU(itemId,kidId,patch){ S.use[itemId]=S.use[itemId]||{}; S.use[itemId][kidId]=Object.assign({},S.use[itemId][kidId]||{},patch); if(!S.use[itemId][kidId].s && !S.use[itemId][kidId].ok && !S.use[itemId][kidId].note) delete S.use[itemId][kidId]; save(); }
 function typeLabel(t){ for(var i=0;i<TYPES.length;i++) if(TYPES[i][0]===t) return TYPES[i][1]; return t; }
+var ACCESS=[["","Non précisé"],["mdp","J'ai les identifiants"],["sup","Je supervise (outil parental)"],["non","Aucun accès"]];
+var ACCESS_SHORT={mdp:"vous y avez accès",sup:"supervisé",non:"pas d'accès parent"};
+var WHO=[["enfant","L'enfant s'en sert"],["parent","Géré par le parent seul"]];
+var MAILACC=[["","Non précisé"],["oui","Il la consulte"],["non","Il n'y a pas accès"]];
+var MAIL_ACCTS={"compte-google":1,"compte-microsoft":1,"compte-apple":1};
+var ACCT_EXTRA=[["tel","Son numéro de téléphone"],["mail-autre","Une autre adresse e-mail"],["parent","Le compte d'un parent"],["sans","Sans compte"]];
+function kidAccounts(k){ return allItems().filter(function(i){ return famOf(i)==="compte" && u(i.id,k.id).s==="utilise"; }); }
+function kidDevices(k){ return allItems().filter(function(i){ return famOf(i)==="appareil" && u(i.id,k.id).s==="utilise"; }); }
+function acctLabel(v){ var it=item(v); if(it) return it.name; var l=lab2(ACCT_EXTRA,v); return l.charAt(0).toLowerCase()+l.slice(1); }
+function hasAccessInfo(it){ var f=famOf(it); return f!=="outil" && f!=="site" && it.type!=="navigateur"; }
+function accessFields(it,k){
+  var x=u(it.id,k.id), f=famOf(it); if(!hasAccessInfo(it) || !x.s || x.s==="non") return "";
+  var id=function(n){ return "a"+n+"-"+it.id+"-"+k.id; }, at=' data-item="'+it.id+'" data-kid="'+k.id+'"';
+  var sel=function(n,opts,cur,lab){ return '<label class="f" for="'+id(n)+'">'+lab+'<select id="'+id(n)+'" data-uf="'+n+'"'+at+'>'+opts.map(function(o){ return '<option value="'+o[0]+'"'+((cur||"")===o[0]?' selected':'')+'>'+esc(o[1])+'</option>'; }).join("")+'</select></label>'; };
+  var txt=function(n,cur,lab,ph){ return '<label class="f" for="'+id(n)+'">'+lab+'<input type="text" id="'+id(n)+'" data-uf="'+n+'"'+at+' value="'+esc(cur||"")+'" placeholder="'+esc(ph||"")+'" autocomplete="off"></label>'; };
+  var h="";
+  if(f==="compte"){
+    h+=sel("who",WHO,x.who||"enfant","Qui s'en sert");
+    h+=txt("login",x.login,"Identifiant","adresse ou pseudo");
+    if(MAIL_ACCTS[it.id]) h+=sel("mail",MAILACC,x.mail,"Boîte mail");
+    h+=sel("pa",ACCESS,x.pa,"Votre accès à ce compte");
+  } else {
+    var accts=[["","Non précisé"]].concat(kidAccounts(k).map(function(a){return [a.id,a.name];})).concat(ACCT_EXTRA);
+    h+=sel("acct",accts,x.acct,f==="appareil"?"Compte connecté sur l'appareil":"Inscrit avec");
+    if(f!=="appareil"){
+      var dv=kidDevices(k), via=x.via||[];
+      h+='<fieldset class="f via"><legend>Sur quels appareils</legend>'+(dv.length?dv.map(function(d){ var cid=id("v-"+d.id); return '<label for="'+cid+'"><input type="checkbox" id="'+cid+'" data-via="'+d.id+'"'+at+(via.indexOf(d.id)>=0?' checked':'')+'>'+esc(d.name)+'</label>'; }).join(""):'<span class="tiny muted">Indiquez d\'abord ses appareils.</span>')+'</fieldset>';
+      h+=txt("login",x.login,"Pseudo ou identifiant","facultatif");
+      h+=sel("pa",ACCESS,x.pa,"Votre accès à son compte");
+    }
+  }
+  return '<div class="accgrid">'+h+'</div>';
+}
+function accessLine(it,k){
+  var x=u(it.id,k.id), f=famOf(it), p=[]; if(!hasAccessInfo(it) || !x.s || x.s==="non") return "";
+  if(f==="compte"){ if(x.who==="parent") p.push("géré par le parent"); if(x.login) p.push(x.login); if(x.mail==="non") p.push("pas d'accès à la boîte mail"); if(x.mail==="oui") p.push("consulte sa boîte mail"); }
+  else { if(x.acct) p.push((f==="appareil"?"compte ":"avec ")+acctLabel(x.acct)); if(x.via&&x.via.length) p.push("sur "+x.via.map(function(d){ var i=item(d); return i?i.name:d; }).join(", ")); if(x.login) p.push(x.login); }
+  if(ACCESS_SHORT[x.pa]) p.push(ACCESS_SHORT[x.pa]);
+  return p.join(" · ");
+}
 function kidDot(k){ return '<span class="kdot" style="--kc:'+esc(k.color)+'"></span>'; }
 function under(it,k){ var a=ageOf(k); return it.age && a!=null && a<it.age; }
 function plural(n,s,p){ return n+" "+(n>1?(p||s+"s"):s); }
@@ -1296,16 +1350,27 @@ function checklist(list,prefix){
     return '<label class="chk'+(on?' done':'')+'"><input type="checkbox" id="c-'+esc(key)+'" data-check="'+esc(key)+'"'+(on?' checked':'')+'><span>'+esc(c[1])+(c[2]?'<small>'+esc(c[2])+'</small>':'')+'</span></label>'; }).join("")+'</div>';
 }
 var CHILD_LABEL={utilise:["C'est bon","ok"],discussion:["On en parle","warn"],non:["Pas pour l'instant","plain"]};
+function accountsView(k){
+  var accts=allItems().filter(function(i){ return famOf(i)==="compte" && u(i.id,k.id).s && u(i.id,k.id).s!=="non"; });
+  var apps=allItems().filter(function(i){ var f=famOf(i), s=u(i.id,k.id).s; return (f==="app"||f==="appareil") && (s==="utilise"||s==="discussion"); });
+  var row=function(it){ var x=u(it.id,k.id), l=accessLine(it,k), miss=famOf(it)==="compte"?!x.pa:(famOf(it)==="appareil"?!x.acct:(!x.acct||!x.pa));
+    return '<button type="button" class="userow" data-act="open-item" data-item="'+it.id+'">'+iconFor(it)+'<span class="un">'+esc(it.name)+'<small>'+esc(l||"Rien de précisé")+'</small></span>'+(miss?'<span class="pill warn">À compléter</span>':(x.pa==="non"?'<span class="pill warn">Pas d\'accès</span>':'<span class="pill ok">Renseigné</span>'))+'</button>'; };
+  var noAcc=apps.concat(accts).filter(function(it){ return u(it.id,k.id).pa==="non"; });
+  return '<section class="card"><h3>Ses comptes</h3><p class="small muted">Un compte peut exister sans que l\'enfant s\'en serve (par exemple une adresse Gmail créée pour l\'inscrire à des apps). Touchez une ligne pour préciser qui s\'en sert, l\'identifiant, la boîte mail et votre accès.</p><div class="uselist">'+(accts.length?accts.map(row).join(""):'<p class="small muted">Aucun compte indiqué. Ajoutez-les dans Ce qu\'ils utilisent › Comptes.</p>')+'</div></section>'+
+    '<section class="card"><h3>Où il ou elle est inscrit</h3><p class="small muted">Pour chaque appareil et chaque app : avec quel compte, sur quels appareils, et si vous y avez accès.</p><div class="uselist">'+(apps.length?apps.map(row).join(""):'<p class="small muted">Rien pour l\'instant.</p>')+'</div>'+
+    (noAcc.length?'<p class="small" style="margin-top:10px"><b>Sans accès parent :</b> '+esc(noAcc.map(function(i){return i.name;}).join(", "))+'. Ce n\'est pas forcément un problème à son âge, mais convenez ensemble de ce qui se passe en cas de souci (mot de passe oublié, piratage).</p>':'')+'</section>';
+}
 function viewEnfants(){
   if(!S.kids.length) return '<section class="card"><h2>Mes enfants</h2><p class="small">Ajoutez votre premier enfant.</p><div class="toolbar"><button type="button" data-act="manage-kids">Ajouter un enfant</button></div></section>';
   if(!kidSel()) UI.kidSel=S.kids[0].id;
-  var k=kid(kidSel()), bp=bandProgress(k), ksub=subOf("kid","vue",["vue","essentiels","utilise","conseils"]);
+  var k=kid(kidSel()), bp=bandProgress(k), ksub=subOf("kid","vue",["vue","essentiels","utilise","comptes","conseils"]);
   var groups=FAMS.map(function(f){ var its=allItems().filter(function(it){ return famOf(it)===f[0] && u(it.id,k.id).s; }); if(!its.length) return ""; return '<div class="usegroup"><span class="kicker">'+f[1]+'</span><div class="uselist">'+its.map(function(it){ var x=u(it.id,k.id), lab=famOf(it)==="outil"?"Activé":lab2(STATUS,x.s);
-      return '<button type="button" class="userow" data-act="open-item" data-item="'+it.id+'">'+iconFor(it)+'<span class="un">'+esc(it.name)+(x.note?'<small>'+esc(x.note)+'</small>':'')+'</span><span class="pill '+(x.s==="utilise"?(x.ok||!it.settings||!it.settings.length?'ok':'warn'):x.s==="discussion"?'warn':'plain')+'">'+esc(lab)+(x.s==="utilise"&&it.settings&&it.settings.length&&!x.ok?' · à régler':'')+'</span></button>'; }).join("")+'</div></div>'; }).join("");
+      return '<button type="button" class="userow" data-act="open-item" data-item="'+it.id+'">'+iconFor(it)+'<span class="un">'+esc(it.name)+(accessLine(it,k)?'<small>'+esc(accessLine(it,k))+'</small>':'')+(x.note?'<small>'+esc(x.note)+'</small>':'')+'</span><span class="pill '+(x.s==="utilise"?(x.ok||!it.settings||!it.settings.length?'ok':'warn'):x.s==="discussion"?'warn':'plain')+'">'+esc(lab)+(x.s==="utilise"&&it.settings&&it.settings.length&&!x.ok?' · à régler':'')+'</span></button>'; }).join("")+'</div></div>'; }).join("");
   return '<section class="card"><div class="toolbar" style="justify-content:space-between"><h2>Mes enfants</h2><button type="button" class="ghost" data-act="manage-kids">Gérer les enfants</button></div>'+kidTabs(false)+'</section>'+
     '<section class="card kid" style="--kc:'+esc(k.color)+'"><div class="toolbar" style="justify-content:space-between"><div class="kidhead">'+avatar(k,"lg")+'<div><h2>'+esc(k.name)+'</h2><span class="small muted">'+ageOf(k)+' ans · '+esc(bp.b.n)+'</span></div></div><div class="toolbar"><button type="button" data-act="child-open" data-kid="'+k.id+'">Ouvrir son espace</button><button type="button" class="ghost" data-act="child-export" data-kid="'+k.id+'">Exporter son espace</button></div></div>'+
       '<p class="lead">'+esc(bp.b.key)+'</p></section>'+
-    subnav("kid",[["vue","Vue d'ensemble","home"],["essentiels","Essentiels pour son âge","lock",bp.n+"/"+bp.t],["utilise","Ce qu'il ou elle utilise","phone"],["conseils","Conseils","heart"]],ksub)+
+    subnav("kid",[["vue","Vue d'ensemble","home"],["essentiels","Essentiels pour son âge","lock",bp.n+"/"+bp.t],["utilise","Ce qu'il ou elle utilise","phone"],["comptes","Comptes et accès","key"],["conseils","Conseils","heart"]],ksub)+
+    (ksub==="comptes"?accountsView(k):'')+
     (ksub==="vue"?'<section class="card">'+kidSummary(k)+requestsBlock(k)+'</section><section class="card"><h3>À faire</h3>'+todoList(k)+'</section>':'')+
     (ksub==="essentiels"?'<section class="card"><h3>Les essentiels pour son âge</h3>'+progressBar(bp.n,bp.t)+checklist(bp.b.items,k.id)+'</section>':'')+
     (ksub==="utilise"?'<section class="card"><div class="toolbar" style="justify-content:space-between"><h3>Ce qu\'il ou elle utilise</h3><a class="small" href="#apps" data-act="go-kid-apps" data-kid="'+k.id+'">Modifier</a></div>'+(groups||'<p class="small muted">Rien pour l\'instant.</p>')+'</section>':'')+
@@ -1328,6 +1393,7 @@ function parentSees(k){
   if(us("snapchat")) out.push(["Snapchat","ta liste d'amis et avec qui tu as échangé récemment, jamais le contenu."]);
   if(us("discord")) out.push(["Discord","tes serveurs et tes nouveaux amis, jamais le contenu des messages."]);
   if(us("whatsapp")) out.push(["WhatsApp","rien, sauf si on active ensemble les contrôles pour les ados (une alerte quand tu rejoins un groupe)."]);
+  allItems().forEach(function(it){ var x=u(it.id,k.id); if(x.s==="utilise" && x.pa==="mdp" && hasAccessInfo(it) && famOf(it)!=="appareil") out.push([it.name,"tes parents connaissent les identifiants de ce compte. Ils s'en servent seulement si c'est nécessaire, et ils te le disent."]); });
   return out;
 }
 function childBody(k, forExport){
@@ -1356,7 +1422,7 @@ function exportChild(k){
   var html='<!DOCTYPE html>\n<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>En clair · l\'espace de '+esc(k.name)+'</title><style>'+css+'</style></head><body><div class="childmode" style="--kc:'+esc(k.color)+'"><header class="ctop"><div class="wrap ctop-row"><div class="brand"><span class="brand-mark" aria-hidden="true">EC</span><div><b>En clair</b><span class="small muted"> · l\'espace de '+esc(k.name)+'</span></div></div><span class="tiny muted">Mis à jour le '+esc(fmtDate(todayISO()))+'</span></div></header><main class="wrap cmain">'+childBody(k,true)+'</main></div></body></html>';
   download("en-clair-espace-"+slug(k.name)+".html", html, "text/html");
 }
-function statusOpts(it){ return famOf(it)==="outil" ? [["","Non activé"],["utilise","Activé"]] : STATUS; }
+function statusOpts(it){ return famOf(it)==="outil" ? [["","Non activé"],["utilise","Activé"]] : famOf(it)==="compte" ? STATUS_ACCT : STATUS; }
 function viewApps(){
   if(!UI.fFam) UI.fFam="appareil";
   var FI={appareil:"phone",compte:"key",app:"chat",site:"globe",outil:"shield"};
@@ -1375,20 +1441,23 @@ function viewAppsList(sw){
     return true;
   });
   var ks = UI.fKid ? S.kids.filter(function(k){return k.id===UI.fKid;}) : S.kids;
+  var compact = !UI.fKid && (S.kids.length>=3 || (S.kids.length>=2 && window.innerWidth<=760));
   return sw+'<section class="card"><div class="toolbar" style="justify-content:space-between"><div><h2>'+esc(UI.q?'Recherche dans toute la liste':FAMS.filter(function(f){return f[0]===UI.fFam;})[0][1])+'</h2><p class="small muted">'+esc(UI.q?'':FAMS.filter(function(f){return f[0]===UI.fFam;})[0][2])+' Indiquez ce que chaque enfant utilise ; touchez un nom pour sa fiche.</p></div><button type="button" class="ghost" data-act="new-item">Ajouter un élément</button></div>'+
+      '<div class="frow kidpick"><span class="lbl">Pour</span><button type="button" class="chip" aria-pressed="'+(!UI.fKid)+'" data-act="f-kid" data-kid="">Tous</button>'+S.kids.map(function(k){return '<button type="button" class="chip" aria-pressed="'+(UI.fKid===k.id)+'" data-act="f-kid" data-kid="'+k.id+'">'+esc(k.name)+'</button>';}).join("")+'</div>'+
     '<details class="filtbox"'+(UI.filtOpen||window.innerWidth>760||UI.fKid||UI.fUsed||UI.fTodo||UI.fType||UI.q?' open':'')+'><summary class="small"><b>Filtres et recherche</b></summary><div class="filters">'+
-      '<div class="frow"><span class="lbl">Enfant</span><button type="button" class="chip" aria-pressed="'+(!UI.fKid)+'" data-act="f-kid" data-kid="">Tous</button>'+S.kids.map(function(k){return '<button type="button" class="chip" aria-pressed="'+(UI.fKid===k.id)+'" data-act="f-kid" data-kid="'+k.id+'">'+esc(k.name)+'</button>';}).join("")+'</div>'+
       '<div class="frow"><span class="lbl">Afficher</span><button type="button" class="chip" aria-pressed="'+UI.fUsed+'" data-act="f-used">Seulement ce qui est utilisé</button><button type="button" class="chip" aria-pressed="'+UI.fTodo+'" data-act="f-todo">Seulement ce qui demande une action</button></div>'+
       (UI.fFam==="app"?'<div class="frow"><span class="lbl">Catégorie</span><button type="button" class="chip" aria-pressed="'+(!UI.fType)+'" data-act="f-type" data-type="">Toutes</button>'+TYPES.filter(function(t){return famOf({type:t[0]})==="app";}).map(function(t){return '<button type="button" class="chip" aria-pressed="'+(UI.fType===t[0])+'" data-act="f-type" data-type="'+t[0]+'">'+t[1]+'</button>';}).join("")+'</div>':'')+
       '<div class="frow"><span class="lbl">Chercher</span><input type="search" id="q" value="'+esc(UI.q)+'" placeholder="Nom d\'une app…" aria-label="Chercher une app"></div>'+
-    '</div></details><p class="small muted">'+plural(list.length,"élément")+'</p></section>'+
+    '</div></details><p class="small muted">'+plural(list.length,"élément")+(compact?' · touchez un prénom pour modifier ses réglages':'')+'</p></section>'+
     '<section class="items">'+(list.length?list.map(function(it){
       return '<div class="item"><div class="nm"><div class="nmrow">'+iconFor(it)+'<button type="button" class="quiet" data-act="open-item" data-item="'+it.id+'">'+esc(it.name)+'</button></div><div class="pills"><span class="pill plain">'+esc(famLabel(famOf(it)))+(famOf(it)==="app"?' · '+esc(typeLabel(it.type)):'')+'</span>'+(it.age?'<span class="pill">'+it.age+' ans minimum</span>':'')+'</div>'+
         (it.feats&&it.feats.length?'<span class="tiny muted">À surveiller : '+esc(it.feats.map(function(f){return (FEATS[f]||f).toLowerCase();}).join(", "))+'</span>':'')+'</div>'+
+        (compact?'<div class="kchips">'+ks.map(function(k){ var x=u(it.id,k.id), lab=x.s?lab2(statusOpts(it),x.s):"—", cls=x.s==="utilise"?(x.ok||!it.settings||!it.settings.length?"ok":"warn"):x.s==="discussion"?"warn":"plain";
+          return '<button type="button" class="kchip" data-act="f-kid" data-kid="'+k.id+'" title="Modifier pour '+esc(k.name)+'">'+avatar(k,"sm")+'<span class="kn">'+esc(k.name)+'</span><span class="pill '+cls+'">'+esc(lab)+'</span>'+((x.s==="utilise"||x.s==="discussion")&&under(it,k)?'<span class="flag">âge</span>':'')+'</button>'; }).join("")+'</div></div>':
         '<div class="kids">'+ks.map(function(k){ var x=u(it.id,k.id), sid="st-"+it.id+"-"+k.id, oid="ok-"+it.id+"-"+k.id;
           return '<div class="kidctl"><span class="who">'+kidDot(k)+esc(k.name)+'</span><label for="'+sid+'" class="hide">Statut pour '+esc(k.name)+'</label><select id="'+sid+'" data-status="1" data-item="'+it.id+'" data-kid="'+k.id+'">'+statusOpts(it).map(function(s){return '<option value="'+s[0]+'"'+((x.s||"")===s[0]?' selected':'')+'>'+s[1]+'</option>';}).join("")+'</select>'+
             (x.s==="utilise"&&it.settings&&it.settings.length?'<label for="'+oid+'"><input type="checkbox" id="'+oid+'" data-ok="1" data-item="'+it.id+'" data-kid="'+k.id+'"'+(x.ok?' checked':'')+'>Réglages faits</label>':'')+
-            ((x.s==="utilise"||x.s==="discussion")&&under(it,k)?'<span class="flag">Âge minimum non atteint</span>':'')+'</div>'; }).join("")+'</div></div>';
+            ((x.s==="utilise"||x.s==="discussion")&&under(it,k)?'<span class="flag">Âge minimum non atteint</span>':'')+(accessLine(it,k)?'<span class="tiny muted">'+esc(accessLine(it,k))+'</span>':'')+'</div>'; }).join("")+'</div></div>');
     }).join(""):'<div class="card"><p class="muted">Rien ne correspond. Retirez un filtre ou ajoutez l\'app.</p></div>')+'</section>';
 }
 function viewRituel(){
@@ -1465,7 +1534,7 @@ function renderDialog(){
         '<div class="toolbar"><label for="'+sid+'" class="hide">Statut</label><select id="'+sid+'" data-status="1" data-item="'+it.id+'" data-kid="'+k.id+'">'+statusOpts(it).map(function(s){return '<option value="'+s[0]+'"'+((x.s||"")===s[0]?' selected':'')+'>'+s[1]+'</option>';}).join("")+'</select>'+
         (x.s==="utilise"&&it.settings&&it.settings.length?'<label for="'+oid+'"><input type="checkbox" id="'+oid+'" data-ok="1" data-item="'+it.id+'" data-kid="'+k.id+'"'+(x.ok?' checked':'')+'>Réglages faits</label>':'')+'</div>'+
         (isNet&&x.s==="discussion"?'<div class="checks">'+READY.map(function(r){ var key=k.id+":"+it.id+":"+r[0], on=!!S.checks[key]; return '<label class="chk'+(on?' done':'')+'"><input type="checkbox" id="c-'+esc(key)+'" data-check="'+esc(key)+'"'+(on?' checked':'')+'><span class="small">'+esc(r[1])+'</span></label>'; }).join("")+'</div>':'')+
-        '<label class="f" for="'+nid+'">Note<input type="text" id="'+nid+'" data-note="1" data-item="'+it.id+'" data-kid="'+k.id+'" value="'+esc(x.note||"")+'" placeholder="ex. règle convenue, réglage particulier"></label></div>'; }).join("")+'</div></section>'+
+        '<label class="f" for="'+nid+'">Note<input type="text" id="'+nid+'" data-note="1" data-item="'+it.id+'" data-kid="'+k.id+'" value="'+esc(x.note||"")+'" placeholder="ex. règle convenue, réglage particulier"></label>'+accessFields(it,k)+'</div>'; }).join("")+'</div></section>'+
     (MATRIX[it.id]?'<section><span class="kicker">Sur quels écrans</span><div class="screens">'+IFACES.map(function(f){ var c=MATRIX[it.id].cells[f[0]]||["non"]; return '<button type="button" class="screenrow" data-act="open" data-ref="m:'+it.id+':'+f[0]+'"'+(c[0]==="non"?' disabled':'')+'>'+svgIcon(f[2])+'<span>'+esc(f[1])+(c[1]?'<small>'+esc(c[1])+'</small>':'')+'</span>'+cellBadge(c)+'</button>'; }).join("")+'</div>'+(MATRIX[it.id].tip?'<p class="small">'+esc(MATRIX[it.id].tip)+'</p>':'')+'</section>':'')+
     (isNet?'<section><span class="kicker">Réglages communs à tous les réseaux</span><ul class="plain small">'+COMMON_SOCIAL.map(function(s){return '<li>'+esc(s)+'</li>';}).join("")+'</ul></section>':'')+
     usageLinks(relatedUsages("i:"+it.id))+
@@ -1536,8 +1605,8 @@ function doExportCatalog(){
   download("en-clair-ajouts-"+todayISO()+".json", JSON.stringify({app:"vie-numerique-famille",version:1,kind:"catalogue",exported:new Date().toISOString(),custom:S.custom||[],icons:ic},null,2), "application/json");
 }
 function doCsv(){
-  var rows=[["Élément","Type","Âge minimum","Enfant","Âge de l'enfant","Statut","Réglages faits","Note"]];
-  allItems().forEach(function(it){ S.kids.forEach(function(k){ var x=u(it.id,k.id); if(!x.s && !x.note) return; rows.push([it.name,typeLabel(it.type),it.age||"",k.name,ageOf(k),(STATUS.filter(function(s){return s[0]===(x.s||"");})[0]||["",""])[1],x.ok?"oui":"non",x.note||""]); }); });
+  var rows=[["Élément","Type","Âge minimum","Enfant","Âge de l'enfant","Statut","Réglages faits","Note","Comptes et accès"]];
+  allItems().forEach(function(it){ S.kids.forEach(function(k){ var x=u(it.id,k.id); if(!x.s && !x.note) return; rows.push([it.name,typeLabel(it.type),it.age||"",k.name,ageOf(k),lab2(statusOpts(it),x.s||""),x.ok?"oui":"non",x.note||"",accessLine(it,k)]); }); });
   var csv="﻿"+rows.map(function(r){ return r.map(function(c){ c=String(c==null?"":c); return /[;"\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c; }).join(";"); }).join("\r\n");
   download("en-clair-"+slug(S.family)+"-"+todayISO()+".csv", csv, "text/csv;charset=utf-8");
 }
@@ -1637,6 +1706,8 @@ document.addEventListener("change", function(ev){
   if(ds.status){ setU(ds.item,ds.kid,{s:t.value, ok: t.value==="utilise"?u(ds.item,ds.kid).ok:false}); render(); return; }
   if(ds.ok){ setU(ds.item,ds.kid,{ok:t.checked}); render(); return; }
   if(ds.note){ setU(ds.item,ds.kid,{note:t.value.trim()}); return; }
+  if(ds.uf){ var pp={}; pp[ds.uf]=t.value.trim(); setU(ds.item,ds.kid,pp); if(t.tagName==="SELECT") render(); return; }
+  if(ds.via){ var cv=(u(ds.item,ds.kid).via||[]).filter(function(v){return v!==ds.via;}); if(t.checked) cv.push(ds.via); setU(ds.item,ds.kid,{via:cv}); return; }
   if(ds.check){ if(t.checked) S.checks[ds.check]=true; else delete S.checks[ds.check]; rerender(); return; }
   if(ds.topic){ if(t.checked) S.topics[ds.topic]=true; else delete S.topics[ds.topic]; rerender(); return; }
   if(t.id==="family"){ S.family=t.value.trim(); rerender(); return; }
