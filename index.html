@@ -367,7 +367,21 @@ fieldset.via{border:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:4px 
 fieldset.via legend{font-size:.85rem;font-weight:600;padding:0;margin-bottom:4px}
 fieldset.via label{display:flex;gap:6px;align-items:center;font-size:.9rem}
 .userow .un small+small{margin-top:1px}
+.acclist{display:grid;gap:8px;margin-top:10px}
+details.accrow{background:var(--bg);border-radius:var(--rs);padding:0 12px}
+details.accrow>summary{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 0;cursor:pointer;list-style:none}
+details.accrow>summary::-webkit-details-marker{display:none}
+details.accrow .un small{display:block;color:var(--muted);font-size:.82rem}
+details.accrow .accgrid{margin:0 0 12px}
+table.via-mx th span{display:block;font-size:.75rem;font-weight:600;max-width:84px;line-height:1.2}
+table.via-mx thead th{text-align:center;vertical-align:bottom}
+table.via-mx thead th .ic{width:30px;height:30px;margin:0 auto 4px}
+table.via-mx td{text-align:center}
+table.via-mx td input{width:20px;height:20px}
 /* Navigation mobile */
+.tablewrap{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+table.via-mx th[scope="row"]{position:sticky;left:0;background:var(--surface);z-index:1}
+
 .filtbox>summary{cursor:pointer;padding:6px 0;list-style-position:inside}
 .filtbox[open]>summary{margin-bottom:8px}
 
@@ -398,6 +412,11 @@ main.wrap>*{min-width:0}
   .card{padding:16px}
   .frow .lbl{min-width:0;width:100%}
   .sitefoot{padding-bottom:12px}
+  .card.kid .lead{display:none}
+  .card.kid button[data-act=child-open]{padding:8px 14px;font-size:.9rem;min-height:0}
+  .card.kid button[data-act=child-export]{display:none}
+  .card.kid .avatar.lg{width:44px;height:44px;font-size:1.2rem}
+  .card.kid>.toolbar{gap:10px}
 }
 </style>
 </head>
@@ -726,7 +745,9 @@ var ACCT_EXTRA=[["tel","Son numéro de téléphone"],["mail-autre","Une autre ad
 function kidAccounts(k){ return allItems().filter(function(i){ return famOf(i)==="compte" && u(i.id,k.id).s==="utilise"; }); }
 function kidDevices(k){ return allItems().filter(function(i){ return famOf(i)==="appareil" && u(i.id,k.id).s==="utilise"; }); }
 function acctLabel(v){ var it=item(v); if(it) return it.name; var l=lab2(ACCT_EXTRA,v); return l.charAt(0).toLowerCase()+l.slice(1); }
-function hasAccessInfo(it){ var f=famOf(it); return f!=="outil" && f!=="site" && it.type!=="navigateur"; }
+function hasAccessInfo(it){ var f=famOf(it); return f!=="outil" && it.type!=="navigateur"; }
+function kidBrowsers(){ return allItems().filter(function(i){ return i.type==="navigateur"; }); }
+function viaCols(k){ return kidDevices(k).concat(kidBrowsers()); }
 function accessFields(it,k){
   var x=u(it.id,k.id), f=famOf(it); if(!hasAccessInfo(it) || !x.s || x.s==="non") return "";
   var id=function(n){ return "a"+n+"-"+it.id+"-"+k.id; }, at=' data-item="'+it.id+'" data-kid="'+k.id+'"';
@@ -742,8 +763,9 @@ function accessFields(it,k){
     var accts=[["","Non précisé"]].concat(kidAccounts(k).map(function(a){return [a.id,a.name];})).concat(ACCT_EXTRA);
     h+=sel("acct",accts,x.acct,f==="appareil"?"Compte connecté sur l'appareil":"Inscrit avec");
     if(f!=="appareil"){
-      var dv=kidDevices(k), via=x.via||[];
-      h+='<fieldset class="f via"><legend>Sur quels appareils</legend>'+(dv.length?dv.map(function(d){ var cid=id("v-"+d.id); return '<label for="'+cid+'"><input type="checkbox" id="'+cid+'" data-via="'+d.id+'"'+at+(via.indexOf(d.id)>=0?' checked':'')+'>'+esc(d.name)+'</label>'; }).join(""):'<span class="tiny muted">Indiquez d\'abord ses appareils.</span>')+'</fieldset>';
+      var via=x.via||[], box=function(list,leg,empty){ return '<fieldset class="f via"><legend>'+leg+'</legend>'+(list.length?list.map(function(d){ var cid=id("v-"+d.id); return '<label for="'+cid+'"><input type="checkbox" id="'+cid+'" data-via="'+d.id+'"'+at+(via.indexOf(d.id)>=0?' checked':'')+'>'+esc(d.name.replace(/ \(.*\)$/,""))+'</label>'; }).join(""):'<span class="tiny muted">'+empty+'</span>')+'</fieldset>'; };
+      h+=box(kidDevices(k),"Sur quels appareils","Indiquez d'abord ses appareils dans Ce qu'ils utilisent › Appareils.");
+      h+=box(kidBrowsers(),"Dans quels navigateurs (si utilisé sur le web)","");
       h+=txt("login",x.login,"Pseudo ou identifiant","facultatif");
       h+=sel("pa",ACCESS,x.pa,"Votre accès à son compte");
     }
@@ -1350,14 +1372,22 @@ function checklist(list,prefix){
     return '<label class="chk'+(on?' done':'')+'"><input type="checkbox" id="c-'+esc(key)+'" data-check="'+esc(key)+'"'+(on?' checked':'')+'><span>'+esc(c[1])+(c[2]?'<small>'+esc(c[2])+'</small>':'')+'</span></label>'; }).join("")+'</div>';
 }
 var CHILD_LABEL={utilise:["C'est bon","ok"],discussion:["On en parle","warn"],non:["Pas pour l'instant","plain"]};
+function accessRow(it,k){ var x=u(it.id,k.id), l=accessLine(it,k), f=famOf(it), miss=f==="compte"?!x.pa:(f==="appareil"?!x.acct:(f==="site"?!(x.via&&x.via.length):(!x.acct||!x.pa||!(x.via&&x.via.length))));
+  return '<details class="accrow"'+(UI.accOpen===k.id+":"+it.id?' open':'')+' data-acc="'+esc(k.id+":"+it.id)+'"><summary>'+iconFor(it)+'<span class="un"><b>'+esc(it.name)+'</b><small>'+esc(l||"Rien de précisé")+'</small></span>'+(miss?'<span class="pill warn">À compléter</span>':(x.pa==="non"?'<span class="pill warn">Pas d\'accès</span>':'<span class="pill ok">Renseigné</span>'))+'</summary>'+accessFields(it,k)+'</details>'; }
+function viaTable(k,list){
+  var cols=viaCols(k); if(!list.length) return "";
+  return '<div class="tablewrap"><table class="mx via-mx"><thead><tr><th>App ou site</th>'+cols.map(function(c){ return '<th>'+iconFor(c)+'<span>'+esc(c.name.replace(/ \(.*\)$/,"").replace(/^(Ordinateur|Smartphone ou tablette) /,""))+'</span></th>'; }).join("")+'</tr></thead><tbody>'+
+    list.map(function(it){ var via=u(it.id,k.id).via||[]; return '<tr><th scope="row"><button type="button" class="quiet" data-act="open-item" data-item="'+it.id+'">'+esc(it.name)+'</button></th>'+cols.map(function(c){ var cid="vt-"+it.id+"-"+c.id; return '<td><input type="checkbox" id="'+cid+'" data-via="'+c.id+'" data-item="'+it.id+'" data-kid="'+k.id+'"'+(via.indexOf(c.id)>=0?' checked':'')+' aria-label="'+esc(it.name)+' sur '+esc(c.name)+'"></td>'; }).join("")+'</tr>'; }).join("")+'</tbody></table></div>';
+}
 function accountsView(k){
   var accts=allItems().filter(function(i){ return famOf(i)==="compte" && u(i.id,k.id).s && u(i.id,k.id).s!=="non"; });
-  var apps=allItems().filter(function(i){ var f=famOf(i), s=u(i.id,k.id).s; return (f==="app"||f==="appareil") && (s==="utilise"||s==="discussion"); });
-  var row=function(it){ var x=u(it.id,k.id), l=accessLine(it,k), miss=famOf(it)==="compte"?!x.pa:(famOf(it)==="appareil"?!x.acct:(!x.acct||!x.pa));
-    return '<button type="button" class="userow" data-act="open-item" data-item="'+it.id+'">'+iconFor(it)+'<span class="un">'+esc(it.name)+'<small>'+esc(l||"Rien de précisé")+'</small></span>'+(miss?'<span class="pill warn">À compléter</span>':(x.pa==="non"?'<span class="pill warn">Pas d\'accès</span>':'<span class="pill ok">Renseigné</span>'))+'</button>'; };
-  var noAcc=apps.concat(accts).filter(function(it){ return u(it.id,k.id).pa==="non"; });
-  return '<section class="card"><h3>Ses comptes</h3><p class="small muted">Un compte peut exister sans que l\'enfant s\'en serve (par exemple une adresse Gmail créée pour l\'inscrire à des apps). Touchez une ligne pour préciser qui s\'en sert, l\'identifiant, la boîte mail et votre accès.</p><div class="uselist">'+(accts.length?accts.map(row).join(""):'<p class="small muted">Aucun compte indiqué. Ajoutez-les dans Ce qu\'ils utilisent › Comptes.</p>')+'</div></section>'+
-    '<section class="card"><h3>Où il ou elle est inscrit</h3><p class="small muted">Pour chaque appareil et chaque app : avec quel compte, sur quels appareils, et si vous y avez accès.</p><div class="uselist">'+(apps.length?apps.map(row).join(""):'<p class="small muted">Rien pour l\'instant.</p>')+'</div>'+
+  var devs=allItems().filter(function(i){ return famOf(i)==="appareil" && u(i.id,k.id).s==="utilise"; });
+  var apps=allItems().filter(function(i){ var f=famOf(i), st=u(i.id,k.id).s; return (f==="app"||f==="site") && hasAccessInfo(i) && (st==="utilise"||st==="discussion"); });
+  var noAcc=accts.concat(devs).concat(apps).filter(function(it){ return u(it.id,k.id).pa==="non"; });
+  return '<section class="card"><h3>Où il ou elle y accède</h3><p class="small muted">Cochez, pour chaque app ou site, les appareils et les navigateurs depuis lesquels '+esc(k.name)+' y accède. C\'est là qu\'il faut que vos filtres agissent.</p>'+(apps.length?viaTable(k,apps):'<p class="small muted">Indiquez d\'abord ce qu\'il ou elle utilise.</p>')+'</section>'+
+    '<section class="card"><h3>Ses comptes</h3><p class="small muted">Un compte peut exister sans que l\'enfant s\'en serve (par exemple une adresse Gmail créée pour l\'inscrire à des apps). Ouvrez une ligne pour préciser.</p><div class="acclist">'+(accts.length?accts.map(function(it){return accessRow(it,k);}).join(""):'<p class="small muted">Aucun compte indiqué. Ajoutez-les dans Ce qu\'ils utilisent › Comptes.</p>')+'</div></section>'+
+    '<section class="card"><h3>Ses appareils</h3><p class="small muted">Le compte connecté sur chaque appareil.</p><div class="acclist">'+(devs.length?devs.map(function(it){return accessRow(it,k);}).join(""):'<p class="small muted">Aucun appareil indiqué.</p>')+'</div></section>'+
+    '<section class="card"><h3>Ses apps et sites</h3><p class="small muted">Avec quel compte il ou elle est inscrit, et si vous y avez accès.</p><div class="acclist">'+(apps.length?apps.map(function(it){return accessRow(it,k);}).join(""):'<p class="small muted">Rien pour l\'instant.</p>')+'</div>'+
     (noAcc.length?'<p class="small" style="margin-top:10px"><b>Sans accès parent :</b> '+esc(noAcc.map(function(i){return i.name;}).join(", "))+'. Ce n\'est pas forcément un problème à son âge, mais convenez ensemble de ce qui se passe en cas de souci (mot de passe oublié, piratage).</p>':'')+'</section>';
 }
 function viewEnfants(){
@@ -1570,7 +1600,7 @@ var rendering=false;
 function render(){
   if(rendering){ setTimeout(render,0); return; }
   rendering=true;
-  try { migrateColors(); syncCustom(); renderInner(); } finally { rendering=false; }
+  try { migrateColors(); syncCustom(); renderInner(); Array.prototype.forEach.call(document.querySelectorAll(".subtabs [aria-selected=true]"),function(b){ var n=b.parentNode; if(n.scrollWidth>n.clientWidth) n.scrollLeft=Math.max(0,b.offsetLeft-(n.clientWidth-b.offsetWidth)/2); }); } finally { rendering=false; }
 }
 function renderInner(){
   var a=document.activeElement, fid=a&&a.id, pos=null; try{ pos=a.selectionStart; }catch(e){}
@@ -1707,7 +1737,7 @@ document.addEventListener("change", function(ev){
   if(ds.ok){ setU(ds.item,ds.kid,{ok:t.checked}); render(); return; }
   if(ds.note){ setU(ds.item,ds.kid,{note:t.value.trim()}); return; }
   if(ds.uf){ var pp={}; pp[ds.uf]=t.value.trim(); setU(ds.item,ds.kid,pp); if(t.tagName==="SELECT") render(); return; }
-  if(ds.via){ var cv=(u(ds.item,ds.kid).via||[]).filter(function(v){return v!==ds.via;}); if(t.checked) cv.push(ds.via); setU(ds.item,ds.kid,{via:cv}); return; }
+  if(ds.via){ var cv=(u(ds.item,ds.kid).via||[]).filter(function(v){return v!==ds.via;}); if(t.checked) cv.push(ds.via); setU(ds.item,ds.kid,{via:cv}); render(); return; }
   if(ds.check){ if(t.checked) S.checks[ds.check]=true; else delete S.checks[ds.check]; rerender(); return; }
   if(ds.topic){ if(t.checked) S.topics[ds.topic]=true; else delete S.topics[ds.topic]; rerender(); return; }
   if(t.id==="family"){ S.family=t.value.trim(); rerender(); return; }
@@ -1732,7 +1762,7 @@ document.addEventListener("submit", function(ev){
     var fi=document.getElementById("ni-icon"); if(fi && fi.files && fi.files[0]) setIcon(it.id,fi.files[0]);
     save(); openItem(it.id); render(); }
 });
-document.addEventListener("toggle", function(ev){ var d=ev.target; if(d && d.classList && d.classList.contains("filtbox")) UI.filtOpen=d.open; if(d && d.dataset && d.dataset.g){ UI.openG[d.dataset.g]=d.open; } }, true);
+document.addEventListener("toggle", function(ev){ var d=ev.target; if(d && d.classList && d.classList.contains("filtbox")) UI.filtOpen=d.open; if(d && d.dataset && d.dataset.acc){ if(d.open) UI.accOpen=d.dataset.acc; else if(UI.accOpen===d.dataset.acc) UI.accOpen=""; } if(d && d.dataset && d.dataset.g){ UI.openG[d.dataset.g]=d.open; } }, true);
 document.getElementById("dlg").addEventListener("close", function(){ openId=null; });
 window.addEventListener("hashchange", function(){ render(); window.scrollTo(0,0); });
 render();
