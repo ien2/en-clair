@@ -1,6 +1,6 @@
 # Jiminy
 
-La vie numérique de vos enfants, expliquée : la petite voix qui aide les parents à s'y retrouver.
+La petite voix numérique de la famille.
 
 Un outil pour les parents : ce que chaque enfant utilise (appareils, comptes, applications, sites), les réglages à faire, des conseils par âge et par situation, une charte familiale et un espace pour chaque enfant.
 

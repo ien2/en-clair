@@ -1,7 +1,7 @@
 {
  "name": "Jiminy",
  "short_name": "Jiminy",
- "description": "La vie numérique de vos enfants, expliquée.",
+ "description": "La petite voix numérique de la famille.",
  "lang": "fr",
  "start_url": "./",
  "scope": "./",

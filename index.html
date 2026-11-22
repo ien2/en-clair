@@ -15,7 +15,7 @@
 <script>window.EC_SITE=true;</script>
 <script src="icones.js"></script>
 
-<title>Jiminy · la vie numérique de vos enfants, expliquée</title>
+<title>Jiminy · la petite voix numérique de la famille</title>
 <style>
 :root{
   /* Outil familial hors ligne : parcours guidé, cartes par enfant, fiches pratiques ; bleu ardoise + ambre signal */
@@ -1669,7 +1669,7 @@ function renderInner(){
   else {
     var tab=currentTab();
     var v={accueil:viewAccueil,enfants:viewEnfants,bibliotheque:viewBibliotheque,guides:viewGuides,famille:viewFamille,reglages:viewReglages}[tab]();
-    app.innerHTML='<header class="top"><div class="wrap"><div class="top-row"><div class="brand"><span class="brand-mark" aria-hidden="true">J</span><div><h1>Jiminy</h1><p class="small muted">'+(S.family?esc(S.family)+' · ':'')+'la vie numérique de vos enfants, expliquée</p></div></div>'+
+    app.innerHTML='<header class="top"><div class="wrap"><div class="top-row"><div class="brand"><span class="brand-mark" aria-hidden="true">J</span><div><h1>Jiminy</h1><p class="small muted">'+(S.family?esc(S.family)+' · ':'')+'la petite voix numérique de la famille</p></div></div>'+
       '<div class="toolbar"><span class="saved'+(storageOK?'':' warn')+'"><span class="dot"></span>'+(storageOK?'Enregistré sur cet ordinateur':'Non enregistré : sauvegardez')+'</span><button type="button" class="ghost" data-act="export">Sauvegarder</button><a class="btn ghost iconbtn" href="#reglages" aria-label="Réglages, enfants et sauvegarde" title="Réglages"'+(tab==="reglages"?' aria-current="page"':'')+'>'+svgIcon("gear")+'</a></div></div>'+
       '<nav class="tabs" aria-label="Sections">'+TABS.map(function(t){return '<a href="#'+t[0]+'"'+(t[0]===tab?' aria-current="page"':'')+'>'+svgIcon(TAB_ICON[t[0]]||"globe")+t[1]+'</a>';}).join("")+'</nav></div></header><main class="wrap">'+v+'</main>'+(window.EC_SITE?'<footer class="wrap sitefoot"><span>Vos informations restent dans ce navigateur : rien n\'est envoyé sur Internet.</span> <a href="mentions-legales.html">Mentions légales et confidentialité</a></footer>':'')+bottomNav(tab);
   }
