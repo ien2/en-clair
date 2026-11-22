@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; manifest-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0f1b3d">
+<meta name="apple-mobile-web-app-title" content="En clair">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="app-icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script>window.EC_SITE=true;</script>
+<script src="icones.js"></script>
+
+<title>En clair · la vie numérique de vos enfants, expliquée</title>
+<style>
+:root{
+  /* Outil familial hors ligne : parcours guidé, cartes par enfant, fiches pratiques ; bleu ardoise + ambre signal */
+  --bg:#f4f5f8; --surface:#ffffff; --ink:#0f1b3d; --muted:#586079; --line:#e3e6ee;
+  --accent:#2551e6; --accent-soft:#e8eeff; --amber:#9a5000; --amber-soft:#fff0dd;
+  --ok:#137a4b; --ok-soft:#e0f4ea; --crit:#b42318; --crit-soft:#fde8e6; --r:14px; --rs:10px; --navy:#0f1b3d;
+  --shadow:0 1px 2px rgba(15,27,61,.06),0 8px 24px rgba(15,27,61,.06);
+  --display:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12161f; --surface:#1a202c; --ink:#e7eaf1; --muted:#9aa3b5; --line:#2c3445;
+  --accent:#9db2ff; --accent-soft:#1f2942; --amber:#f0b350; --amber-soft:#3a2e17;
+  --ok:#5fd19a; --ok-soft:#173527; --crit:#ff8a7e; --crit-soft:#3d1d1a; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#12161f; --surface:#1a202c; --ink:#e7eaf1; --muted:#9aa3b5; --line:#2c3445;
+  --accent:#9db2ff; --accent-soft:#1f2942; --amber:#f0b350; --amber-soft:#3a2e17;
+  --ok:#5fd19a; --ok-soft:#173527; --crit:#ff8a7e; --crit-soft:#3d1d1a; color-scheme:dark;}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.2;font-weight:700;letter-spacing:-.005em}
+h1{font-size:1.7rem} h2{font-size:1.3rem} h3{font-size:1.08rem}
+p{margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top-row{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between;padding:18px 0 10px}
+.saved{font-size:.82rem;color:var(--muted);display:flex;gap:6px;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.saved.warn .dot{background:var(--amber)}
+nav.tabs{display:flex;gap:2px;overflow-x:auto}
+nav.tabs a{padding:10px 11px;text-decoration:none;color:var(--muted);font-weight:600;border-bottom:3px solid transparent;white-space:nowrap}
+nav.tabs a:hover{color:var(--ink)}
+nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main.wrap{padding-top:24px;padding-bottom:64px;display:grid;gap:20px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:12px;align-content:start;min-width:0}
+.card.kid{border-top:5px solid var(--kc,var(--accent))}
+.card.soft{background:var(--accent-soft);border-color:transparent}
+.banner{padding:12px 16px;border-radius:var(--r);background:var(--amber-soft);display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.muted{color:var(--muted)} .small{font-size:.88rem} .tiny{font-size:.8rem}
+.lead{font-size:1.05rem;max-width:62ch}
+.kicker{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--amber-soft);color:var(--amber)}
+.pill.crit{background:var(--crit-soft);color:var(--crit)}
+.pill.plain{background:var(--bg);color:var(--ink);font-weight:500}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.kdot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--kc,var(--accent));flex:none}
+button,.btn{font:inherit;font-size:.95rem;font-weight:600;cursor:pointer;border-radius:var(--r);padding:9px 16px;border:1px solid var(--accent);background:var(--accent);color:var(--surface);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button.ghost,.btn.ghost{background:transparent;color:var(--accent)}
+button.quiet{background:transparent;border-color:transparent;color:var(--accent);padding:4px 6px;font-weight:600}
+button.danger{background:transparent;border-color:var(--crit);color:var(--crit)}
+button[disabled]{opacity:.5;cursor:default}
+button.chip{background:var(--surface);color:var(--ink);border:1px solid var(--line);font-weight:500;padding:7px 12px;border-radius:99px;font-size:.9rem}
+button.chip[aria-pressed="true"]{background:var(--accent);color:var(--surface);border-color:var(--accent)}
+button.chip .age{font-size:.72rem;font-weight:700;opacity:.8}
+button.chip.under{border-color:var(--amber)}
+button.chip.under .age{color:var(--amber);opacity:1}
+button.chip[aria-pressed="true"].under .age{color:var(--surface)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+input[type="text"],input[type="search"],input[type="date"],input[type="number"],select,textarea{font:inherit;font-size:.95rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:8px 10px;min-width:0}
+textarea{width:100%;min-height:80px;resize:vertical}
+.form{display:grid;gap:12px}
+.form .row{display:flex;flex-wrap:wrap;gap:12px}
+.form .row>label{flex:1;min-width:140px}
+label.f{display:grid;gap:4px;font-size:.85rem;color:var(--muted);font-weight:600}
+.todo{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.todo li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 12px;border-radius:var(--r);background:var(--bg)}
+.todo li.warn{background:var(--amber-soft)}
+.todo .ico{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.8rem;font-weight:700;background:var(--accent-soft);color:var(--accent)}
+.todo li.warn .ico{background:var(--surface);color:var(--amber)}
+.todo li.done{background:var(--ok-soft)}
+.todo li.done .ico{background:var(--surface);color:var(--ok)}
+.checks{display:grid;gap:2px}
+label.chk{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;padding:8px;border-radius:var(--r);cursor:pointer}
+label.chk:hover{background:var(--bg)}
+label.chk input{margin:3px 0 0;width:18px;height:18px;accent-color:var(--accent)}
+label.chk.done span{color:var(--muted)}
+label.chk small{display:block;color:var(--muted);font-size:.82rem}
+.progress{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent)}
+.progress-row{display:flex;gap:10px;align-items:center;font-size:.82rem;color:var(--muted)}
+.progress-row .progress{flex:1}
+.items{display:grid;gap:10px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;grid-template-columns:minmax(220px,1.2fr) 2fr;gap:12px 20px;align-items:start}
+.item .nm{display:grid;gap:6px}
+.item .nm button.quiet{padding:0;font-size:1.02rem;text-align:left;justify-content:flex-start}
+.item .kids{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.kidctl{display:grid;gap:6px;padding:8px 10px;border-radius:var(--r);background:var(--bg)}
+.kidctl .who{display:flex;align-items:center;gap:6px;font-weight:600;font-size:.88rem}
+.kidctl select{font-size:.85rem;padding:5px 6px}
+.kidctl label{display:flex;gap:6px;align-items:center;font-size:.85rem}
+.kidctl .flag{font-size:.78rem;color:var(--amber);font-weight:600}
+@media (max-width:640px){.item{grid-template-columns:1fr}}
+.filters{display:grid;gap:10px}
+.frow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.frow .lbl{font-size:.8rem;color:var(--muted);font-weight:700;min-width:70px}
+.steps{display:grid;gap:8px;counter-reset:s;margin:0;padding:0;list-style:none}
+.steps li{display:grid;grid-template-columns:30px 1fr;gap:10px;counter-increment:s}
+.steps li::before{content:counter(s);width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:.85rem;display:grid;place-items:center}
+.plain{margin:0;padding-left:20px;display:grid;gap:5px}
+.entry{border-left:3px solid var(--accent);padding:4px 0 4px 14px;display:grid;gap:6px}
+.entry dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:2px 12px;font-size:.92rem}
+.entry dt{color:var(--muted)} .entry dd{margin:0}
+.months{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.month{border:1px solid var(--line);border-radius:var(--r);padding:12px;display:grid;gap:6px;background:var(--surface)}
+.month.now{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.month .m{font-size:.8rem;color:var(--muted);font-weight:700}
+.charter{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.charter ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.wizard{max-width:760px;margin:0 auto;padding:40px 20px 80px;display:grid;gap:22px}
+.wsteps{display:flex;gap:8px;flex-wrap:wrap}
+.wsteps span{font-size:.82rem;font-weight:700;color:var(--muted);padding:4px 10px;border-radius:99px;background:var(--surface);border:1px solid var(--line)}
+.wsteps span.on{background:var(--accent);color:var(--surface);border-color:var(--accent)}
+.wsteps span.done{color:var(--ok);border-color:var(--ok)}
+.kidrow{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:10px;align-items:end;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.kidrow .swatches{grid-column:1/-1;align-items:center;flex-wrap:wrap}
+@media (max-width:560px){.kidrow{grid-template-columns:1fr 1fr}.kidrow label:first-child{grid-column:1/-1}}
+.swatches{display:flex;gap:6px}
+.swatches button{width:26px;height:26px;border-radius:50%;padding:0;border:2px solid transparent}
+.swatches button[aria-pressed="true"]{border-color:var(--ink)}
+.group{display:grid;gap:8px}
+dialog{border:1px solid var(--line);border-radius:var(--r);padding:0;max-width:680px;width:calc(100% - 32px);background:var(--surface);color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.18)}
+dialog::backdrop{background:rgba(15,20,30,.45)}
+.dlg{padding:22px;display:grid;gap:14px;max-height:85vh;overflow:auto}
+.dlg .close{justify-self:end}
+.dlg section{display:grid;gap:6px}
+.stat{display:grid;gap:2px}
+.stat b{font-family:var(--display);font-size:1.6rem;font-variant-numeric:tabular-nums}
+.hide{display:none!important}
+.q{display:grid;gap:6px}
+details.guide{padding:0;border-left:5px solid var(--kc,var(--line))}
+details.guide.done{opacity:.85}
+details.guide summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+details.guide summary::-webkit-details-marker{display:none}
+details.guide summary .gt{font-family:var(--display);font-weight:700;font-size:1.05rem;display:flex;gap:8px;align-items:center}
+details.guide summary .gt::before{content:"▸";color:var(--accent);font-size:.9rem}
+details.guide[open] summary .gt::before{content:"▾"}
+details.guide .gbody{padding:0 20px 18px;display:grid;gap:12px}
+.links{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.link{display:grid;gap:4px;padding:14px;border:1px solid var(--line);border-radius:var(--r);text-decoration:none;color:var(--ink);background:var(--surface)}
+a.link:hover{border-color:var(--accent)}
+.link strong{font-family:var(--display);font-size:1.1rem;color:var(--accent)}
+.link span{font-size:.85rem;color:var(--muted)}
+.hsearch{min-width:0;width:210px}
+@media (max-width:640px){.hsearch{min-width:0;width:100%}}
+button.hit{background:var(--surface);color:var(--ink);border:1px solid var(--line);font-weight:500;justify-content:flex-start;text-align:left;width:100%}
+button.hit:hover{border-color:var(--accent)}
+button.ucard{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:6px;align-content:start;text-align:left;font-weight:400}
+button.ucard:hover{border-color:var(--accent)}
+button.ucard b{font-family:var(--display);font-size:1.05rem;color:var(--accent)}
+.talk{font-style:italic;padding-left:10px;border-left:3px solid var(--accent-soft)}
+.ifh{background:var(--amber-soft);padding:10px 12px;border-radius:var(--r)}
+:root{--fa:#2f4fb5;--fc:#0f7c8c;--fp:#8a3fa0;--fs:#1f7a4d;--fo:#a35f00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--fa:#8ea6ff;--fc:#5cc8d6;--fp:#d9a2ea;--fs:#5fd19a;--fo:#f0b350}}
+:root[data-theme="dark"]{--fa:#8ea6ff;--fc:#5cc8d6;--fp:#d9a2ea;--fs:#5fd19a;--fo:#f0b350}
+.ic{--fx:var(--accent);display:inline-grid;place-items:center;width:34px;height:34px;border-radius:var(--r);flex:none;color:var(--fx);background:color-mix(in srgb,var(--fx) 14%,transparent)}
+.ic svg{width:20px;height:20px}
+.fam-appareil{--fx:var(--fa)} .fam-compte{--fx:var(--fc)} .fam-app{--fx:var(--fp)} .fam-site{--fx:var(--fs)} .fam-outil{--fx:var(--fo)}
+button.chip .ic{width:22px;height:22px;border-radius:var(--r);margin:-3px 2px -3px -6px} button.chip .ic svg{width:15px;height:15px}
+button.chip[aria-pressed="true"] .ic{background:rgba(255,255,255,.2);color:inherit}
+.nmrow{display:flex;gap:10px;align-items:center}
+.famtabs{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(175px,1fr))}
+button.famtab{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:var(--r);padding:10px;font-weight:600;justify-content:flex-start;gap:10px;text-align:left;line-height:1.2}
+button.famtab[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.dhead{display:flex;gap:12px;align-items:center}
+.dhead .ic{width:44px;height:44px} .dhead .ic svg{width:26px;height:26px}
+.agebox{background:var(--bg);border-radius:var(--r);padding:12px}
+.verdict{padding:10px 12px;border-radius:var(--r);font-size:.9rem} .verdict.ok{background:var(--ok-soft)} .verdict.warn{background:var(--amber-soft)}
+button.task .ic{margin-bottom:4px}
+.seg{gap:4px}
+table.mx{min-width:760px}
+table.mx th,table.mx td{vertical-align:middle}
+table.mx th[scope="row"] button{display:flex;gap:8px;align-items:center;text-align:left;font-weight:600;color:var(--ink)}
+table.mx th[scope="row"] .ic{width:28px;height:28px} table.mx th[scope="row"] .ic svg{width:17px;height:17px}
+table.mx .hl{background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.thic svg{width:16px;height:16px;vertical-align:-3px;margin-right:6px}
+button.cell{background:transparent;border:1px solid transparent;color:var(--ink);padding:6px;border-radius:var(--r);display:grid;gap:3px;justify-items:start;text-align:left;font-weight:400;width:100%}
+button.cell:hover{border-color:var(--accent)}
+.layer{background:var(--bg);border-radius:var(--r);padding:12px;display:grid;gap:4px}
+.tipbox{background:var(--amber-soft)}
+.brand{display:flex;gap:12px;align-items:center}
+.brand h1{font-size:1.55rem;line-height:1.1}
+.brand-mark{width:40px;height:40px;border-radius:var(--r);background:var(--accent);color:#fff;display:inline-grid;place-items:center;font-family:var(--display);font-weight:700;font-size:.95rem;letter-spacing:.02em;flex:none}
+.brand-mark.big{width:56px;height:56px;font-size:1.3rem;margin-bottom:12px}
+.dlg>*{min-width:0}
+dialog{max-width:760px}
+@media (max-width:600px){dialog{width:100%;max-width:none;margin:auto 0 0;border-radius:var(--r) var(--r) 0 0;max-height:92vh}.dlg{max-height:92vh}}
+.screens{display:grid;gap:4px}
+button.screenrow{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;background:var(--bg);border:1px solid transparent;color:var(--ink);font-weight:500;text-align:left;padding:8px 10px}
+button.screenrow svg{width:18px;height:18px;color:var(--muted)}
+button.screenrow small{display:block;color:var(--muted);font-size:.8rem}
+button.screenrow:hover:not([disabled]){border-color:var(--accent)}
+button.screenrow[disabled]{opacity:.55;cursor:default}
+.kidtabs{display:flex;gap:8px;overflow-x:auto;padding:2px}
+button.kidtab{background:var(--surface);color:var(--ink);border:1px solid var(--line);padding:8px 14px 8px 8px;font-weight:600;gap:10px;white-space:nowrap;flex:none}
+button.kidtab small{display:block;font-weight:400;color:var(--muted);font-size:.78rem;line-height:1.1}
+button.kidtab span{text-align:left}
+button.kidtab[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 -3px 0 var(--accent)}
+.kidtab .avatar,.kidtile .avatar{width:34px;height:34px;font-size:.95rem}
+.avatar.all{background:var(--ink)}
+.avatar.all svg{width:18px;height:18px}
+.avatar.lg{width:56px;height:56px;font-size:1.5rem}
+.avatar.xl{width:72px;height:72px;font-size:2rem}
+.badge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:var(--accent);color:#fff;font-size:.72rem;font-weight:700}
+.badge.warn{background:var(--amber)}
+.kidgrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+button.kidtile{display:grid;gap:10px;align-content:start;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-top:5px solid var(--kc);padding:16px;text-align:left;font-weight:400}
+button.kidtile:hover{border-color:var(--accent);border-top-color:var(--kc)}
+.kidtile .kidhead small{display:block;color:var(--muted);font-size:.82rem}
+.tilebar{display:grid;gap:2px}
+.reqs{display:grid;gap:6px;background:var(--accent-soft);padding:12px;border-radius:var(--r)}
+.req{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.usegroup{display:grid;gap:6px}
+.uselist{display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+button.userow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--bg);color:var(--ink);border:1px solid transparent;font-weight:600;text-align:left;padding:8px 10px}
+button.userow:hover{border-color:var(--accent)}
+.userow .un small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+.userow .ic{width:30px;height:30px}
+/* espace enfant */
+.childmode{min-height:100vh;background:color-mix(in srgb,var(--kc) 7%,var(--bg))}
+.ctop{background:var(--surface);border-bottom:1px solid var(--line)}
+.ctop-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 20px}
+.cmain{padding-top:24px;padding-bottom:60px;display:grid;gap:18px;max-width:900px}
+.ccard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:grid;gap:12px;align-content:start}
+.ccard h2{font-size:1.25rem}
+.ccard.hero{grid-template-columns:auto 1fr;align-items:center;gap:20px;border-top:6px solid var(--kc)}
+.ccard.hero h1{font-size:2rem}
+.ccard.help{background:var(--amber-soft);border-color:transparent}
+.cgrid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.cgrid2{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.citem{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--bg);padding:10px;border-radius:var(--r)}
+.citem small{display:block;color:var(--muted);font-size:.82rem}
+.help .citem{background:var(--surface);grid-template-columns:auto 1fr}
+.num{font-family:var(--display);font-size:1.6rem;color:var(--ink);min-width:62px}
+ul.seen{margin:0;padding-left:20px;display:grid;gap:6px}
+ul.seen li.never{list-style:none;margin-left:-20px;padding:10px 12px;background:var(--ok-soft);border-radius:var(--r)}
+@media (max-width:560px){.ccard.hero{grid-template-columns:1fr}}
+/* Direction D : B en plus moderne */
+header.top{background:var(--navy);color:#fff;border-bottom:none}
+header.top .brand h1{color:#fff}
+header.top .brand p{color:#b9c2de}
+header.top .brand-mark{background:#fff;color:var(--navy);border-radius:12px}
+header.top .saved{color:#b9c2de}
+header.top button.ghost{color:#fff;border-color:rgba(255,255,255,.45);border-radius:999px}
+header.top input.hsearch{background-repeat:no-repeat;background-position:12px center;background-size:16px;padding-left:36px;border-radius:999px;border-color:transparent;background-color:rgba(255,255,255,.12);color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dde3f5' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6'/%3E%3Cpath d='M15 15l5.5 5.5'/%3E%3C/svg%3E")}
+header.top input.hsearch::placeholder{color:#b9c2de}
+nav.tabs{background:rgba(255,255,255,.08);border-radius:999px;padding:4px;width:max-content;max-width:100%;margin-bottom:16px;gap:2px}
+nav.tabs a{border-bottom:none;border-radius:999px;color:#dde3f5;padding:8px 13px}
+nav.tabs a:hover{color:#fff;background:rgba(255,255,255,.08)}
+nav.tabs a[aria-current="page"]{background:#fff;color:var(--navy)}
+.card,.item,.stat.box{border-color:transparent;box-shadow:var(--shadow)}
+.card.soft{box-shadow:none}
+.card.kid{border-top:6px solid var(--kc)}
+button,.btn,input[type="text"],input[type="search"],input[type="date"],input[type="number"],select,textarea{border-radius:var(--rs)}
+.todo li,.stat,.kidctl,.layer,.agebox,.reqs,button.userow,button.screenrow,.citem,.verdict,.banner{border-radius:var(--rs)}
+.banner{background:var(--amber-soft)}
+button.kidtab{border-radius:999px;padding:6px 16px 6px 6px;box-shadow:none}
+button.kidtab[aria-selected="true"]{background:var(--accent-soft);border-color:var(--accent);box-shadow:none}
+button.kidtile{border-color:transparent;box-shadow:var(--shadow);border-radius:var(--r);border-top:5px solid var(--kc)}
+button.famtab{border-color:transparent;box-shadow:var(--shadow)}
+button.famtab[aria-pressed="true"]{box-shadow:0 0 0 2px var(--accent)}
+button.ucard{border-color:transparent;box-shadow:var(--shadow)}
+dialog{border:none;border-radius:18px}
+.childmode{background:color-mix(in srgb,var(--kc) 9%,#eef2ff)}
+.ccard{border:none;border-radius:18px;box-shadow:var(--shadow)}
+.ccard.hero{background:var(--kc);color:#fff;border-top:none}
+.ccard.hero .lead{color:rgba(255,255,255,.9)}
+.ccard.hero .avatar{background:#fff;color:var(--kc)}
+.ccard.help{background:var(--amber-soft)}
+.ctop{border-bottom:none;box-shadow:0 1px 0 var(--line)}
+.ctop .brand-mark{background:var(--navy)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--navy:#0b1430;--shadow:none}:root:not([data-theme="light"]) .card,:root:not([data-theme="light"]) .item{border-color:var(--line)}}
+:root[data-theme="dark"]{--navy:#0b1430;--shadow:none}
+.ic.img{background:transparent;border-radius:50%;overflow:hidden;padding:0}
+.ic.img img{width:100%;height:100%;object-fit:contain;border-radius:inherit}
+.icontools{margin-top:4px;gap:6px}
+label.linklike{color:var(--accent);font-weight:600;font-size:.85rem;cursor:pointer}
+label.linklike:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+@media print{
+  header.top,nav,.no-print,.banner{display:none!important}
+  body{background:#fff;color:#000}
+  .card{border:none;padding:0}
+  main{padding:0}
+}
+@media (max-width:420px){.wrap{padding:0 16px} h1{font-size:1.4rem}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Direction B : sobre et structuré */
+header.top{border-bottom:1px solid var(--line)}
+header.top h1{font-size:1.6rem;font-weight:700}
+nav.tabs a{display:flex;gap:7px;align-items:center;font-size:.95rem}
+nav.tabs a svg{width:17px;height:17px}
+nav.tabs a[aria-current="page"]{border-bottom-color:var(--accent);color:var(--ink)}
+.hsearch{padding-left:34px;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a5f6b' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6'/%3E%3Cpath d='M15 15l5.5 5.5'/%3E%3C/svg%3E") no-repeat 10px center/16px}
+.card{box-shadow:none}
+.card.kid{border-top-width:6px}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--kc,var(--accent));color:#fff;display:inline-grid;place-items:center;font-family:var(--display);font-weight:700;font-size:1.15rem;flex:none}
+.kidhead{display:flex;gap:12px;align-items:center}
+.card.soft{background:var(--accent-soft);border-color:transparent}
+.stat{background:var(--bg);border:none;padding:12px}
+.stat b{font-size:1.55rem}
+.todo li{border-radius:var(--r)}
+button,.btn{border-radius:var(--r)}
+.kicker{letter-spacing:.07em}
+.sitefoot{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;font-size:.85rem;color:var(--muted);padding-top:8px;padding-bottom:32px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<dialog id="dlg" aria-labelledby="dlg-title"><div class="dlg" id="dlg-body"></div></dialog>
+<input type="file" id="import-file" accept=".json,application/json" class="hide">
+<script>
+(function(){
+"use strict";
+var STORE = "vie-numerique-famille.v1";
+var COLORS = ["#2f4fb5","#8a3fa0","#1f7a4d","#c0560f","#0f7c8c","#b42318"];
+
+/* ============ Catalogue : ce que l'outil sait expliquer ============ */
+var TYPES = [["appareil","Appareils"],["compte","Comptes"],["reseau","Messageries et réseaux"],["jeu","Jeux"],["video","Vidéo"],["ecole","École et apprentissage"],["ia","Intelligence artificielle"],["achat","Achats et ventes"],["outil","Outils de contrôle"],["navigateur","Navigateurs"]];
+var FEATS = {messagerie:"Messagerie",inconnus:"Contact avec des inconnus",public:"Contenus publics",geoloc:"Localisation",achats:"Achats",ia:"IA intégrée",ephemere:"Messages éphémères",voix:"Vocal ou vidéo"};
+var STATUS = [["","Non utilisé"],["utilise","Utilisé"],["discussion","En discussion"],["non","Pas pour l'instant"]];
+
+var CAT = [
+ {id:"iphone",name:"iPhone",type:"appareil",ctl:"Temps d'écran (Partage familial Apple)",url:"https://support.apple.com/fr-fr/HT201304",feats:["messagerie","geoloc","achats"],
+  what:"Le smartphone d'Apple. Tout se règle depuis votre propre iPhone, grâce au Partage familial.",
+  risks:["Usage tard le soir","Achats dans les apps","Contenus inadaptés sur le web"],
+  settings:["Créer le Partage familial et y ajouter votre enfant","Temps d'écran : un temps d'arrêt le soir et la nuit","Activer « Demander l'achat »","Contenu et confidentialité : classement d'âge adapté, sites web limités","Activer la Sécurité des communications (floute les images de nudité reçues)"]},
+ {id:"ipad",name:"iPad",type:"appareil",ctl:"Temps d'écran (Partage familial Apple)",url:"https://support.apple.com/fr-fr/HT201304",feats:["achats"],
+  what:"La tablette d'Apple. Mêmes réglages que l'iPhone, depuis votre appareil.",
+  risks:["Temps passé sans s'en rendre compte","Achats dans les apps"],
+  settings:["Ajouter l'enfant au Partage familial","Temps d'arrêt et limites par catégorie d'apps","Activer « Demander l'achat »","Sites web limités et classement d'âge adapté","Limites de communication : contacts connus uniquement"]},
+ {id:"android",name:"Smartphone ou tablette Android",type:"appareil",ctl:"Google Family Link",url:"https://families.google.com/families",feats:["messagerie","geoloc","achats"],
+  what:"Samsung, Xiaomi, Google Pixel… Le contrôle passe par l'app Family Link, installée sur votre téléphone.",
+  risks:["Installation d'apps sans accord","Usage la nuit","Contenus inadaptés"],
+  settings:["Installer Family Link sur votre téléphone et superviser le compte Google de l'enfant","Fixer une heure de coucher pour l'appareil","Exiger votre accord pour les nouvelles apps","Activer les filtres de Chrome (ils n'agissent que dans Chrome)"]},
+ {id:"windows",name:"Ordinateur Windows",type:"appareil",ctl:"Microsoft Family Safety",url:"https://family.microsoft.com",feats:["achats"],
+  what:"Le PC familial ou celui de l'enfant. Le contrôle passe par son compte Microsoft.",
+  risks:["Navigation sans filtre dans un autre navigateur","Session avec droits d'administrateur"],
+  settings:["Créer une session au nom de l'enfant avec son compte Microsoft, sans droits d'administrateur","Fixer des plages horaires","Activer les filtres web (ils marchent dans Edge ; les autres navigateurs sont alors bloqués)","Recevoir le rapport d'activité hebdomadaire"]},
+ {id:"mac",name:"Mac",type:"appareil",ctl:"Temps d'écran (macOS)",url:"https://support.apple.com/fr-fr/HT201304",feats:[],
+  what:"L'ordinateur d'Apple. Mêmes outils que l'iPhone.",
+  risks:["Session partagée avec un adulte"],
+  settings:["Créer une session standard au nom de l'enfant","L'ajouter au Partage familial et régler Temps d'écran"]},
+ {id:"switch",name:"Nintendo Switch",type:"appareil",ctl:"App Contrôle parental Nintendo Switch",url:"https://accounts.nintendo.com",feats:["inconnus","achats","voix"],
+  what:"La console de Nintendo. Une app gratuite sur votre téléphone permet de tout régler.",
+  risks:["Parties qui s'éternisent","Achats sur l'eShop","Échanges avec d'autres joueurs en ligne"],
+  settings:["Installer l'app Contrôle parental Nintendo Switch et lier la console","Fixer un temps de jeu quotidien","Restreindre les jeux selon le classement PEGI","Limiter la communication et les dépenses"]},
+ {id:"playstation",name:"PlayStation",type:"appareil",ctl:"Gestion familiale PlayStation",url:"",feats:["inconnus","achats","voix"],
+  what:"La console de Sony. Les règles se fixent depuis votre compte parent PlayStation.",
+  risks:["Chat vocal avec des inconnus","Dépenses"],
+  settings:["Créer un compte enfant rattaché à votre compte","Limiter le temps de jeu et les dépenses","Restreindre la communication avec d'autres joueurs"]},
+ {id:"xbox",name:"Xbox",type:"appareil",ctl:"App Xbox Family Settings",url:"",feats:["inconnus","achats","voix"],
+  what:"La console de Microsoft, gérée avec l'app Xbox Family Settings.",
+  risks:["Chat vocal avec des inconnus","Dépenses"],
+  settings:["Installer l'app Xbox Family Settings","Fixer le temps d'écran et les classements autorisés","Limiter le multijoueur et la communication"]},
+ {id:"compte-google",name:"Compte Google",type:"compte",ctl:"Google Family Link",url:"https://families.google.com/families",feats:["messagerie"],
+  what:"Gmail, YouTube, Google Drive… Un compte créé pour un enfant peut être supervisé avec Family Link, même sur un iPhone ou un iPad.",
+  risks:["Connexion depuis un navigateur que Family Link ne contrôle pas"],
+  settings:["Créer le compte avec la vraie date de naissance","Le superviser dans Family Link","Lire les alertes de connexion reçues par e-mail"]},
+ {id:"compte-microsoft",name:"Compte Microsoft",type:"compte",ctl:"Microsoft Family Safety",url:"https://family.microsoft.com",feats:["achats"],
+  what:"Nécessaire pour Windows, Xbox et Minecraft. Il se rattache à votre groupe familial Microsoft.",
+  risks:["Achats non approuvés"],
+  settings:["Ajouter l'enfant à votre groupe familial","Exiger votre accord pour les achats"]},
+ {id:"whatsapp",name:"WhatsApp",type:"reseau",age:13,ctl:"Contrôles parentaux WhatsApp pour les 13-17 ans",url:"https://www.whatsapp.com/security/parent-managed-accounts?lang=fr",feats:["messagerie","inconnus","geoloc","ia","voix"],
+  what:"La messagerie la plus utilisée au collège, surtout pour les groupes de classe.",
+  risks:["Ajout à des groupes par des inconnus","Images partagées puis transférées","Groupes de classe où la moquerie s'installe"],
+  settings:["Confidentialité › Groupes : « Mes contacts »","Activer la vérification en deux étapes (code PIN)","Photo de profil et « vu à » : « Mes contacts »","Désactiver le téléchargement automatique des photos et vidéos"]},
+ {id:"imessage",name:"Messages et FaceTime (Apple)",type:"reseau",ctl:"Temps d'écran : Limites de communication",url:"https://support.apple.com/fr-fr/HT201304",feats:["messagerie","voix"],
+  what:"La messagerie intégrée aux iPhone et iPad.",
+  risks:["Messages de numéros inconnus"],
+  settings:["Limites de communication : contacts uniquement","Sécurité des communications activée"]},
+ {id:"instagram",name:"Instagram",type:"reseau",age:13,ctl:"Centre familial Meta",url:"https://familycenter.meta.com/fr/",feats:["messagerie","inconnus","public","ia"],
+  what:"Photos, vidéos courtes et messages. Avec une vraie date de naissance, l'enfant obtient un « Compte Ado » mieux protégé.",
+  risks:["Comparaison permanente et pression sociale","Messages d'inconnus","Temps passé sur les vidéos"],
+  settings:["Créer le compte ensemble, avec sa vraie date de naissance","Activer la supervision depuis le Centre familial Meta","Fixer une limite de temps quotidienne","Garder le compte privé"]},
+ {id:"snapchat",name:"Snapchat",type:"reseau",age:13,ctl:"Snapchat Family Center",url:"https://parents.snapchat.com",feats:["messagerie","inconnus","geoloc","ephemere","ia"],
+  what:"Messages photo qui disparaissent, carte des amis, discussions. Très utilisé dès le collège.",
+  risks:["Fausse impression que tout s'efface (une capture reste possible)","Localisation visible sur la carte","Ajout d'inconnus"],
+  settings:["Créer votre propre compte pour activer le Family Center","Carte (Snap Map) : mode fantôme","« Qui peut me contacter » : mes amis","Désactiver l'ajout rapide"]},
+ {id:"tiktok",name:"TikTok",type:"reseau",age:13,ctl:"Connexion famille (TikTok)",url:"",feats:["public","inconnus","messagerie"],
+  what:"Vidéos courtes proposées par un algorithme très efficace pour retenir l'attention.",
+  risks:["Temps qui file sans s'en rendre compte","Contenus choquants ou défis dangereux","Comparaison et pression sociale"],
+  settings:["Créer le compte avec la vraie date de naissance","Relier votre compte avec « Connexion famille »","Limiter le temps d'écran quotidien","Garder le compte privé"]},
+ {id:"discord",name:"Discord",type:"reseau",age:13,ctl:"Discord Family Center",url:"https://discord.com/safety-family-center",feats:["messagerie","inconnus","voix","achats"],
+  what:"Discussions par communautés (« serveurs »), souvent autour des jeux vidéo.",
+  risks:["Serveurs ouverts à des inconnus","Vocal avec des personnes jamais rencontrées"],
+  settings:["Relier votre compte avec le Family Center","Messages privés : amis uniquement","Rejoindre seulement des serveurs de gens connus"]},
+ {id:"youtube",name:"YouTube",type:"video",age:13,ctl:"Google Family Link",url:"https://families.google.com/families",feats:["public","inconnus"],
+  what:"Vidéos de tout type. Avant 13 ans, préférez YouTube Kids ou l'expérience supervisée de Family Link.",
+  risks:["Enchaînement automatique des vidéos","Commentaires","Contenus inadaptés"],
+  settings:["Avant 13 ans : YouTube Kids ou compte supervisé","Désactiver la lecture automatique","Régler le niveau de contenu dans Family Link"]},
+ {id:"roblox",name:"Roblox",type:"jeu",ctl:"Contrôles parentaux Roblox",url:"",feats:["inconnus","messagerie","achats","voix"],
+  what:"Des milliers de mini-jeux créés par les joueurs, avec un chat et une monnaie virtuelle (Robux).",
+  risks:["Chat avec des inconnus","Dépenses en Robux","Jeux de qualité très inégale"],
+  settings:["Créer le compte avec la vraie date de naissance","Relier votre compte parent","Limiter ou couper le chat","Fixer un plafond de dépenses"]},
+ {id:"minecraft",name:"Minecraft",type:"jeu",ctl:"Microsoft Family / Xbox Family Settings",url:"https://family.microsoft.com",feats:["inconnus","messagerie","achats"],
+  what:"Jeu de construction créatif. Le multijoueur se règle par le compte Microsoft.",
+  risks:["Serveurs publics avec des inconnus"],
+  settings:["Rattacher son compte Microsoft à votre famille","Autoriser le multijoueur seulement avec des amis"]},
+ {id:"fortnite",name:"Fortnite",type:"jeu",ctl:"Contrôles parentaux Epic Games",url:"",feats:["inconnus","voix","achats"],
+  what:"Jeu de combat en ligne très populaire (classé PEGI 12).",
+  risks:["Chat vocal avec des inconnus","Achats de V-bucks","Parties longues"],
+  settings:["Activer les contrôles parentaux Epic Games","Couper ou limiter le chat vocal","Bloquer les achats sans code"]},
+ {id:"duolingo",name:"Duolingo",type:"ecole",age:13,ctl:"Réglages de confidentialité Duolingo (site web)",url:"https://www.duolingo.com/settings/privacy",feats:["public","inconnus","ia","achats"],
+  what:"Apprentissage des langues. Avant 13 ans, un compte enfant sans classements ni amis ; ensuite, des fonctions sociales apparaissent.",
+  risks:["Profil public visible","Abonnés et commentaires après 13 ans"],
+  settings:["Saisir la vraie date de naissance","Passer le profil en privé (sur le site web)"]},
+ {id:"ent",name:"ENT ou Pronote",type:"ecole",ctl:"Accès parent fourni par l'établissement",url:"",feats:["messagerie"],
+  what:"L'espace numérique de l'école : notes, devoirs, messagerie avec les professeurs.",
+  risks:["Peu de risques ; la messagerie reste un vrai canal officiel"],
+  settings:["Activer votre propre accès parent","Regarder ensemble les devoirs de la semaine"]},
+ {id:"chatgpt",name:"ChatGPT et autres IA",type:"ia",age:13,ctl:"Contrôles parentaux proposés par l'éditeur",url:"",feats:["ia","messagerie"],
+  what:"Assistants qui répondent à tout : utiles pour comprendre, risqués pour faire les devoirs à sa place.",
+  risks:["Réponses fausses présentées avec assurance","Confidences personnelles","Devoirs faits par l'IA"],
+  settings:["Parler ensemble de ce qu'on peut lui confier ou non","Activer les contrôles parentaux s'ils existent","Utiliser l'IA pour expliquer, pas pour rendre le travail"]},
+ {id:"controle-tiers",name:"Logiciel de contrôle parental (Bitdefender, Norton, Qustodio…)",type:"outil",ctl:"",url:"",feats:[],
+  what:"Un outil payant qui filtre le web sur plusieurs appareils et navigateurs à la fois.",
+  risks:["Règles en double avec les outils d'Apple, Google ou Microsoft"],
+  settings:["Choisir un seul outil pour limiter le temps, l'autre pour filtrer","Vérifier qu'il couvre tous les navigateurs installés"]},
+ {id:"navigateurs",name:"Autres navigateurs (Firefox, Chrome sur iPhone…)",type:"navigateur",ctl:"Souvent aucun",url:"",feats:["public"],
+  what:"Les filtres d'un outil ne s'appliquent souvent que dans un navigateur précis. Un autre navigateur peut passer à côté.",
+  risks:["Navigation sans filtre"],
+  settings:["Savoir quels navigateurs sont installés","Les bloquer, ou utiliser un outil qui les couvre tous"]}
+];
+/* ---- Familles, pictogrammes, conditions d'utilisation ---- */
+var FAMS = [
+ ["appareil","Appareils","Les objets : téléphone, tablette, ordinateur, console."],
+ ["compte","Comptes","L'identité en ligne de l'enfant. Elle relie ses appareils, ses achats et ses apps."],
+ ["app","Applications","Ce qu'on installe sur un appareil : messageries, réseaux sociaux, jeux, vidéo, école, IA."],
+ ["site","Sites web","Ce qu'on consulte dans un navigateur, sans rien installer."],
+ ["outil","Outils parentaux","Ce que vous utilisez, vous, pour régler et suivre."]
+];
+function famOf(it){ return it.fam || ({appareil:"appareil",compte:"compte",outil:"outil",site:"site"})[it.type] || "app"; }
+function famLabel(f){ for(var i=0;i<FAMS.length;i++) if(FAMS[i][0]===f) return FAMS[i][1]; return f; }
+CAT = CAT.concat([
+ {id:"compte-apple",name:"Compte Apple (identifiant Apple)",type:"compte",ctl:"Partage familial Apple",url:"https://support.apple.com/fr-fr/HT201304",feats:["achats"],
+  what:"Le compte qui relie iPhone, iPad et Mac, les achats et iCloud. Pour un enfant, il se crée depuis votre Partage familial.",
+  risks:["Utiliser le compte d'un parent sur l'appareil de l'enfant"],settings:["Créer son propre compte depuis le Partage familial","Ne jamais laisser l'enfant sur votre propre compte"]},
+ {id:"temps-ecran",name:"Temps d'écran (Apple)",type:"outil",guide:"apple",url:"https://support.apple.com/fr-fr/HT201304",feats:[],
+  what:"L'outil de contrôle parental gratuit, intégré aux iPhone, iPad et Mac. Il se règle depuis votre propre appareil Apple."},
+ {id:"family-link",name:"Google Family Link",type:"outil",guide:"fl-android",url:"https://families.google.com/families",feats:[],
+  what:"L'outil gratuit de Google : il supervise un compte Google et, sur Android, l'appareil lui-même. L'app parent existe sur Android et sur iPhone."},
+ {id:"ms-family",name:"Microsoft Family Safety",type:"outil",guide:"microsoft",url:"https://family.microsoft.com",feats:[],
+  what:"L'outil gratuit de Microsoft pour Windows, la Xbox et Minecraft, à gérer depuis le site ou l'app mobile."},
+ {id:"nintendo-app",name:"App Contrôle parental Nintendo Switch",type:"outil",guide:"nintendo",url:"https://accounts.nintendo.com",feats:[],
+  what:"L'app gratuite de Nintendo, sur votre téléphone, pour régler et suivre la console."},
+ {id:"box-fai",name:"Contrôle parental de la box internet",type:"outil",guide:"box",url:"",feats:[],
+  what:"Il agit sur tout le Wi-Fi de la maison. En général inclus dans l'abonnement, mais sans effet en 4G ou 5G."},
+ {id:"netflix",name:"Netflix",type:"video",feats:["achats"],ctl:"Profils et contrôle parental Netflix",url:"",
+  what:"Films et séries en streaming. Chaque membre de la famille peut avoir son profil, avec une limite d'âge.",
+  risks:["Contenus pour adultes depuis un profil adulte","Enchaînement automatique des épisodes"],settings:["Créer un profil Enfants ou un profil avec limite d'âge","Verrouiller les profils adultes par un code PIN","Désactiver la lecture automatique de l'épisode suivant"]},
+ {id:"disney",name:"Disney+",type:"video",feats:["achats"],ctl:"Profils et contrôle parental Disney+",url:"",
+  what:"Films et séries en streaming. Les profils peuvent être limités selon l'âge.",
+  risks:["Contenus pour adultes depuis un profil adulte"],settings:["Créer un profil adapté à l'âge de l'enfant","Protéger les profils adultes par un code PIN"]},
+ {id:"prime-video",name:"Prime Video",type:"video",feats:["achats"],ctl:"Contrôle parental Prime Video (code PIN)",url:"https://www.primevideo.com",
+  what:"Films et séries d'Amazon, souvent inclus dans l'abonnement Amazon Prime ou dans une box. On peut y louer ou acheter des films en plus.",
+  risks:["Contenus pour adultes depuis un profil adulte","Location ou achat de films en un clic, payés avec la carte du compte Amazon"],
+  settings:["Créer un profil Enfants pour les plus jeunes","Définir le code PIN du contrôle parental (Compte et paramètres › Contrôle parental)","Exiger ce code PIN pour les achats et les locations","Choisir la limite d'âge (7+, 13+, 16+ ou 18+) et l'appliquer à tous les appareils"]},
+ {id:"vinted",name:"Vinted",type:"achat",age:18,feats:["achats","messagerie","inconnus"],ctl:"Aucun contrôle parental : le compte est celui du parent",url:"https://www.vinted.fr/help/105",
+  what:"Achat et vente de vêtements et objets d'occasion entre particuliers. Réservé aux 18 ans et plus : pour un mineur, c'est le parent qui ouvre le compte et en reste responsable.",
+  risks:["Arnaques : faux paiements, demandes de payer ou de discuter hors de Vinted","Messages d'inconnus, parfois insistants","Photos de l'enfant ou de la maison dans les annonces","Données personnelles (adresse, nom complet) à l'envoi des colis"],
+  settings:["Ouvrir le compte au nom du parent, avec votre propre moyen de paiement","Toujours payer et discuter dans l'app, jamais par virement ou lien externe","Ne pas montrer son visage ni l'intérieur de la maison sur les photos","Utiliser un point relais plutôt que l'adresse du domicile","Regarder ensemble les ventes et les messages de temps en temps"]},
+ {id:"bitdefender",name:"Bitdefender Central (contrôle parental)",type:"outil",guide:"suite",url:"https://central.bitdefender.com",feats:[],
+  what:"L'espace en ligne de Bitdefender et son contrôle parental : filtrage du web, temps d'écran et localisation, réglés pour chaque enfant depuis le site ou l'app Central.",
+  risks:["Règles en double avec Temps d'écran, Family Link ou Microsoft Family","Un navigateur non couvert peut échapper au filtrage"],
+  settings:["Créer un profil par enfant et y rattacher ses appareils","Choisir un seul outil pour limiter le temps, l'autre pour filtrer","Vérifier que le filtrage couvre tous les navigateurs installés (Firefox compris)"]},
+ {id:"bitdefender-antivirus",name:"Antivirus Bitdefender",type:"outil",url:"https://central.bitdefender.com",feats:[],
+  what:"La protection contre les virus, les sites piégés et les arnaques, installée sur chaque appareil (Total Security sur ordinateur, Mobile Security sur téléphone).",
+  risks:["Appareil de l'enfant oublié lors de l'installation","Abonnement expiré sans qu'on s'en rende compte"],
+  settings:["Installer la protection sur chaque appareil de l'enfant depuis Bitdefender Central","Activer la protection web (anti-hameçonnage)","Vérifier la date de fin d'abonnement et le nombre d'appareils couverts"]},
+ {id:"recherche",name:"Moteurs de recherche (Google, Bing…)",type:"site",feats:["public"],ctl:"Filtre SafeSearch",url:"",
+  what:"La porte d'entrée vers tout le web. Le filtre SafeSearch masque les résultats explicites.",
+  risks:["Résultats choquants sans filtre","Fausses informations bien classées"],settings:["Vérifier que SafeSearch est activé sur son compte","Apprendre à reconnaître une source fiable"]},
+ {id:"streaming-illegal",name:"Sites de streaming ou de téléchargement illégaux",type:"site",feats:["public"],ctl:"Filtres de l'appareil, de la box ou de la suite",url:"",
+  what:"Films, séries, matchs « gratuits » : souvent remplis de publicités trompeuses et de faux boutons de téléchargement.",
+  risks:["Publicités choquantes ou trompeuses","Virus et arnaques","Pratique illégale"],settings:["Expliquer pourquoi, et montrer les offres légales","Bloquer ces sites avec les filtres"]},
+ {id:"jeux-web",name:"Sites de jeux en ligne gratuits",type:"site",feats:["inconnus","public"],ctl:"Filtres de l'appareil",url:"",
+  what:"Des jeux jouables sans installation, financés par la publicité.",
+  risks:["Publicités envahissantes","Chats ouverts à tous"],settings:["Choisir ensemble quelques sites connus","Vérifier s'il y a un chat"]},
+ {id:"sites-adultes",name:"Sites pour adultes",type:"site",age:18,feats:["public"],ctl:"Filtres de l'appareil, de la box ou de la suite",url:"",
+  what:"Interdits aux mineurs. La loi impose à ces sites de vérifier l'âge, mais les filtres de vos appareils restent indispensables.",
+  risks:["Images choquantes, vues souvent par hasard"],settings:["Activer les filtres « contenu adulte » sur chaque appareil","En parler tôt, avec des mots adaptés"]}
+]);
+CAT.forEach(function(it){ if(it.id==="controle-tiers"){ it.guide="suite"; } });
+var TOS = {
+ iphone:"https://www.apple.com/legal/internet-services/itunes/fr/terms.html", ipad:"https://www.apple.com/legal/internet-services/itunes/fr/terms.html", mac:"https://www.apple.com/legal/internet-services/itunes/fr/terms.html",
+ "compte-apple":"https://www.apple.com/legal/internet-services/itunes/fr/terms.html", imessage:"https://www.apple.com/legal/internet-services/itunes/fr/terms.html", "temps-ecran":"https://www.apple.com/legal/internet-services/itunes/fr/terms.html",
+ android:"https://policies.google.com/terms?hl=fr", "compte-google":"https://policies.google.com/terms?hl=fr", "family-link":"https://policies.google.com/terms?hl=fr", recherche:"https://policies.google.com/terms?hl=fr",
+ windows:"https://www.microsoft.com/fr-fr/servicesagreement", "compte-microsoft":"https://www.microsoft.com/fr-fr/servicesagreement", xbox:"https://www.microsoft.com/fr-fr/servicesagreement", "ms-family":"https://www.microsoft.com/fr-fr/servicesagreement",
+ playstation:"https://www.playstation.com/fr-fr/legal/psn-terms-of-service/",
+ whatsapp:"https://www.whatsapp.com/legal/terms-of-service-eea", instagram:"https://help.instagram.com/581066165581870", snapchat:"https://www.snap.com/terms",
+ tiktok:"https://www.tiktok.com/legal/page/eea/terms-of-service/fr", discord:"https://discord.com/terms", youtube:"https://www.youtube.com/t/terms",
+ roblox:"https://en.help.roblox.com/hc/fr/articles/115004647846", minecraft:"https://www.minecraft.net/fr-fr/eula", fortnite:"https://www.epicgames.com/site/fr/tos",
+ duolingo:"https://www.duolingo.com/terms", netflix:"https://help.netflix.com/legal/termsofuse", vinted:"https://www.vinted.fr/terms-and-conditions", "prime-video":"https://www.primevideo.com/terms", chatgpt:"https://openai.com/fr-FR/policies/eu-terms-of-use/"
+};
+CAT.forEach(function(it){ if(TOS[it.id]) it.tos=TOS[it.id]; });
+var ICON_OF = {iphone:"phone",android:"phone",ipad:"tablet",windows:"laptop",mac:"laptop",switch:"console",playstation:"console",xbox:"console",
+ instagram:"camera",snapchat:"camera",tiktok:"play",youtube:"play","box-fai":"router",recherche:"search",navigateurs:"browser"};
+var TYPE_ICON = {appareil:"phone",compte:"key",reseau:"chat",jeu:"gamepad",video:"play",ecole:"book",ia:"spark",achat:"bag",outil:"shield",navigateur:"browser",site:"globe"};
+var SVG = {
+ bag:'<path d="M5.5 8h13l-1 12.5h-11L5.5 8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>',
+ phone:'<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
+ tablet:'<rect x="4.5" y="3" width="15" height="18" rx="2.5"/><path d="M11 18h2"/>',
+ laptop:'<rect x="5" y="5" width="14" height="10" rx="1.5"/><path d="M3 19h18"/>',
+ console:'<rect x="2.5" y="7" width="19" height="10" rx="5"/><path d="M7 10.5v3M5.5 12h3"/><circle cx="16" cy="11" r=".9"/><circle cx="18" cy="13" r=".9"/>',
+ gamepad:'<path d="M7 8h10a4 4 0 0 1 4 4v1a3 3 0 0 1-5.4 1.8L14.5 14h-5l-1.1 1.8A3 3 0 0 1 3 13v-1a4 4 0 0 1 4-4z"/><path d="M8 10.5v3M6.5 12h3"/>',
+ chat:'<path d="M4 5h16v10H9l-5 4z"/>',
+ camera:'<rect x="3.5" y="6.5" width="17" height="13" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M9 6.5l1.2-2h3.6l1.2 2"/>',
+ play:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z"/>',
+ book:'<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20v3H6.5"/>',
+ spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
+ shield:'<path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.3-7.5 9.5-4.3-1.2-7.5-4.9-7.5-9.5V6z"/><path d="M9 12l2.2 2.2L15.5 10"/>',
+ key:'<circle cx="8" cy="12" r="4"/><path d="M12 12h9M17.5 12v3M20.5 12v2"/>',
+ globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z"/>',
+ browser:'<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M3 9h18"/><circle cx="6" cy="6.8" r=".6"/><circle cx="8.2" cy="6.8" r=".6"/>',
+ router:'<rect x="3" y="13" width="18" height="6" rx="2"/><path d="M7 16h.01M10 16h.01M8 13l-2-5M16 13l2-5"/><path d="M9.5 6.5a4 4 0 0 1 5 0"/>',
+ search:'<circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5.5 5.5"/>',
+ lock:'<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/>',
+ plus:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+ block:'<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>',
+ home:'<path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-5h4v5"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>',
+ heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
+ users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.5a5 5 0 0 1 5.5 5"/>',
+ doc:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/>'
+};
+function svgIcon(k){ return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(SVG[k]||SVG.globe)+'</svg>'; }
+function iconFor(it){ var img=(S.icons||{})[it.id]||(window.EC_ICONS||{})[it.id]; if(img) return '<span class="ic img fam-'+famOf(it)+'"><img src="'+esc(img)+'" alt=""></span>'; return '<span class="ic fam-'+famOf(it)+'">'+svgIcon(it.ic||ICON_OF[it.id]||TYPE_ICON[it.type]||"globe")+'</span>'; }
+function setIcon(itemId,file){
+  if(!file || !/^image\//.test(file.type)){ alert2("Choisissez une image (PNG, JPG ou SVG)."); return; }
+  var r=new FileReader();
+  r.onload=function(){ var im=new Image(); im.onload=function(){ var c=document.createElement("canvas"); c.width=c.height=96; var x=c.getContext("2d"); var s=Math.min(96/im.width,96/im.height)||1, w=im.width*s, hh=im.height*s; x.drawImage(im,(96-w)/2,(96-hh)/2,w,hh); try{ S.icons=S.icons||{}; S.icons[itemId]=c.toDataURL("image/png"); rerender(); }catch(e){ alert2("Cette image n'a pas pu être utilisée."); } }; im.onerror=function(){ alert2("Cette image n'a pas pu être lue."); }; im.src=r.result; };
+  r.readAsDataURL(file);
+}
+function iconKey(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\.[a-z0-9]+$/,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""); }
+function matchItem(fname){
+  var k=iconKey(fname), its=allItems();
+  return its.filter(function(i){return i.id===k;})[0] || its.filter(function(i){return iconKey(i.name)===k;})[0] || its.filter(function(i){ var n=iconKey(i.name); return n.indexOf(k)===0 || k.indexOf(i.id)===0; })[0];
+}
+function bulkIcons(files){
+  var ok=[], miss=[], left=files.length; if(!left) return;
+  files.forEach(function(f){
+    var it=matchItem(f.name);
+    if(!it || !/^image\//.test(f.type)){ miss.push(f.name); if(--left===0) done(); return; }
+    var r=new FileReader(); r.onload=function(){ var im=new Image(); im.onload=function(){ var c=document.createElement("canvas"); c.width=c.height=96; var x=c.getContext("2d"); var s=Math.min(96/im.width,96/im.height)||1, w=im.width*s, hh=im.height*s; x.drawImage(im,(96-w)/2,(96-hh)/2,w,hh); S.icons=S.icons||{}; S.icons[it.id]=c.toDataURL("image/png"); ok.push(it.name); if(--left===0) done(); }; im.onerror=function(){ miss.push(f.name); if(--left===0) done(); }; im.src=r.result; }; r.readAsDataURL(f);
+  });
+  function done(){ UI.iconMsg=(ok.length?plural(ok.length,"icône")+" ajoutée"+(ok.length>1?"s":"")+" : "+ok.join(", ")+". ":"")+(miss.length?"Non reconnu"+(miss.length>1?"s":"")+" : "+miss.join(", ")+".":""); rerender(); }
+}
+function alert2(m){ UI.msg=m; render(); }
+
+var OPENING = ["Discussion : pourquoi ce réseau, avec qui, pour quoi faire.","Création ensemble, avec sa vraie date de naissance.","Supervision activée avec l'outil officiel, expliquée à l'enfant.","Un mois d'essai, puis un point dédié.","Allègement progressif si tout va bien."];
+var READY = [["r1","La charte familiale a été lue et signée"],["r2","Il ou elle sait bloquer, signaler et quitter une conversation"],["r3","Il ou elle connaît le 3018 et sait qu'on ne sera pas puni pour avoir parlé"],["r4","La supervision est acceptée pour un mois d'essai"]];
+
+var BANDS = {
+ p:{n:"Avant le collège",key:"Les écrans se partagent et se découvrent avec vous. L'environnement fait l'essentiel : apps choisies, contacts connus, pas d'espace public.",
+   items:[["p1","Les écrans s'utilisent dans les pièces communes"],["p2","Chaque nouvelle app est choisie avec vous"],["p3","Pas de réseau social (13 ans minimum dans leurs conditions)"],["p4","Messagerie limitée aux contacts connus"],["p5","Achats bloqués ou soumis à votre accord"],["p6","YouTube Kids ou YouTube supervisé"],["p7","Trois réflexes appris : pas d'inconnus, je ferme et je le dis, mes codes sont secrets"]]},
+ c:{n:"Collège",key:"C'est souvent l'âge du premier téléphone et des groupes de classe. On garde des garde-fous sur la nuit, les achats et les inconnus, et on ouvre le reste pas à pas.",
+   items:[["c1","Le téléphone dort hors de la chambre"],["c2","Un temps d'arrêt le soir est réglé"],["c3","Les achats demandent votre accord"],["c4","Les filtres de contenus sont actifs"],["c5","Les réseaux sociaux s'ouvrent ensemble, un à la fois"],["c6","Il ou elle connaît le 3018"],["c7","On parle des groupes de classe et de ce qu'on y partage"]]},
+ l:{n:"Lycée",key:"L'objectif est l'autonomie. Les contrôles s'allègent ; la confiance et la discussion prennent le relais.",
+   items:[["l1","Il ou elle règle seul(e) sa confidentialité"],["l2","La double authentification est activée sur ses comptes"],["l3","On a parlé d'arnaques, de chantage aux images et de réputation"],["l4","Les contrôles restants ont été revus ensemble"]]}
+};
+var PARENT = [["s1","Double authentification sur vos comptes Apple, Google, Microsoft","Tout le contrôle parental repose sur ces comptes."],["s2","Code Temps d'écran secret, différent de vos autres codes",""],["s3","Un seul outil pour limiter le temps sur chaque appareil","Deux outils qui se contredisent poussent au contournement."],["s4","Rapports hebdomadaires activés et lus",""],["s5","Mises à jour automatiques sur tous les appareils",""],["s6","Mêmes grandes règles chez tous les adultes qui gardent les enfants",""]];
+var TOPICS = [
+ ["Arnaques et hameçonnage","Faux concours, faux colis, messages trop beaux pour être vrais.",6],
+ ["Mots de passe","Un code secret, la double authentification, ne jamais prêter son compte.",6],
+ ["Qui me voit en ligne ?","Profil privé, abonnés, ce qu'on publie et pour qui.",11],
+ ["Cyberharcèlement et 3018","Reconnaître, ne pas rester témoin, faire des captures, parler.",8],
+ ["Vrai ou faux ?","Vérifier une info, reconnaître une image fabriquée par IA.",9],
+ ["Images et chantage","Jamais d'image intime ; si quelqu'un menace, on en parle, on ne paie pas.",11],
+ ["Jeux en ligne","Inconnus dans les jeux, achats intégrés.",6],
+ ["Localisation","Ce que révèlent une photo, une story, une carte partagée.",9],
+ ["Sommeil et écrans","Pourquoi le téléphone dort hors de la chambre.",6],
+ ["Groupes de classe","Ce qu'on écrit, ce qu'on transfère, quand quitter un groupe.",10],
+ ["Chatbots et IA","Ce qu'une IA retient, ce qu'on ne lui confie pas.",9],
+ ["Bilan de l'année","Relire le journal, ajuster la charte, assouplir ce qui peut l'être.",6]
+];
+var CHARTE = {
+ parent:["Expliquer chaque règle et chaque outil, sans surveillance cachée.","Ne jamais lire vos messages sans vous le dire.","Ne pas punir le fait de m'avoir parlé d'un problème.","Assouplir les règles à mesure que vous grandissez.","Respecter moi aussi les moments sans écran."],
+ kids:["Te parler dès que quelque chose me met mal à l'aise.","Pas de compte secret, pas de deuxième compte.","Jamais de photo intime, ni envoyée ni transférée.","Garder mes codes pour moi.","Respecter les autres en ligne comme en vrai.","Le téléphone dort hors de la chambre."],
+ common:["Pas d'écran à table.","Les demandes d'app ou de réseau se font au point famille.","Un joker par mois, demandé à l'avance."]
+};
+
+/* ============ État ============ */
+function blank(){ return {app:"vie-numerique-famille",version:1,family:"",onboarded:false,kids:[],use:{},custom:[],checks:{},topics:{},journal:[],requests:[],icons:{},charte:null,lastExport:null,parent:{},parentDone:false,created:new Date().toISOString()}; }
+var S = blank(), storageOK = true;
+try { var raw = localStorage.getItem(STORE); if(raw){ S = Object.assign(blank(), JSON.parse(raw)); } } catch(e){ storageOK = false; }
+function save(){ S.updated = new Date().toISOString(); try { localStorage.setItem(STORE, JSON.stringify(S)); storageOK = true; } catch(e){ storageOK = false; } }
+var UI = {step:1, kidSel:"", child:"", appsView:"liste", mxUsed:false, as:{}, fFam:"", cq:"", cview:"situations", qEdit:false, openG:{}, fKid:"", fType:"", fUsed:false, fTodo:false, q:"", chEdit:false, pendingImport:null, wipeArmed:false, msg:""};
+
+/* ============ Utilitaires ============ */
+function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];}); }
+function uid(p){ return p+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function allItems(){ return CAT.concat(S.custom||[]); }
+function syncCustom(){ (S.custom||[]).forEach(function(c){ if(c.screens && c.screens.length){ var cells={}; c.screens.forEach(function(f){ cells[f]=[c.type==="site"?"web":(f==="web"?"web":"app")]; }); MATRIX[c.id]={acct:c.ctl||"",cells:cells,tip:"",custom:true}; } else if(MATRIX[c.id]&&MATRIX[c.id].custom){ delete MATRIX[c.id]; } }); }
+function item(id){ return allItems().filter(function(i){return i.id===id;})[0]; }
+function kid(id){ return S.kids.filter(function(k){return k.id===id;})[0]; }
+function ageOf(k){ if(!k||!k.year) return null; var n=new Date(), a=n.getFullYear()-k.year; if(k.month && (n.getMonth()+1)<k.month) a--; return a; }
+function band(a){ return a==null?"c":(a<11?"p":(a<15?"c":"l")); }
+function u(itemId,kidId){ return ((S.use[itemId]||{})[kidId])||{}; }
+function setU(itemId,kidId,patch){ S.use[itemId]=S.use[itemId]||{}; S.use[itemId][kidId]=Object.assign({},S.use[itemId][kidId]||{},patch); if(!S.use[itemId][kidId].s && !S.use[itemId][kidId].ok && !S.use[itemId][kidId].note) delete S.use[itemId][kidId]; save(); }
+function typeLabel(t){ for(var i=0;i<TYPES.length;i++) if(TYPES[i][0]===t) return TYPES[i][1]; return t; }
+function kidDot(k){ return '<span class="kdot" style="--kc:'+esc(k.color)+'"></span>'; }
+function under(it,k){ var a=ageOf(k); return it.age && a!=null && a<it.age; }
+function plural(n,s,p){ return n+" "+(n>1?(p||s+"s"):s); }
+function fmtDate(d){ try { return new Date(d.length===10?d+"T12:00:00":d).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}); } catch(e){ return d; } }
+function todayISO(){ var t=new Date(); t.setMinutes(t.getMinutes()-t.getTimezoneOffset()); return t.toISOString().slice(0,10); }
+function daysSince(iso){ if(!iso) return null; return Math.floor((Date.now()-new Date(iso).getTime())/86400000); }
+
+function todos(k){
+  var out=[];
+  allItems().forEach(function(it){
+    var x=u(it.id,k.id);
+    if(x.s==="utilise" && under(it,k)) out.push({warn:true,t:it.name+" : âge minimum "+it.age+" ans, "+k.name+" en a "+ageOf(k)+".",id:it.id,btn:"Comprendre"});
+    else if(x.s==="discussion" && under(it,k)) out.push({warn:true,t:it.name+" est en discussion : âge minimum "+it.age+" ans.",id:it.id,btn:"Le parcours"});
+    if(x.s==="utilise" && !x.ok && it.settings && it.settings.length) out.push({t:"Faire les réglages : "+it.name,id:it.id,btn:"Comment faire"});
+    if(x.s==="discussion" && !under(it,k)) out.push({t:"Préparer l'ouverture : "+it.name,id:it.id,btn:"Le parcours"});
+  });
+  out.sort(function(a,b){ return (b.warn?1:0)-(a.warn?1:0); });
+  return out;
+}
+function bandProgress(k){ var b=BANDS[band(ageOf(k))]; var n=b.items.filter(function(x){return S.checks[k.id+":"+x[0]];}).length; return {n:n,t:b.items.length,b:b}; }
+function settledCount(k){ var used=0, ok=0; allItems().forEach(function(it){ var x=u(it.id,k.id); if(x.s==="utilise" && it.settings && it.settings.length){ used++; if(x.ok) ok++; } }); return {used:used,ok:ok}; }
+function progressBar(n,t){ var p=t?Math.round(100*n/t):0; return '<div class="progress-row"><div class="progress"><i style="width:'+p+'%"></i></div><span>'+n+' / '+t+'</span></div>'; }
+function monthTopics(){
+  var now=new Date(), out=[], mois=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+  var c=S.created?new Date(S.created):now, start=(now.getFullYear()-c.getFullYear())*12+(now.getMonth()-c.getMonth());
+  for(var i=0;i<12;i++){ var d=new Date(now.getFullYear(),now.getMonth()+i,1); var key=d.getFullYear()+"-"+(d.getMonth()<9?"0":"")+(d.getMonth()+1);
+    var t=TOPICS[((start+i)%12+12)%12]; out.push({key:key,label:mois[d.getMonth()]+" "+d.getFullYear(),t:t}); }
+  return out;
+}
+function charte(){ return S.charte || CHARTE; }
+
+/* ============ Mise en place : questions au parent et guides ============ */
+var QUESTIONS = [
+ {k:"phone",q:"Quel téléphone avez-vous ?",o:[["iphone","iPhone"],["android","Android (Samsung, Xiaomi, Pixel…)"],["autre","Autre"]]},
+ {k:"computer",q:"Quel ordinateur avez-vous ?",o:[["windows","Windows"],["mac","Mac"],["aucun","Aucun"]]},
+ {k:"suite",q:"Avez-vous un antivirus ou une suite de sécurité payante ?",h:"Souvent compris dans un abonnement : regardez vos prélèvements ou les icônes en bas de l'écran de l'ordinateur.",o:[["bitdefender","Bitdefender"],["norton","Norton"],["kaspersky","Kaspersky"],["mcafee","McAfee"],["eset","ESET"],["autre","Autre"],["non","Non"],["nsp","Je ne sais pas"]]},
+ {k:"isp",q:"Quelle est votre box internet ?",o:[["Orange","Orange"],["SFR","SFR"],["Free","Free"],["Bouygues Telecom","Bouygues Telecom"],["autre","Autre"]]},
+ {k:"homes",q:"Vos enfants vivent-ils dans deux foyers ?",o:[["un","Non"],["deux","Oui"]]},
+ {k:"level",q:"Comment vous sentez-vous avec ces réglages ?",o:[["debut","Je débute"],["moyen","Je me débrouille"],["aise","À l'aise"]]}
+];
+var SUITES = {bitdefender:"Bitdefender",norton:"Norton",kaspersky:"Kaspersky",mcafee:"McAfee",eset:"ESET",autre:"votre suite de sécurité"};
+var GUIDES = {
+ apple:{t:"Temps d'écran, géré depuis votre appareil Apple",tool:"Apple",url:"https://support.apple.com/fr-fr/HT201304",
+  why:"C'est l'outil intégré aux iPhone et iPad : gratuit, fiable, et vous recevez les demandes de votre enfant sur votre propre appareil.",
+  steps:[["a1","Sur votre iPhone : Réglages › Famille (ou Réglages › votre nom › Partage familial) : créez votre groupe familial","f"],
+   ["a2","Ajoutez votre enfant : « Ajouter un membre », puis créez un compte enfant ou invitez son identifiant Apple"],
+   ["a3","Réglages › Temps d'écran › choisissez votre enfant et activez Temps d'écran"],
+   ["a4","Temps d'arrêt : une plage le soir et la nuit"],
+   ["a5","Limites d'apps : par catégorie (réseaux sociaux, jeux)"],
+   ["a6","Contenu et confidentialité : classement d'âge des apps, sites web limités"],
+   ["a7","Demander l'achat : activé dans Réglages › Famille › votre enfant"],
+   ["a8","Sécurité des communications : activée"],
+   ["a9","Code Temps d'écran : un code secret, différent de vos autres codes"]],
+  limits:["Ne gère que les appareils Apple.","Les intitulés varient un peu selon la version d'iOS."]},
+ "apple-local":{t:"Temps d'écran, réglé directement sur l'appareil de l'enfant",tool:"Apple",url:"https://support.apple.com/fr-fr/HT201304",
+  why:"Sans iPhone, iPad ou Mac de votre côté, le Partage familial d'Apple ne se gère pas à distance. Les réglages se font donc sur l'appareil de l'enfant, protégés par un code.",
+  steps:[["l1","Sur l'appareil de l'enfant : Réglages › Temps d'écran › activer, puis indiquer que c'est l'appareil de votre enfant"],
+   ["l2","Choisir le temps d'arrêt du soir et les limites d'apps"],
+   ["l3","Contenu et confidentialité : classement d'âge, sites web limités, achats bloqués"],
+   ["l4","Créer un code Temps d'écran secret et le noter en lieu sûr"]],
+  limits:["Pas de rapport ni de demande d'autorisation sur votre téléphone : il faut reprendre l'appareil pour changer un réglage.","Alternative : une app de contrôle parental qui gère à la fois Android et iPhone (souvent payante)."]},
+ "fl-android":{t:"Google Family Link pour son téléphone ou sa tablette Android",tool:"Google",url:"https://families.google.com/families",
+  why:"C'est l'outil de Google pour les appareils Android. Il se pilote depuis votre téléphone, que ce soit un Android ou un iPhone.",
+  steps:[["f1","Installez l'app Family Link sur votre téléphone","f"],
+   ["f2","Ajoutez votre enfant : créez son compte Google, ou supervisez celui qu'il a déjà (gardez les deux téléphones à portée de main)"],
+   ["f3","Sur le téléphone de l'enfant, connectez-vous avec son compte et suivez les étapes"],
+   ["f4","Réglez l'heure du coucher et une limite quotidienne"],
+   ["f5","Google Play : exigez votre accord pour les nouvelles apps"],
+   ["f6","Chrome : activez le filtrage des sites"],
+   ["f7","Localisation : décidez ensemble si vous l'activez"]],
+  limits:["Les limites quotidiennes s'appliquent appareil par appareil.","Les filtres web n'agissent que dans Chrome.","À partir de 13 ans, l'ado peut demander à gérer lui-même son compte ; l'arrêt de la supervision demande l'accord d'un parent."]},
+ "fl-account":{t:"Google Family Link pour son compte Google",tool:"Google",url:"https://families.google.com/families",
+  why:"Votre enfant utilise un compte Google (Gmail, YouTube) sur un appareil qui n'est pas Android. Family Link supervise ce compte, sans gérer l'appareil lui-même.",
+  steps:[["g1","Installez Family Link et supervisez son compte Google","f"],
+   ["g2","YouTube : choisissez YouTube Kids ou le niveau de contenu adapté"],
+   ["g3","Surveillez les accès donnés à d'autres apps (« Se connecter avec Google »)"],
+   ["g4","Lisez les alertes « nouvel appareil » reçues par e-mail et parlez-en avec votre enfant"]],
+  limits:["Ne limite ni le temps ni les apps de l'iPhone, de l'iPad ou du PC : c'est le rôle de l'outil de l'appareil.","Les filtres ne s'appliquent pas dans les autres navigateurs (Firefox, Safari…)."]},
+ microsoft:{t:"Microsoft Family Safety pour l'ordinateur Windows",tool:"Microsoft",url:"https://family.microsoft.com",
+  why:"C'est l'outil gratuit de Microsoft pour Windows, la Xbox et Minecraft. Il se gère depuis le site family.microsoft.com ou l'app mobile.",
+  steps:[["m1","Sur family.microsoft.com, connectez-vous et créez votre groupe familial","f"],
+   ["m2","Ajoutez votre enfant avec son propre compte Microsoft"],
+   ["m3","Sur le PC : Paramètres › Comptes › Famille : ajoutez sa session, en utilisateur standard (pas administrateur)"],
+   ["m4","Fixez ses plages horaires sur l'ordinateur"],
+   ["m5","Activez les filtres web : ils fonctionnent dans Edge, et les autres navigateurs sont alors bloqués"],
+   ["m6","Achats : exigez votre accord"],
+   ["m7","Activez le rapport d'activité hebdomadaire par e-mail"]],
+  limits:["L'ancienne app Family Safety pour Windows disparaît : passez par le site ou l'app mobile."]},
+ nintendo:{t:"Contrôle parental de la Nintendo Switch",tool:"Nintendo",url:"https://accounts.nintendo.com",
+  why:"Une app gratuite sur votre téléphone pour régler et suivre la console.",
+  steps:[["n1","Installez l'app « Contrôle parental Nintendo Switch » sur votre téléphone"],
+   ["n2","Sur la console : Paramètres › Contrôle parental, puis saisissez le code affiché par l'app"],
+   ["n3","Fixez un temps de jeu quotidien"],
+   ["n4","Choisissez le niveau de restriction selon l'âge (PEGI)"],
+   ["n5","Limitez la communication avec d'autres joueurs et les dépenses eShop"]],
+  limits:[]},
+ playstation:{t:"Gestion familiale PlayStation",tool:"Sony",url:"",why:"Les règles de la console se fixent depuis votre compte parent PlayStation.",
+  steps:[["ps1","Créez un compte enfant rattaché à votre compte"],["ps2","Limitez le temps de jeu et les dépenses"],["ps3","Restreignez la communication avec les autres joueurs"]],limits:[]},
+ xbox:{t:"Xbox Family Settings",tool:"Microsoft",url:"",why:"L'app gratuite de Microsoft pour la Xbox.",
+  steps:[["x1","Installez l'app Xbox Family Settings"],["x2","Fixez le temps d'écran et les classements autorisés"],["x3","Limitez le multijoueur et la communication"]],limits:[]},
+ suite:{t:"Le contrôle parental de votre suite de sécurité",tool:"",url:"",
+  why:"Votre abonnement inclut peut-être un contrôle parental. Il filtre le web dans tous les navigateurs et sur plusieurs systèmes à la fois : un bon complément aux outils d'Apple, Google et Microsoft.",
+  steps:[["s1","Dans votre espace client, vérifiez que le contrôle parental est inclus"],
+   ["s2","Créez un profil pour chaque enfant"],
+   ["s3","Installez l'app sur chaque appareil de l'enfant et rattachez-le à son profil"],
+   ["s4","Activez le filtrage web"],
+   ["s5","Ne réglez pas de limite de temps ici si Apple, Google ou Microsoft le font déjà"]],
+  limits:["Deux outils qui limitent le temps en même temps créent des blocages incompréhensibles."]},
+ "suite-none":{t:"Option : une app qui gère iPhone et Android à la fois",tool:"",url:"",
+  why:"Votre téléphone n'est pas un iPhone alors qu'un de vos enfants a un appareil Apple. Une app de contrôle parental multi-plateforme permet de tout suivre depuis votre téléphone.",
+  steps:[["o1","Comparer deux ou trois apps (Bitdefender, Norton Family, Qustodio, Kaspersky Safe Kids…)"],["o2","Profiter d'un essai gratuit avant de s'abonner"]],
+  limits:["Facultatif : les réglages faits directement sur l'appareil suffisent pour commencer."]},
+ box:{t:"Le contrôle parental de votre box",tool:"",url:"",
+  why:"Il agit sur tout le Wi-Fi de la maison, y compris la télévision, la console et les appareils sans autre réglage. Il est en général inclus dans votre abonnement.",
+  steps:[["b1","Ouvrez l'application ou l'espace client de votre box"],["b2","Repérez les appareils de vos enfants dans la liste du Wi-Fi"],["b3","Programmez une coupure d'internet le soir pour ces appareils"],["b4","Activez le filtrage des contenus s'il est proposé"]],
+  limits:["Ne fonctionne qu'à la maison : le réseau mobile (4G, 5G) n'est pas concerné.","Certains opérateurs proposent aussi un contrôle parental sur la ligne mobile, gratuit ou payant : renseignez-vous auprès du vôtre."]},
+ coparent:{t:"Partager la gestion avec l'autre parent",tool:"",url:"",
+  why:"Avec deux foyers, chaque parent doit pouvoir répondre aux demandes et voir les mêmes informations. Les règles restent ainsi cohérentes d'une maison à l'autre.",
+  steps:[["c1","Apple : ajoutez l'autre parent au Partage familial comme parent ou tuteur"],["c2","Family Link : ajoutez un deuxième parent"],["c3","Microsoft : ajoutez-le comme organisateur de la famille"],["c4","Convenez ensemble des grandes règles (la charte) et envoyez-lui votre sauvegarde"]],
+  limits:[]}
+};
+function hasApple(){ var p=S.parent||{}; if(!p.phone) return true; return p.phone==="iphone" || p.computer==="mac"; }
+function usedBy(id,k){ return u(id,k.id).s==="utilise"; }
+function plan(){
+  var p=S.parent||{}, out=[], once={};
+  function add(g,k,why){ var key=g+(k?":"+k.id:""); if(once[key]) return; once[key]=1; out.push({g:g,kid:k||null,why:why||""}); }
+  S.kids.forEach(function(k){
+    var apple=["iphone","ipad","mac"].filter(function(d){return usedBy(d,k);}).map(function(d){return item(d).name;});
+    if(apple.length) add(hasApple()?"apple":"apple-local",k,apple.join(", "));
+    if(usedBy("android",k)) add("fl-android",k,"Smartphone ou tablette Android");
+    if(usedBy("windows",k)||usedBy("minecraft",k)) add("microsoft",k,usedBy("windows",k)?"Ordinateur Windows":"Minecraft");
+    if(usedBy("compte-google",k) && !usedBy("android",k)) add("fl-account",k,"Compte Google");
+  });
+  if(S.kids.some(function(k){return usedBy("switch",k);})) add("nintendo");
+  if(S.kids.some(function(k){return usedBy("playstation",k);})) add("playstation");
+  if(S.kids.some(function(k){return usedBy("xbox",k);})) add("xbox");
+  if(SUITES[p.suite]) add("suite");
+  else if((p.suite==="non"||p.suite==="nsp") && p.phone && p.phone!=="iphone" && S.kids.some(function(k){return ["iphone","ipad"].some(function(d){return usedBy(d,k);});}) && p.level!=="debut") add("suite-none");
+  if(p.isp) add("box");
+  if(p.homes==="deux") add("coparent");
+  return out;
+}
+function gKey(e,s){ var st=GUIDES[e.g].steps.filter(function(x){return x[0]===s;})[0]; var fam=!e.kid||(st&&st[2]==="f"); return "g:"+e.g+":"+(fam?"f":e.kid.id)+":"+s; }
+function gDone(e){ return GUIDES[e.g].steps.filter(function(s){return S.checks[gKey(e,s[0])];}).length; }
+function guideTitle(e){
+  var G=GUIDES[e.g], t=G.t;
+  if(e.g==="suite") t="Le contrôle parental de "+SUITES[(S.parent||{}).suite];
+  if(e.g==="box" && (S.parent||{}).isp && S.parent.isp!=="autre") t="Le contrôle parental de votre box "+S.parent.isp;
+  return t+(e.kid?" · "+e.kid.name:"");
+}
+function planTotals(){ var pl=plan(), n=0, t=0; pl.forEach(function(e){ n+=gDone(e); t+=GUIDES[e.g].steps.length; }); return {n:n,t:t,pl:pl}; }
+function nextStep(){ var pl=plan(); for(var i=0;i<pl.length;i++){ var e=pl[i]; var st=GUIDES[e.g].steps; for(var j=0;j<st.length;j++){ if(!S.checks[gKey(e,st[j][0])]) return {e:e,s:st[j]}; } } return null; }
+function questionsHtml(){
+  var p=S.parent||{};
+  return QUESTIONS.map(function(q){
+    return '<div class="q" role="group" aria-labelledby="ql-'+q.k+'"><b id="ql-'+q.k+'">'+esc(q.q)+'</b>'+(q.h?'<span class="tiny muted">'+esc(q.h)+'</span>':'')+
+      '<div class="pills">'+q.o.map(function(o){ return '<button type="button" class="chip" aria-pressed="'+(p[q.k]===o[0])+'" data-act="answer" data-q="'+q.k+'" data-v="'+esc(o[0])+'">'+esc(o[1])+'</button>'; }).join("")+'</div></div>';
+  }).join("");
+}
+function viewSetup(){
+  var p=S.parent||{};
+  var asked = S.parentDone && !UI.qEdit;
+  var tot=planTotals(), pl=tot.pl;
+  var head='<section class="card"><div class="toolbar" style="justify-content:space-between"><div><h2>Votre plan de mise en place</h2><p class="small muted">Les outils à activer, choisis selon vos appareils et ceux de vos enfants. Chaque guide se fait en 10 à 20 minutes ; cochez les étapes au fur et à mesure.</p></div>'+
+    (asked?'<button type="button" class="ghost" data-act="q-edit">Modifier mes réponses</button>':'')+'</div>'+
+    (asked? progressBar(tot.n,tot.t) : '<div class="grid" style="gap:16px">'+questionsHtml()+'<div class="toolbar"><button type="button" data-act="q-done">'+(S.parentDone?'Mettre à jour mon plan':'Voir mon plan')+'</button></div></div>')+'</section>';
+  if(!asked && !S.parentDone) return head;
+  var first=true;
+  return head+'<section class="grid" style="gap:12px">'+pl.map(function(e,ix){
+    var G=GUIDES[e.g], d=gDone(e), t=G.steps.length, key=e.g+(e.kid?":"+e.kid.id:""), complete=d===t;
+    var start = !complete && first; if(start) first=false;
+    var open = UI.openG[key]!==undefined ? UI.openG[key] : start;
+    return '<details class="guide card'+(complete?' done':'')+'" data-g="'+esc(key)+'"'+(open?' open':'')+(e.kid?' style="--kc:'+esc(e.kid.color)+'"':'')+'><summary><span class="gt">'+(e.kid?kidDot(e.kid)+' ':'')+esc(guideTitle(e))+'</span><span class="pills">'+(start&&p.level==="debut"?'<span class="pill">Commencez ici</span>':'')+'<span class="pill '+(complete?'ok':'plain')+'">'+(complete?'Terminé':d+' / '+t)+'</span></span></summary>'+
+      '<div class="gbody"><p class="small">'+esc(G.why)+(e.why?' <span class="muted">Concerne : '+esc(e.why)+'.</span>':'')+'</p>'+
+      '<div class="checks">'+G.steps.map(function(s,j){ var k2=gKey(e,s[0]), on=!!S.checks[k2]; return '<label class="chk'+(on?' done':'')+'"><input type="checkbox" id="c-'+esc(k2)+'" data-check="'+esc(k2)+'"'+(on?' checked':'')+'><span><b class="tiny muted">Étape '+(j+1)+'</b> '+esc(s[1])+(s[2]==="f"&&e.kid?'<small>Une seule fois pour toute la famille.</small>':'')+'</span></label>'; }).join("")+'</div>'+
+      (G.limits&&G.limits.length?'<div><span class="kicker">Bon à savoir</span><ul class="plain small">'+G.limits.map(function(l){return '<li>'+esc(l)+'</li>';}).join("")+'</ul></div>':'')+
+      (G.url?'<a class="small" href="'+esc(G.url)+'" target="_blank" rel="noopener">Aide officielle</a>':'')+usageLinks(relatedUsages("g:"+e.g))+'</div></details>';
+  }).join("")+(pl.length?'':'<div class="card"><p class="muted">Indiquez dans « Apps et appareils » ce que vos enfants utilisent pour obtenir votre plan.</p></div>')+'</section>'+
+  '<section class="card soft"><h3>Un nouvel appareil ?</h3><p class="small">Depuis le 13 juillet 2024, les appareils connectés vendus en France doivent proposer un contrôle parental. Activez-le dès le premier allumage, avant de donner l\'appareil à votre enfant, puis ajoutez-le ici.</p></section>';
+}
+
+/* ============ Conseils : par situation et par outil ============ */
+var HELP = [
+ {n:"3018",d:"Cyberharcèlement, chantage, images diffusées : écoute et aide au retrait des contenus. Gratuit, anonyme, 7 j/7 de 9 h à 23 h, par téléphone, tchat ou l'app 3018.",u:"https://e-enfance.org/numero-3018/"},
+ {n:"119",d:"Enfance en danger, pour toute forme de violence. Gratuit, 24 h/24.",u:"https://www.allo119.gouv.fr"},
+ {n:"17",d:"Police et gendarmerie, en cas de danger immédiat.",u:""},
+ {n:"Pharos",d:"Signaler un contenu illégal en ligne.",u:"https://www.internet-signalement.gouv.fr"},
+ {n:"Cybermalveillance.gouv.fr",d:"Piratage de compte, arnaque, virus : diagnostic et conseils.",u:"https://www.cybermalveillance.gouv.fr"},
+ {n:"Je protège mon enfant",d:"Le site du gouvernement pour les parents.",u:"https://jeprotegemonenfant.gouv.fr"}
+];
+var USAGES = [
+ {id:"premier-telephone",t:"Le premier téléphone",a:[9,14],
+  intro:"Le moment où l'enfant gagne en autonomie. Plus le téléphone est préparé avant d'être donné, plus les règles sont simples à tenir.",
+  doo:["Le donner quand un vrai besoin existe (trajets seul, activités)","Le configurer avant de le donner : contrôle parental activé dès le premier allumage","Commencer avec peu d'apps et en ajouter au fil du temps","Décider dès le départ où il dort la nuit","Lire et signer la charte ensemble"],
+  talk:["« Ce téléphone est à toi. Les règles, on les fixe ensemble et elles évolueront avec toi. »","« Si quelque chose te gêne, tu peux toujours m'en parler, tu ne seras pas puni pour ça. »"],
+  tools:["g:apple","g:fl-android","i:iphone","i:android"]},
+ {id:"temps-ecran",t:"Le temps d'écran au quotidien",a:[3,18],
+  intro:"Ce qui compte n'est pas seulement le nombre d'heures, mais ce qu'il remplace : sommeil, sport, devoirs, moments en famille.",
+  doo:["Fixer des plages sans écran (repas, devoirs, soirée) plutôt qu'un seul chiffre","Regarder le rapport de la semaine ensemble, sans reproche","Faire la différence entre écrans pour apprendre, échanger et se divertir","Montrer l'exemple"],
+  talk:["« Qu'est-ce qui t'a pris le plus de temps cette semaine ? Ça valait le coup ? »"],
+  signals:["Fatigue, irritabilité quand on coupe","Résultats scolaires en baisse","Abandon d'activités qu'il ou elle aimait"],
+  tools:["g:apple","g:fl-android","g:microsoft","g:nintendo"]},
+ {id:"sommeil",t:"Le sommeil et les écrans le soir",a:[3,18],
+  intro:"C'est souvent le premier sujet à régler : les écrans du soir retardent l'endormissement et les notifications réveillent.",
+  doo:["Programmer un temps d'arrêt automatique le soir","Faire charger les téléphones hors des chambres","Couper les écrans un moment avant le coucher","Utiliser un vrai réveil plutôt que le téléphone"],
+  signals:["Fatigue le matin","Utilisation tard le soir dans les rapports"],
+  tools:["g:apple","g:fl-android","g:box"]},
+ {id:"achats",t:"Les achats et les abonnements",a:[6,18],
+  intro:"Achats dans les jeux, monnaies virtuelles, abonnements : les dépenses vont vite et se voient peu.",
+  doo:["Activer l'accord du parent pour chaque achat (« Demander l'achat », Family Link, Microsoft)","Ne pas enregistrer de carte bancaire sur les comptes des enfants","Préférer une carte cadeau avec un montant fixé","Expliquer les achats intégrés et les « boîtes à butin »"],
+  ifh:["Achat non voulu : demandez vite un remboursement auprès de la boutique (Apple, Google, Microsoft, Nintendo)","Changez les codes si l'enfant les connaissait"],
+  tools:["g:apple","g:fl-android","g:microsoft","g:nintendo","i:roblox","i:fortnite"]},
+ {id:"reseaux-sociaux",t:"Les réseaux sociaux",a:[11,18],
+  intro:"La plupart demandent 13 ans minimum dans leurs conditions, et le cadre légal français évolue : vérifiez la règle en vigueur au moment d'ouvrir un compte.",
+  doo:["Un réseau à la fois, ouvert ensemble (parcours en cinq étapes dans chaque fiche)","Les mêmes réglages partout : compte privé, commentaires et mentions limités, position précise désactivée, abonnés vérifiés","Toujours avec la vraie date de naissance : elle déclenche les protections pour les ados","Compte privé et supervision officielle, expliquée à l'enfant","Faire le point au bout d'un mois"],
+  talk:["« Qu'est-ce que tu aimerais y faire, et avec qui ? »","« Qu'est-ce qui pourrait te mettre mal à l'aise là-dessus ? »"],
+  signals:["Humeur qui dépend des « j'aime »","Comparaison permanente avec les autres","Utilisation la nuit"],
+  tools:["i:instagram","i:snapchat","i:tiktok","i:discord"]},
+ {id:"groupes-classe",t:"Les messageries et les groupes de classe",a:[10,18],
+  intro:"Les groupes de classe sont utiles mais peuvent devenir le lieu des moqueries. Quelques règles simples changent beaucoup.",
+  doo:["Réglage : seuls les contacts peuvent l'ajouter à un groupe","On n'écrit rien qu'on ne dirait pas en face","On ne transfère jamais la photo de quelqu'un sans son accord","On a le droit de quitter un groupe qui fait du mal"],
+  signals:["Un élève moqué dans un groupe","Messages reçus tard le soir","Notifications qui stressent"],
+  ifh:["Faire des captures d'écran","Ne pas répondre aux attaques","Prévenir l'établissement","Appeler le 3018"],
+  tools:["i:whatsapp","i:imessage","i:snapchat"]},
+ {id:"jeux-en-ligne",t:"Les jeux vidéo en ligne",a:[6,18],
+  intro:"Jouer est un plaisir partagé. Les points sensibles : les échanges avec des inconnus, les dépenses et le temps.",
+  doo:["Respecter le classement PEGI","Limiter le chat aux amis, ou le couper pour les plus jeunes","Fixer un plafond de dépenses","Jouer avec lui de temps en temps pour comprendre son jeu"],
+  signals:["Un nouvel « ami » en ligne plus âgé","Des cadeaux en monnaie virtuelle","Une demande de continuer la discussion sur une autre app"],
+  tools:["g:nintendo","g:playstation","g:xbox","i:roblox","i:minecraft","i:fortnite","i:discord"]},
+ {id:"videos",t:"YouTube et les vidéos",a:[3,18],
+  intro:"Les vidéos s'enchaînent seules, et les recommandations peuvent mener loin du point de départ.",
+  doo:["Avant 13 ans : YouTube Kids ou YouTube supervisé","Désactiver la lecture automatique","Regarder ensemble de temps en temps","Apprendre à signaler une vidéo"],
+  ifh:["Vidéo choquante : écouter, rassurer, ne pas punir, puis signaler la vidéo"],
+  tools:["i:youtube","g:fl-account","i:tiktok"]},
+ {id:"contenus-choquants",t:"Les contenus choquants et pour adultes",a:[6,18],
+  intro:"Aucun filtre n'est parfait. Mieux vaut en parler avant que l'enfant ne tombe dessus, avec des mots adaptés à son âge.",
+  doo:["Activer les filtres sur chaque appareil et dans chaque navigateur","Ajouter le filtrage de la box pour toute la maison","En parler tôt, simplement, sans attendre un incident"],
+  talk:["« Si tu tombes sur des images qui te choquent, ce n'est pas ta faute. Viens m'en parler. »"],
+  ifh:["Garder son calme, écouter, ne pas punir","Renforcer les filtres","Signaler un contenu illégal sur Pharos"],
+  tools:["g:apple","g:fl-android","g:microsoft","g:box","g:suite","i:navigateurs"]},
+ {id:"inconnus",t:"Les inconnus en ligne",a:[6,18],
+  intro:"Une personne rencontrée en ligne peut se présenter comme un enfant du même âge. Le contact se construit souvent sur la gentillesse et le secret.",
+  doo:["Profils privés, contacts limités aux personnes connues","« Un inconnu reste un inconnu, même gentil »","Jamais de rendez-vous avec quelqu'un rencontré en ligne sans un adulte"],
+  signals:["L'enfant cache une conversation ou un nouvel ami","Des cadeaux, des compliments très insistants","Des demandes de photos ou de secret"],
+  ifh:["Garder les preuves (captures d'écran)","Bloquer et signaler le compte sur la plateforme","Appeler le 3018 ; en cas de danger immédiat, le 17"],
+  tools:["i:roblox","i:discord","i:snapchat","i:instagram","i:whatsapp"]},
+ {id:"cyberharcelement",t:"Le cyberharcèlement",a:[8,18],
+  intro:"Moqueries, rumeurs, exclusion, photos détournées : quand cela se répète, c'est du harcèlement. Un enfant peut être victime, témoin ou auteur.",
+  doo:["Expliquer qu'un témoin peut aider : ne pas liker, ne pas partager, soutenir la victime","Rappeler qu'il n'y a jamais de punition pour avoir parlé"],
+  signals:["Repli, tristesse, peur d'aller à l'école","Sursaut à chaque notification","Comptes supprimés ou téléphone évité"],
+  ifh:["Faire des captures d'écran, ne pas répondre","Bloquer et signaler sur la plateforme","Appeler le 3018, qui peut aider à faire retirer les contenus","Prévenir l'établissement ; porter plainte si nécessaire"],
+  tools:["i:whatsapp","i:snapchat","i:instagram","i:tiktok"]},
+ {id:"images-chantage",t:"Les images intimes et le chantage",a:[11,18],
+  intro:"Une image envoyée peut circuler et servir à faire pression. Si cela arrive, l'enfant n'est jamais responsable du chantage qu'il subit.",
+  doo:["Aucune image intime, même à quelqu'un de confiance","Ne jamais transférer l'image de quelqu'un","Dire à l'avance : « Si un jour ça arrive, tu peux me le dire, on trouvera une solution »"],
+  ifh:["Ne pas payer et ne rien envoyer d'autre","Couper le contact, sans supprimer la conversation","Garder les preuves (captures, nom du compte)","Appeler le 3018 pour faire supprimer les contenus","Porter plainte au commissariat ou à la gendarmerie","Rassurer : ce n'est pas sa faute"],
+  tools:["i:snapchat","i:instagram","i:whatsapp","i:discord"]},
+ {id:"localisation",t:"La localisation et le partage de position",a:[8,18],
+  intro:"Partager sa position rassure en famille, mais une photo, une story ou une carte d'amis peut aussi la révéler à d'autres.",
+  doo:["Partage de position en famille décidé ensemble, et expliqué","Carte Snapchat en mode fantôme","Ne pas publier une story en direct d'un lieu où l'on se trouve"],
+  tools:["i:snapchat","i:whatsapp","g:apple","g:fl-android"]},
+ {id:"ia-devoirs",t:"L'IA et les devoirs",a:[9,18],
+  intro:"Les assistants comme ChatGPT expliquent bien, se trompent parfois avec aplomb, et retiennent ce qu'on leur confie.",
+  doo:["L'IA pour comprendre, pas pour rendre le travail à sa place","Vérifier ce qu'elle affirme dans une autre source","Ne pas lui confier d'informations personnelles"],
+  talk:["« Montre-moi comment tu l'utilises pour tes devoirs. »"],
+  tools:["i:chatgpt","i:snapchat","i:whatsapp"]},
+ {id:"arnaques",t:"Les arnaques et les comptes piratés",a:[8,18],
+  intro:"Faux concours, faux support, « code reçu par erreur » : les arnaques visent aussi les enfants, souvent pour voler leur compte.",
+  doo:["Double authentification sur les comptes importants","Un mot de passe différent par compte","Ne jamais donner un code reçu par SMS, même à un « ami »","Se méfier de tout ce qui est urgent ou trop beau"],
+  ifh:["Changer le mot de passe et activer la double authentification","Prévenir ses contacts","Se faire aider sur cybermalveillance.gouv.fr"],
+  tools:["i:whatsapp","i:compte-google"]},
+ {id:"contournement",t:"Quand les règles sont contournées",a:[9,18],
+  intro:"Un autre navigateur, un autre appareil, un code découvert : cela arrive dans presque toutes les familles. C'est l'occasion d'une discussion.",
+  doo:["En parler avant de sanctionner, pour comprendre le besoin derrière","Revoir la règle si elle n'est plus adaptée à son âge","Savoir quels appareils et navigateurs il ou elle utilise","Changer les codes s'ils sont connus"],
+  signals:["Alerte « nouvel appareil » ou « nouveau navigateur »","Temps d'écran qui ne correspond pas à ce que vous observez"],
+  tools:["i:navigateurs","g:fl-account","g:suite"]},
+ {id:"deux-maisons",t:"Deux maisons, mêmes repères",a:[3,18],
+  intro:"Les outils suivent les appareils ; les règles de vie suivent les enfants. Des repères communs évitent les négociations d'une maison à l'autre.",
+  doo:["Partager la gestion des outils avec l'autre parent","Une seule charte pour les deux maisons","Envoyer la sauvegarde de cet outil à l'autre parent"],
+  tools:["g:coparent"]}
+];
+function usage(id){ return USAGES.filter(function(x){return x.id===id;})[0]; }
+function kidAges(){ return S.kids.map(ageOf).filter(function(a){return a!=null;}); }
+function usageFits(x){ var ag=kidAges(); return !ag.length || ag.some(function(a){return a>=x.a[0] && a<=x.a[1];}); }
+function refName(r){ var p=r.split(":"), id=p.slice(1).join(":"); if(p[0]==="g") return GUIDES[id]?GUIDES[id].t:id; var it=item(id); return it?it.name:id; }
+function refLinks(list){ return '<div class="pills">'+list.filter(function(r){ var p=r.split(":"); return p[0]==="g"?!!GUIDES[p[1]]:!!item(p.slice(1).join(":")); }).map(function(r){ return '<button type="button" class="chip" data-act="open" data-ref="'+esc(r)+'">'+esc(refName(r))+'</button>'; }).join("")+'</div>'; }
+function relatedUsages(ref){ return USAGES.filter(function(x){ return x.tools.indexOf(ref)>=0; }); }
+function usageLinks(list){ if(!list.length) return ""; return '<section><span class="kicker">Conseils liés</span><div class="pills">'+list.map(function(x){ return '<button type="button" class="chip" data-act="open" data-ref="u:'+x.id+'">'+esc(x.t)+'</button>'; }).join("")+'</div></section>'; }
+function listBlock(title,arr,cls){ if(!arr||!arr.length) return ""; return '<section class="'+(cls||"")+'"><span class="kicker">'+title+'</span><ul class="plain small">'+arr.map(function(s){return '<li>'+esc(s)+'</li>';}).join("")+'</ul></section>'; }
+function usageBody(x){
+  return '<p>'+esc(x.intro)+'</p>'+listBlock("Les bons réflexes",x.doo)+
+    (x.talk?'<section><span class="kicker">Pour en parler</span>'+x.talk.map(function(s){return '<p class="small talk">'+esc(s)+'</p>';}).join("")+'</section>':'')+
+    listBlock("Signaux d'alerte",x.signals)+listBlock("Si ça arrive",x.ifh,"ifh")+
+    (x.tools&&x.tools.length?'<section><span class="kicker">Les réglages utiles</span>'+refLinks(x.tools)+'</section>':'');
+}
+function guideBody(id){
+  var G=GUIDES[id]; var inPlan=plan().filter(function(e){return e.g===id;});
+  return '<p>'+esc(G.why)+'</p><section><span class="kicker">Étapes</span><ol class="plain small">'+G.steps.map(function(s){return '<li>'+esc(s[1])+'</li>';}).join("")+'</ol></section>'+
+    listBlock("Bon à savoir",G.limits)+(G.url?'<a class="small" href="'+esc(G.url)+'" target="_blank" rel="noopener">Aide officielle</a>':'')+
+    (inPlan.length?'<p class="small"><span class="pill ok">Dans votre plan</span> <a href="#mise-en-place" data-act="close">Cocher les étapes dans « Mise en place »</a></p>':'');
+}
+function searchHits(q){
+  q=q.trim().toLowerCase(); if(!q) return null;
+  function has(){ return Array.prototype.slice.call(arguments).join(" ").toLowerCase().indexOf(q)>=0; }
+  var out=[];
+  USAGES.forEach(function(x){ if(has(x.t,x.intro,(x.doo||[]).join(" "),(x.ifh||[]).join(" "),(x.signals||[]).join(" "),(x.talk||[]).join(" "))) out.push({ref:"u:"+x.id,t:x.t,k:"Situation"}); });
+  Object.keys(GUIDES).forEach(function(id){ var G=GUIDES[id]; if(has(G.t,G.why,G.steps.map(function(s){return s[1];}).join(" "),(G.limits||[]).join(" "))) out.push({ref:"g:"+id,t:G.t,k:"Guide"}); });
+  allItems().forEach(function(it){ if(has(it.name,it.what||"",(it.risks||[]).join(" "),(it.settings||[]).join(" "),it.ctl||"")) out.push({ref:"i:"+it.id,t:it.name,k:"Fiche"}); });
+  HELP.forEach(function(h){ if(has(h.n,h.d)) out.push({ref:"h",t:h.n+" : "+h.d,k:"Aide"}); });
+  return out;
+}
+function helpCard(){
+  return '<section class="card"><h2>Numéros et sites utiles</h2><div class="links">'+HELP.map(function(h){ return (h.u?'<a class="link" href="'+esc(h.u)+'" target="_blank" rel="noopener">':'<div class="link">')+'<strong>'+esc(h.n)+'</strong><span>'+esc(h.d)+'</span>'+(h.u?'</a>':'</div>'); }).join("")+'</div></section>';
+}
+function viewConseils(){
+  var hits=searchHits(UI.cq||"");
+  var head='<section class="card"><h2>Conseils</h2><p class="small muted">Par situation de la vie de tous les jours, ou par outil. Touchez un sujet pour l\'ouvrir.</p>'+
+    '<label class="f" for="cq">Chercher un conseil<input type="search" id="cq" value="'+esc(UI.cq||"")+'" placeholder="ex. sommeil, Snapchat, harcèlement, achats…"></label>'+
+    '<div class="frow"><button type="button" class="chip" aria-pressed="'+(UI.cview!=="outils")+'" data-act="cview" data-v="situations">Par situation</button><button type="button" class="chip" aria-pressed="'+(UI.cview==="outils")+'" data-act="cview" data-v="outils">Par outil</button></div></section>';
+  if(hits){
+    return head+'<section class="card"><h2>'+plural(hits.length,"résultat")+'</h2>'+(hits.length?'<div class="items" style="gap:6px">'+hits.map(function(h){ return h.ref==="h"?'<p class="small"><span class="pill plain">'+h.k+'</span> '+esc(h.t)+'</p>':'<button type="button" class="hit" data-act="open" data-ref="'+esc(h.ref)+'"><span class="pill plain">'+h.k+'</span> '+esc(h.t)+'</button>'; }).join("")+'</div>':'<p class="muted small">Rien trouvé. Essayez un autre mot, ou regardez les situations ci-dessous.</p>')+'</section>'+helpCard();
+  }
+  if(UI.cview==="outils"){
+    var pl=plan().map(function(e){return e.g;});
+    return head+'<section class="card"><h2>Guides de mise en place</h2><div class="items" style="gap:6px">'+Object.keys(GUIDES).map(function(id){ return '<button type="button" class="hit" data-act="open" data-ref="g:'+id+'">'+esc(GUIDES[id].t)+(pl.indexOf(id)>=0?' <span class="pill ok">Dans votre plan</span>':'')+'</button>'; }).join("")+'</div></section>'+
+      FAMS.map(function(f){ var its=allItems().filter(function(i){return famOf(i)===f[0];}); if(!its.length) return ""; return '<section class="card"><h3>'+f[1]+'</h3><p class="small muted">'+esc(f[2])+'</p><div class="pills">'+its.map(function(it){ return '<button type="button" class="chip" data-act="open" data-ref="i:'+it.id+'">'+iconFor(it)+esc(it.name)+'</button>'; }).join("")+'</div></section>'; }).join("")+helpCard();
+  }
+  var fit=USAGES.filter(usageFits), other=USAGES.filter(function(x){return !usageFits(x);});
+  function cards(list){ return '<div class="grid g3">'+list.map(function(x){ return '<button type="button" class="ucard" data-act="open" data-ref="u:'+x.id+'"><b>'+esc(x.t)+'</b><span class="small muted">'+esc(x.intro)+'</span></button>'; }).join("")+'</div>'; }
+  return head+'<section class="grid" style="gap:12px"><h2>Pour l\'âge de vos enfants</h2>'+cards(fit)+'</section>'+(other.length?'<section class="grid" style="gap:12px"><h2>Pour plus tard</h2>'+cards(other)+'</section>':'')+helpCard();
+}
+
+/* ============ Aide à la configuration ============ */
+var TASKS = [
+ ["device","phone","Préparer un nouvel appareil","Avant de le donner : compte, contrôle parental, sécurité."],
+ ["tool","shield","Activer un outil de contrôle parental","Temps d'écran, Family Link, Microsoft, consoles…"],
+ ["secure","lock","Sécuriser les comptes","Vos comptes et ceux de vos enfants : codes, double authentification."],
+ ["app","plus","Autoriser une nouvelle application","Vérifier l'âge, les risques et les réglages avant d'installer."],
+ ["site","block","Bloquer ou autoriser un site web","Où le régler, outil par outil."],
+ ["box","router","Configurer la box internet","Coupure le soir et filtrage pour toute la maison."]
+];
+function deviceGuide(id){ return {iphone:hasApple()?"apple":"apple-local",ipad:hasApple()?"apple":"apple-local",mac:hasApple()?"apple":"apple-local",android:"fl-android",windows:"microsoft",switch:"nintendo",playstation:"playstation",xbox:"xbox"}[id]; }
+function deviceAccount(id,k){
+  var n=esc(k?k.name:"l'enfant");
+  if(["iphone","ipad","mac"].indexOf(id)>=0) return "Connectez-le avec le compte Apple de "+n+", créé depuis votre Partage familial (jamais avec le vôtre).";
+  if(id==="android") return "Connectez-le avec le compte Google de "+n+", supervisé par Family Link.";
+  if(id==="windows") return "Créez la session de "+n+" avec son compte Microsoft, en utilisateur standard (pas administrateur).";
+  return "Créez un compte enfant rattaché à votre compte parent sur la console.";
+}
+function kidPicker(){
+  if(!S.kids.length) return "";
+  if(!UI.as.kid || !kid(UI.as.kid)) UI.as.kid=S.kids[0].id;
+  return '<div class="frow"><span class="lbl">Pour</span>'+S.kids.map(function(k){ return '<button type="button" class="chip" aria-pressed="'+(UI.as.kid===k.id)+'" data-act="as-set" data-f="kid" data-v="'+k.id+'">'+kidDot(k)+' '+esc(k.name)+'</button>'; }).join("")+'</div>';
+}
+function assistantBody(){
+  var a=UI.as, k=kid(a.kid);
+  var close='<button type="button" class="quiet close" data-act="close">Fermer</button>';
+  if(a.k==="device"){
+    var devs=allItems().filter(function(i){return i.type==="appareil";});
+    var body=close+'<div><span class="kicker">Aide à la configuration</span><h2 id="dlg-title">Préparer un nouvel appareil</h2></div>'+kidPicker()+
+      '<div class="frow"><span class="lbl">Appareil</span>'+devs.map(function(d){ return '<button type="button" class="chip" aria-pressed="'+(a.item===d.id)+'" data-act="as-set" data-f="item" data-v="'+d.id+'">'+esc(d.name)+'</button>'; }).join("")+'</div>';
+    if(!a.item) return body+'<p class="small muted">Choisissez l\'appareil à préparer.</p>';
+    var d=item(a.item), g=deviceGuide(a.item);
+    var steps=[
+      ["Avant de le donner","Allumez-le vous-même et faites les mises à jour."],
+      ["Au premier allumage","Acceptez la proposition de contrôle parental : depuis juillet 2024, les appareils vendus en France doivent la proposer."],
+      ["Le bon compte",deviceAccount(a.item,k)],
+      ["Le contrôle parental",(g?"Suivez le guide « "+GUIDES[g].t+" ».":"Activez l'outil de l'appareil.")],
+      ["La sécurité","Un code de verrouillage ; la localisation en cas de perte ; la sauvegarde automatique."],
+      ["Les apps","N'installez que les apps convenues ; ouvrez la fiche de chacune avant."],
+      ["La remise","Donnez l'appareil en relisant la charte ensemble."]
+    ];
+    var used = k && u(a.item,k.id).s==="utilise";
+    return body+'<ol class="steps small">'+steps.map(function(s){ return '<li><span><b>'+esc(s[0])+'.</b> '+s[1]+'</span></li>'; }).join("")+'</ol>'+
+      '<div class="toolbar">'+(g?'<button type="button" class="ghost" data-act="open" data-ref="g:'+g+'">Ouvrir le guide</button>':'')+'<button type="button" class="ghost" data-act="open" data-ref="i:'+d.id+'">Fiche '+esc(d.name)+'</button>'+
+      (k?(used?'<span class="pill ok">Dans l\'inventaire de '+esc(k.name)+'</span>':'<button type="button" data-act="as-add" data-s="utilise">Ajouter à l\'inventaire de '+esc(k.name)+'</button>'):'')+'</div>';
+  }
+  if(a.k==="tool"){
+    var pl=plan().map(function(e){return e.g;});
+    return close+'<div><span class="kicker">Aide à la configuration</span><h2 id="dlg-title">Activer un outil de contrôle parental</h2></div><p class="small">Chaque appareil a son outil. Ceux de votre plan sont signalés.</p><div class="items" style="gap:6px">'+
+      Object.keys(GUIDES).map(function(id){ return '<button type="button" class="hit" data-act="open" data-ref="g:'+id+'">'+esc(GUIDES[id].t)+(pl.indexOf(id)>=0?' <span class="pill ok">Dans votre plan</span>':'')+'</button>'; }).join("")+'</div>';
+  }
+  if(a.k==="secure"){
+    function blk(title,list,prefix){ return '<section><span class="kicker">'+title+'</span>'+checklist(list,prefix)+'</section>'; }
+    return close+'<div><span class="kicker">Aide à la configuration</span><h2 id="dlg-title">Sécuriser les comptes</h2></div><p class="small">Le contrôle parental ne vaut que si les comptes sont bien protégés. Cochez au fur et à mesure.</p>'+
+      blk("Vos comptes de parent",SECURE_PARENT,"sec:parent")+
+      S.kids.map(function(kk){ var a2=ageOf(kk); return blk("Les comptes de "+esc(kk.name),SECURE_KID.filter(function(x){return !x[3]||a2>=x[3];}),"sec:"+kk.id); }).join("")+
+      '<p class="small">En cas de piratage : <a href="https://www.cybermalveillance.gouv.fr" target="_blank" rel="noopener">cybermalveillance.gouv.fr</a></p>';
+  }
+  if(a.k==="app"){
+    var apps=allItems().filter(function(i){ var f=famOf(i); return f==="app"; });
+    var body2=close+'<div><span class="kicker">Aide à la configuration</span><h2 id="dlg-title">Autoriser une nouvelle application</h2></div>'+kidPicker()+
+      '<div class="frow"><span class="lbl">Application</span>'+apps.map(function(i){ return '<button type="button" class="chip" aria-pressed="'+(a.item===i.id)+'" data-act="as-set" data-f="item" data-v="'+i.id+'">'+esc(i.name)+'</button>'; }).join("")+'<button type="button" class="chip" data-act="new-item">Une autre app</button></div>';
+    if(!a.item) return body2+'<p class="small muted">Choisissez l\'application demandée.</p>';
+    var it=item(a.item), un=k&&under(it,k), cur=k?u(it.id,k.id).s:"";
+    return body2+'<div class="verdict '+(un?'warn':'ok')+'">'+(it.age?(un?'<b>Âge minimum non atteint.</b> '+esc(it.name)+' demande '+it.age+' ans dans ses conditions d\'utilisation ; '+esc(k.name)+' en a '+ageOf(k)+'.':'<b>Âge minimum respecté</b> ('+it.age+' ans).'):'<b>Pas d\'âge minimum indiqué.</b> Vérifiez le classement dans la boutique d\'applications.')+
+      (it.tos?' <a href="'+esc(it.tos)+'" target="_blank" rel="noopener">Lire les conditions d\'utilisation</a>':'')+'</div>'+
+      (it.what?'<p class="small">'+esc(it.what)+'</p>':'')+
+      (it.feats&&it.feats.length?'<p class="small"><span class="muted">Ce qu\'elle permet :</span> '+esc(it.feats.map(function(f){return (FEATS[f]||f).toLowerCase();}).join(", "))+'</p>':'')+
+      '<section><span class="kicker">Avant de dire oui</span><ol class="plain small"><li>Installation depuis la boutique officielle, avec votre accord</li><li>Compte créé ensemble, avec la vraie date de naissance</li>'+(it.settings||[]).map(function(s){return '<li>'+esc(s)+'</li>';}).join("")+'<li>Règles d\'usage convenues (quand, combien de temps, avec qui)</li></ol></section>'+
+      usageLinks(relatedUsages("i:"+it.id))+
+      (k?'<div class="toolbar"><button type="button" data-act="as-add" data-s="utilise"'+(cur==="utilise"?' disabled':'')+'>Autoriser pour '+esc(k.name)+'</button><button type="button" class="ghost" data-act="as-add" data-s="discussion"'+(cur==="discussion"?' disabled':'')+'>En discussion</button><button type="button" class="ghost" data-act="as-add" data-s="non"'+(cur==="non"?' disabled':'')+'>Pas pour l\'instant</button></div>':'')+
+      '<p class="tiny muted">'+(cur?'Statut actuel pour '+esc(k.name)+' : '+esc(lab2(STATUS,cur)):'')+'</p>';
+  }
+  if(a.k==="site"){
+    var mode=a.mode||"bloquer", site=(a.site||"").trim();
+    var tools=[];
+    var devs2={}; S.kids.forEach(function(kk){ allItems().forEach(function(i){ if(i.type==="appareil" && u(i.id,kk.id).s==="utilise") devs2[i.id]=1; }); });
+    var hasA=devs2.iphone||devs2.ipad||devs2.mac, hasG=devs2.android||S.kids.some(function(kk){return u("compte-google",kk.id).s==="utilise";}), hasW=devs2.windows;
+    var list=mode==="bloquer"?"« Ne jamais autoriser » (ou « Sites bloqués »)":"« Toujours autoriser » (ou « Sites approuvés »)";
+    if(hasA||!Object.keys(devs2).length) tools.push(["Temps d'écran (iPhone, iPad, Mac)","Réglages › Temps d'écran › votre enfant › Contenu et confidentialité › Restrictions de contenu › Contenu web : ajoutez l'adresse dans "+list+"."]);
+    if(hasG||!Object.keys(devs2).length) tools.push(["Family Link (Chrome)","App Family Link › votre enfant › Contrôles › Restrictions de contenu › Google Chrome › Gérer les sites : ajoutez l'adresse en "+(mode==="bloquer"?"site bloqué":"site approuvé")+"."]);
+    if(hasW||!Object.keys(devs2).length) tools.push(["Microsoft Family (Edge)","family.microsoft.com › votre enfant › Filtres de contenu › Web et recherche : ajoutez l'adresse dans « "+(mode==="bloquer"?"Sites bloqués":"Sites autorisés")+" »."]);
+    if(SUITES[(S.parent||{}).suite]) tools.push([SUITES[S.parent.suite],"Dans l'app, profil de votre enfant › filtrage web › exceptions ou liste de sites."]);
+    if((S.parent||{}).isp) tools.push(["Box "+(S.parent.isp==="autre"?"internet":S.parent.isp),"Application ou espace client de la box › contrôle parental › liste de sites (s'il est proposé)."]);
+    return close+'<div><span class="kicker">Aide à la configuration</span><h2 id="dlg-title">Bloquer ou autoriser un site web</h2></div>'+
+      '<label class="f" for="as-site">Adresse du site<input type="text" id="as-site" value="'+esc(a.site||"")+'" placeholder="ex. exemple.com"></label>'+
+      '<div class="frow"><button type="button" class="chip" aria-pressed="'+(mode==="bloquer")+'" data-act="as-set" data-f="mode" data-v="bloquer">Bloquer</button><button type="button" class="chip" aria-pressed="'+(mode==="autoriser")+'" data-act="as-set" data-f="mode" data-v="autoriser">Autoriser malgré les filtres</button></div>'+
+      '<section><span class="kicker">Où le régler'+(site?' pour '+esc(site):'')+'</span><div class="items" style="gap:8px">'+tools.map(function(t){ return '<div class="kidctl"><b class="small">'+esc(t[0])+'</b><span class="small">'+esc(t[1])+'</span></div>'; }).join("")+'</div></section>'+
+      '<p class="small muted">Chaque réglage ne vaut que pour l\'appareil ou le navigateur concerné : faites-le partout où l\'enfant navigue. Les intitulés peuvent varier selon les versions.</p>'+
+      (site?'<div class="toolbar"><button type="button" data-act="as-site-add">Noter ce site dans l\'inventaire</button></div>':'');
+  }
+  return close;
+}
+function lab2(list,k){ for(var i=0;i<list.length;i++) if(list[i][0]===k) return list[i][1]; return k; }
+var SECURE_PARENT = [["p1","Double authentification sur vos comptes Apple, Google et Microsoft","Elle demande un code en plus du mot de passe."],["p2","Un mot de passe différent pour chaque compte","Un gestionnaire de mots de passe aide beaucoup."],["p3","Numéro et e-mail de récupération à jour",""],["p4","Code Temps d'écran secret, différent du code de votre téléphone",""],["p5","Les enfants n'utilisent jamais votre session ni votre compte",""]];
+var SECURE_KID = [["k1","Vous connaissez ses identifiants ou pouvez les réinitialiser",""],["k2","Récupération du compte avec votre numéro ou votre e-mail",""],["k3","Code de verrouillage sur chacun de ses appareils",""],["k4","Localisation en cas de perte activée",""],["k5","Liste des appareils connectés à son compte vérifiée","Dans les réglages du compte Apple, Google ou Microsoft."],["k6","Double authentification activée sur ses comptes","",13],["k7","Il ou elle sait ne jamais donner un code reçu par SMS","",9]];
+function viewConfigurer(){
+  return '<section class="card"><h2>Que voulez-vous faire ?</h2><p class="small muted">Une aide pas à pas pour chaque situation.</p><div class="grid g3">'+
+    TASKS.map(function(t){ return '<button type="button" class="ucard task" data-act="assist" data-k="'+t[0]+'"><span class="ic fam-outil">'+svgIcon(t[1])+'</span><b>'+esc(t[2])+'</b><span class="small muted">'+esc(t[3])+'</span></button>'; }).join("")+'</div></section>'+viewSetup();
+}
+
+/* ============ Matrice apps / sites × écrans ============ */
+var IFACES = [["ios","iPhone, iPad","phone"],["android","Android","phone"],["web","Navigateur web","browser"],["desktop","App sur ordinateur","laptop"],["console","Console","console"]];
+var DEVCTL = {ios:"Temps d'écran : limite de temps, blocage de l'app, contenus",android:"Family Link : limite de temps, accord pour installer, blocage",web:"Filtres du navigateur : Microsoft Family (Edge), Temps d'écran (Safari), suite de sécurité ou box",desktop:"Microsoft Family (Windows) ou Temps d'écran (Mac)",console:"Contrôle parental de la console"};
+var AVAIL = {app:["App","ok"],web:["Site","ok"],lim:["Limité","warn"],non:["—",""]};
+var MATRIX = {
+ netflix:{acct:"Profils et contrôle parental Netflix",cells:{ios:["app"],android:["app"],web:["web","netflix.com"],desktop:["lim","App Windows ou navigateur"],console:["app","App sur Xbox ou PlayStation"]},tip:"Les réglages d'un profil (âge, code PIN) suivent le compte : ils s'appliquent sur tous les écrans, téléviseur compris."},
+ disney:{acct:"Profils Disney+ et code PIN",cells:{ios:["app"],android:["app"],web:["web","disneyplus.com"],desktop:["lim","Par le navigateur"],console:["app","App sur Xbox ou PlayStation"]},tip:"Un profil adulte sans code PIN ouvre tout le catalogue, sur n'importe quel écran."},
+ "prime-video":{acct:"Contrôle parental Prime Video (code PIN)",cells:{ios:["app"],android:["app"],web:["web","primevideo.com"],desktop:["lim","App Windows ou navigateur"],console:["app","App sur Xbox ou PlayStation"]},tip:"Le code PIN se règle appareil par appareil ou pour tous d'un coup : choisissez « tous les appareils »."},
+ vinted:{acct:"Aucun : c'est le compte du parent",cells:{ios:["app"],android:["app"],web:["web","vinted.fr"],desktop:["lim","Par le navigateur"],console:["non"]},tip:"Vinted ne propose pas de supervision : la règle convenue et le compte au nom du parent font office de contrôle."},
+ whatsapp:{acct:"Contrôles parentaux WhatsApp pour les 13-17 ans",cells:{ios:["app"],android:["app"],web:["lim","WhatsApp Web, relié au téléphone par un QR code"],desktop:["lim","App Windows ou Mac reliée au téléphone"],console:["non"]},tip:"Vérifiez de temps en temps la liste des « Appareils connectés » dans WhatsApp : un ordinateur oublié reste relié au compte."},
+ instagram:{acct:"Supervision du Centre familial Meta et Compte Ado",cells:{ios:["app"],android:["app"],web:["web","instagram.com"],desktop:["lim","Par le navigateur"],console:["non"]},tip:"Sur le web, la supervision du compte s'applique encore, mais la limite de temps de l'appareil ne compte que dans l'app."},
+ snapchat:{acct:"Snapchat Family Center",cells:{ios:["app"],android:["app"],web:["lim","Snapchat sur le web : messages et appels"],desktop:["lim","Par le navigateur"],console:["non"]},tip:"Le Family Center suit le compte : il reste utile même quand l'ado se connecte depuis un ordinateur."},
+ tiktok:{acct:"Connexion famille (TikTok)",cells:{ios:["app"],android:["app"],web:["web","tiktok.com"],desktop:["lim","Par le navigateur"],console:["non"]},tip:"Sur le web, beaucoup de vidéos se regardent sans être connecté : seuls les filtres du navigateur ou de la box agissent alors."},
+ discord:{acct:"Discord Family Center",cells:{ios:["app"],android:["app"],web:["web","discord.com"],desktop:["app","App Windows et Mac"],console:["lim","Vocal sur certaines consoles"]},tip:"Le Family Center suit le compte, quel que soit l'écran."},
+ youtube:{acct:"Family Link (compte supervisé) ou YouTube Kids",cells:{ios:["app"],android:["app"],web:["web","youtube.com"],desktop:["lim","Par le navigateur"],console:["app","App YouTube sur la plupart des consoles et TV"]},tip:"Les réglages supervisés ne s'appliquent que si l'enfant est connecté à son compte. Sans connexion, YouTube reste visible sans filtre de compte."},
+ roblox:{acct:"Contrôles parentaux Roblox (compte parent lié)",cells:{ios:["app"],android:["app"],web:["lim","Site pour le compte, le jeu se lance en app"],desktop:["app","App Windows et Mac"],console:["app","Xbox, PlayStation"]},tip:"Les réglages du compte Roblox suivent l'enfant partout : réglez-les une fois, ils valent sur tous les écrans."},
+ minecraft:{acct:"Microsoft Family (compte Microsoft)",cells:{ios:["app"],android:["app"],web:["non"],desktop:["app","Windows, Mac"],console:["app","Switch, Xbox, PlayStation"]},tip:"Le multijoueur se règle dans le compte Microsoft, pour toutes les versions du jeu."},
+ fortnite:{acct:"Contrôles parentaux Epic Games",cells:{ios:["lim","Selon la boutique disponible"],android:["app"],web:["non"],desktop:["app","Epic Games Launcher"],console:["app","Switch, Xbox, PlayStation"]},tip:"Les contrôles Epic Games suivent le compte ; ceux de la console s'ajoutent."},
+ duolingo:{acct:"Réglages de confidentialité Duolingo",cells:{ios:["app"],android:["app"],web:["web","duolingo.com"],desktop:["lim","Par le navigateur"],console:["non"]},tip:"Les réglages de confidentialité se trouvent plus facilement sur le site web que dans l'app."},
+ chatgpt:{acct:"Contrôles parentaux de l'éditeur, s'ils existent",cells:{ios:["app"],android:["app"],web:["web","chatgpt.com"],desktop:["app","App Windows et Mac"],console:["non"]},tip:"Utilisable sans compte sur le web : les réglages parentaux ne s'appliquent qu'au compte connecté."},
+ imessage:{acct:"Temps d'écran : Limites de communication",cells:{ios:["app"],android:["non"],web:["non"],desktop:["lim","Sur Mac uniquement"],console:["non"]},tip:"Les limites de communication réglées dans Temps d'écran s'appliquent à tous les appareils Apple du compte."},
+ ent:{acct:"Accès parent fourni par l'établissement",cells:{ios:["app"],android:["app"],web:["web","Site de l'ENT"],desktop:["lim","Par le navigateur"],console:["non"]},tip:""},
+ recherche:{acct:"SafeSearch (compte Google supervisé)",cells:{ios:["web"],android:["web"],web:["web"],desktop:["web"],console:["lim","Navigateur de la console, s'il existe"]},tip:"SafeSearch est lié au compte et au navigateur : vérifiez-le sur chaque navigateur utilisé."},
+ "streaming-illegal":{acct:"",cells:{ios:["web"],android:["web"],web:["web"],desktop:["web"],console:["non"]},tip:"Seuls les filtres de l'appareil, de la suite de sécurité ou de la box peuvent bloquer ces sites."},
+ "jeux-web":{acct:"",cells:{ios:["web"],android:["web"],web:["web"],desktop:["web"],console:["non"]},tip:""},
+ "sites-adultes":{acct:"",cells:{ios:["web"],android:["web"],web:["web"],desktop:["web"],console:["lim","Navigateur de la console, s'il existe"]},tip:"Activez le filtrage « contenu adulte » sur chaque appareil et sur la box : un seul navigateur non filtré suffit."}
+};
+function familyIfaces(){ var on={}; S.kids.forEach(function(k){ if(["iphone","ipad"].some(function(d){return u(d,k.id).s==="utilise";})) on.ios=1; if(u("android",k.id).s==="utilise") on.android=1; if(["windows","mac"].some(function(d){return u(d,k.id).s==="utilise";})){ on.web=1; on.desktop=1; } if(["switch","playstation","xbox"].some(function(d){return u(d,k.id).s==="utilise";})) on.console=1; }); return on; }
+function cellBadge(c){ var a=AVAIL[c[0]]||AVAIL.non; return '<span class="pill '+(a[1]||"plain")+'">'+a[0]+'</span>'; }
+function matrixTable(ids,compact){
+  var on=familyIfaces();
+  return '<div class="tablewrap"><table class="mx"><thead><tr><th>Application ou site</th>'+IFACES.map(function(f){ return '<th class="'+(on[f[0]]?'hl':'')+'"><span class="thic">'+svgIcon(f[2])+'</span>'+esc(f[1])+(on[f[0]]?'<span class="tiny muted"> · chez vous</span>':'')+'</th>'; }).join("")+'</tr></thead><tbody>'+
+    ids.map(function(id){ var m=MATRIX[id], it=item(id); if(!m||!it) return ""; return '<tr><th scope="row"><button type="button" class="quiet" data-act="open" data-ref="i:'+id+'">'+iconFor(it)+esc(it.name)+'</button></th>'+IFACES.map(function(f){ var c=m.cells[f[0]]||["non"]; return '<td class="'+(on[f[0]]?'hl':'')+'">'+(c[0]==="non"?'<span class="muted">—</span>':'<button type="button" class="cell" data-act="open" data-ref="m:'+id+':'+f[0]+'" aria-label="'+esc(it.name)+' sur '+esc(f[1])+'">'+cellBadge(c)+(c[1]&&!compact?'<span class="tiny muted">'+esc(c[1])+'</span>':'')+'</button>')+'</td>'; }).join("")+'</tr>'; }).join("")+'</tbody></table></div>';
+}
+function cellBody(id,fk){
+  var m=MATRIX[id], it=item(id), f=IFACES.filter(function(x){return x[0]===fk;})[0], c=m.cells[fk]||["non"];
+  return '<button type="button" class="quiet close" data-act="close">Fermer</button><div class="dhead">'+iconFor(it)+'<div><span class="kicker">'+esc(it.name)+' · sur '+esc(f[1])+'</span><h2 id="dlg-title">'+esc(AVAIL[c[0]][0]==="—"?"Non disponible":AVAIL[c[0]][0]==="App"?"Application":AVAIL[c[0]][0]==="Site"?"Site web":"Disponible avec des limites")+'</h2></div></div>'+
+    (c[1]?'<p class="small">'+esc(c[1])+'.</p>':'')+
+    '<section class="layer"><span class="kicker">1 · Les réglages du compte</span><p class="small">'+(m.acct?esc(m.acct)+'. Ils suivent l\'enfant sur tous les écrans où il est connecté à son compte.':'Pas de réglage de compte : tout passe par les filtres de l\'appareil, du navigateur ou de la box.')+'</p></section>'+
+    '<section class="layer"><span class="kicker">2 · Les réglages de l\'appareil</span><p class="small">'+esc(DEVCTL[fk])+'. Ils ne valent que sur cet appareil.</p></section>'+
+    (m.tip?'<section class="layer tipbox"><span class="kicker">Bon à savoir</span><p class="small">'+esc(m.tip)+'</p></section>':'')+
+    '<div class="toolbar"><button type="button" class="ghost" data-act="open" data-ref="i:'+id+'">Fiche '+esc(it.name)+'</button></div>';
+}
+function viewMatrix(){
+  var ids=Object.keys(MATRIX).filter(function(id){ if(!item(id)) return false; if(!UI.mxUsed) return true; return S.kids.some(function(k){ var s=u(id,k.id).s; return s==="utilise"||s==="discussion"; }); });
+  return '<section class="card"><h2>Sur quels écrans ?</h2><p class="small">Une même app peut s\'utiliser sur le téléphone, sur un ordinateur ou sur une console. Deux niveaux de réglage existent :</p>'+
+    '<div class="grid g2"><div class="layer"><b class="small">Les réglages du compte</b><p class="small muted">Supervision Instagram, Family Center Snapchat, Roblox… Ils suivent l\'enfant partout où il est connecté.</p></div><div class="layer"><b class="small">Les réglages de l\'appareil</b><p class="small muted">Temps d\'écran, Family Link, Microsoft Family, filtres. Ils ne valent que sur l\'appareil réglé.</p></div></div>'+
+    '<div class="frow"><button type="button" class="chip" aria-pressed="'+(!!UI.mxUsed)+'" data-act="mx-used">Seulement ce que mes enfants utilisent</button></div><p class="tiny muted">Les colonnes surlignées sont les écrans présents chez vous. Touchez une case pour le détail.</p></section>'+
+    '<section class="card">'+(ids.length?matrixTable(ids,false):'<p class="muted small">Rien à afficher : indiquez d\'abord ce que vos enfants utilisent.</p>')+'</section>';
+}
+var COMMON_SOCIAL = ["Compte privé","Commentaires et mentions limités aux personnes connues","Position précise désactivée","Liste des abonnés vérifiée régulièrement","Savoir bloquer un contact et signaler un message, une photo ou un commentaire"];
+
+/* ============ Parcours d'accueil ============ */
+function viewWizard(){
+  var steps=["Vos enfants","Leurs appareils","Ce qu'ils utilisent","Vos outils"];
+  var head='<div class="wsteps" aria-label="Étapes">'+steps.map(function(s,i){ return '<span class="'+(i+1===UI.step?'on':(i+1<UI.step?'done':''))+'">'+(i+1)+'. '+s+'</span>'; }).join("")+'</div>';
+  var body="";
+  if(UI.step===1){
+    if(!S.kids.length) S.kids.push({id:uid("k"),name:"",year:"",month:"",color:COLORS[0]});
+    body='<div><span class="brand-mark big" aria-hidden="true">EC</span><h1>Bienvenue dans En clair</h1><p class="lead muted" style="margin-top:8px">La vie numérique de vos enfants, expliquée. Cet outil vous aide à suivre la vie numérique de vos enfants : ce qu\'ils utilisent, les réglages à faire, et des repères pour en parler avec eux. Tout reste sur cet ordinateur.</p></div>'+
+      '<div class="card"><h2>Vos enfants</h2><p class="small muted">Le prénom et l\'année de naissance suffisent. L\'âge sert à adapter les conseils.</p>'+kidRows()+
+      '<div class="toolbar"><button type="button" class="ghost" data-act="add-kid">Ajouter un enfant</button></div></div>'+
+      '<div class="toolbar"><button type="button" data-act="w-next">Continuer</button><button type="button" class="quiet" data-act="import">J\'ai déjà un fichier de sauvegarde</button></div>';
+  } else if(UI.step===2){
+    var devs=allItems().filter(function(i){return i.type==="appareil";});
+    body='<div><h1>Leurs appareils</h1><p class="lead muted" style="margin-top:8px">Touchez les appareils que chaque enfant utilise, même s\'ils sont partagés.</p></div>'+
+      S.kids.map(function(k){ return '<div class="card kid" style="--kc:'+esc(k.color)+'"><h2>'+esc(k.name)+'</h2><div class="pills">'+devs.map(function(it){ return chip(it,k); }).join("")+'</div></div>'; }).join("")+
+      '<div class="toolbar"><button type="button" data-act="w-next">Continuer</button><button type="button" class="ghost" data-act="w-back">Retour</button></div>';
+  } else if(UI.step===4){
+    body='<div><h1>Vos outils à vous</h1><p class="lead muted" style="margin-top:8px">Six questions sur votre propre équipement. Elles servent à choisir les bons outils de contrôle parental et à vous proposer un plan pas à pas.</p></div>'+
+      '<div class="card grid" style="gap:18px">'+questionsHtml()+'</div>'+
+      '<div class="toolbar"><button type="button" data-act="w-done">Voir mon plan</button><button type="button" class="ghost" data-act="w-back">Retour</button></div>';
+  } else {
+    var groups=TYPES.filter(function(t){return ["reseau","video","jeu","ecole","ia","compte"].indexOf(t[0])>=0;});
+    body='<div><h1>Ce qu\'ils utilisent</h1><p class="lead muted" style="margin-top:8px">Touchez ce que chaque enfant utilise déjà. L\'âge indiqué est le minimum fixé par l\'app elle-même ; il apparaît en orange quand votre enfant ne l\'a pas encore. Vous pourrez tout modifier ensuite.</p></div>'+
+      S.kids.map(function(k){ return '<div class="card kid" style="--kc:'+esc(k.color)+'"><h2>'+esc(k.name)+' <span class="small muted">'+ageOf(k)+' ans</span></h2>'+
+        groups.map(function(g){ var its=allItems().filter(function(i){return i.type===g[0];}); if(!its.length) return ""; return '<div class="group"><span class="kicker">'+g[1]+'</span><div class="pills">'+its.map(function(it){return chip(it,k);}).join("")+'</div></div>'; }).join("")+'</div>'; }).join("")+
+      '<div class="toolbar"><button type="button" data-act="w-next">Continuer</button><button type="button" class="ghost" data-act="w-back">Retour</button></div>';
+  }
+  return '<div class="wizard">'+head+body+'<p class="tiny muted">'+(UI.msg?esc(UI.msg):'')+'</p></div>';
+}
+function chip(it,k){
+  var on=u(it.id,k.id).s==="utilise", un=under(it,k);
+  return '<button type="button" class="chip'+(un?' under':'')+'" aria-pressed="'+on+'" data-act="toggle-use" data-item="'+it.id+'" data-kid="'+k.id+'">'+iconFor(it)+esc(it.name)+(it.age?' <span class="age">'+it.age+'+</span>':'')+'</button>';
+}
+function kidRows(){
+  var years=[]; for(var y=new Date().getFullYear(); y>=new Date().getFullYear()-20; y--) years.push(y);
+  var mois=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+  return S.kids.map(function(k,ix){
+    return '<div class="kidrow"><label class="f" for="kn-'+k.id+'">Prénom<input type="text" id="kn-'+k.id+'" data-kfield="name" data-kid="'+k.id+'" value="'+esc(k.name)+'" autocomplete="off"></label>'+
+      '<label class="f" for="ky-'+k.id+'">Année de naissance<select id="ky-'+k.id+'" data-kfield="year" data-kid="'+k.id+'"><option value="">Choisir</option>'+years.map(function(y){return '<option'+(+k.year===y?' selected':'')+'>'+y+'</option>';}).join("")+'</select></label>'+
+      '<label class="f" for="km-'+k.id+'">Mois (facultatif)<select id="km-'+k.id+'" data-kfield="month" data-kid="'+k.id+'"><option value="">—</option>'+mois.map(function(m,i){return '<option value="'+(i+1)+'"'+(+k.month===i+1?' selected':'')+'>'+m+'</option>';}).join("")+'</select></label>'+
+      '<div class="swatches" role="group" aria-label="Couleur de '+esc(k.name||"cet enfant")+'">'+COLORS.map(function(c){return '<button type="button" style="background:'+c+'" aria-label="Couleur" aria-pressed="'+(k.color===c)+'" data-act="kid-color" data-kid="'+k.id+'" data-color="'+c+'"></button>';}).join("")+
+      (S.kids.length>1?'<button type="button" class="quiet" data-act="del-kid" data-kid="'+k.id+'">Retirer</button>':'')+'</div></div>';
+  }).join("");
+}
+
+/* ============ Vues principales ============ */
+var TAB_ICON={accueil:"home","mise-en-place":"gear",conseils:"heart",enfants:"users",apps:"phone",rituel:"chat",charte:"doc",sauvegarde:"lock"};
+var TABS=[["accueil","Accueil"],["mise-en-place","Configurer"],["conseils","Conseils"],["enfants","Enfants"],["apps","Ce qu'ils utilisent"],["rituel","Point famille"],["charte","Charte"],["sauvegarde","Sauvegarde"]];
+function backupBanner(){
+  var d=daysSince(S.lastExport);
+  if(!storageOK) return '<div class="banner"><span>Votre navigateur n\'enregistre pas les données de cette page. Faites une sauvegarde avant de la fermer.</span><button type="button" data-act="export">Sauvegarder</button></div>';
+  if(d===null) return '<div class="banner"><span>Vos informations restent dans ce navigateur. Gardez-en une copie : une sauvegarde prend deux secondes.</span><button type="button" data-act="export">Sauvegarder maintenant</button></div>';
+  if(d>30) return '<div class="banner"><span>Dernière sauvegarde il y a '+d+' jours.</span><button type="button" data-act="export">Sauvegarder</button></div>';
+  return "";
+}
+function kidSel(){ if(UI.kidSel && kid(UI.kidSel)) return UI.kidSel; return S.kids.length===1?S.kids[0].id:""; }
+function avatar(k,cls){ return '<span class="avatar'+(cls?' '+cls:'')+'" aria-hidden="true" style="--kc:'+esc(k.color)+'">'+esc((k.name||"?").charAt(0).toUpperCase())+'</span>'; }
+function kidTabs(allowAll){
+  if(S.kids.length<2 && !allowAll) return "";
+  var sel=kidSel();
+  return '<div class="kidtabs" role="tablist" aria-label="Choisir un enfant">'+
+    (allowAll&&S.kids.length>1?'<button type="button" role="tab" class="kidtab" aria-selected="'+(!sel)+'" data-act="kid-sel" data-kid=""><span class="avatar all" aria-hidden="true">'+svgIcon("users")+'</span><span>Vue d\'ensemble</span></button>':'')+
+    S.kids.map(function(k){ var n=todos(k).length, w=todos(k).filter(function(x){return x.warn;}).length, rq=pendingRequests(k.id).length;
+      return '<button type="button" role="tab" class="kidtab" aria-selected="'+(sel===k.id)+'" data-act="kid-sel" data-kid="'+k.id+'">'+avatar(k)+'<span>'+esc(k.name)+'<small>'+ageOf(k)+' ans</small></span>'+(w?'<span class="badge warn" title="Alertes">'+w+'</span>':'')+(rq?'<span class="badge" title="Demandes">'+rq+'</span>':'')+'</button>'; }).join("")+'</div>';
+}
+function pendingRequests(kidId){ return (S.requests||[]).filter(function(r){ return r.kid===kidId && r.status!=="traitee"; }); }
+function todoList(k,max){
+  var td=todos(k);
+  if(!td.length) return '<ul class="todo"><li class="done"><span class="ico">✓</span><span class="small">Rien d\'urgent. Pensez au point famille du mois.</span><span></span></li></ul>';
+  return '<ul class="todo">'+td.slice(0,max||99).map(function(x){ return '<li class="'+(x.warn?'warn':'')+'"><span class="ico">'+(x.warn?'!':'→')+'</span><span class="small">'+esc(x.t)+'</span><button type="button" class="quiet" data-act="open-item" data-item="'+x.id+'">'+x.btn+'</button></li>'; }).join("")+'</ul>'+(max&&td.length>max?'<a class="small" href="#enfants" data-act="kid-sel" data-kid="'+k.id+'">Voir les '+td.length+' actions</a>':'');
+}
+function requestsBlock(k){
+  var rq=pendingRequests(k.id); if(!rq.length) return "";
+  return '<div class="reqs"><span class="kicker">Demandes de '+esc(k.name)+'</span>'+rq.map(function(r){ return '<div class="req"><div><b>'+esc(r.what)+'</b>'+(r.why?'<span class="small muted"> · '+esc(r.why)+'</span>':'')+'<div class="tiny muted">'+esc(fmtDate(r.date))+'</div></div><button type="button" class="quiet" data-act="req-done" data-id="'+esc(r.id)+'">Vu au point famille</button></div>'; }).join("")+'</div>';
+}
+function kidSummary(k){
+  var bp=bandProgress(k), sc=settledCount(k);
+  return '<div class="grid" style="grid-template-columns:1fr 1fr;gap:10px"><div class="stat"><span class="kicker">Réglages faits</span><b>'+sc.ok+' / '+sc.used+'</b></div><div class="stat"><span class="kicker">Essentiels de son âge</span><b>'+bp.n+' / '+bp.t+'</b></div></div>';
+}
+function overviewTiles(){
+  return '<section class="kidgrid">'+S.kids.map(function(k){
+    var td=todos(k), w=td.filter(function(x){return x.warn;}).length, bp=bandProgress(k), sc=settledCount(k), rq=pendingRequests(k.id).length;
+    return '<button type="button" class="kidtile" style="--kc:'+esc(k.color)+'" data-act="kid-sel" data-kid="'+k.id+'"><span class="kidhead">'+avatar(k)+'<span><b>'+esc(k.name)+'</b><small>'+ageOf(k)+' ans · '+esc(bp.b.n)+'</small></span></span>'+
+      '<span class="tilebar"><span class="tiny muted">Réglages</span>'+progressBar(sc.ok,sc.used)+'</span><span class="tilebar"><span class="tiny muted">Essentiels</span>'+progressBar(bp.n,bp.t)+'</span>'+
+      '<span class="pills">'+(w?'<span class="pill warn">'+plural(w,"alerte")+'</span>':'')+'<span class="pill plain">'+plural(td.length,"action")+'</span>'+(rq?'<span class="pill">'+plural(rq,"demande")+'</span>':'')+'</span></button>';
+  }).join("")+'</section>';
+}
+function viewAccueil(){
+  var tp=monthTopics()[0];
+  var tot=planTotals(), ns=nextStep();
+  var planCard = !S.parentDone ? '<section class="card soft"><h2>Votre plan de mise en place</h2><p class="small">Répondez à six questions sur votre propre équipement : l\'outil vous indique quels contrôles parentaux activer, et comment, étape par étape.</p><div class="toolbar"><a class="btn" href="#mise-en-place">Répondre aux questions</a></div></section>'
+    : '<section class="card soft"><div class="toolbar" style="justify-content:space-between"><h2>Votre plan de mise en place</h2><span class="pill plain">'+tot.n+' / '+tot.t+' étapes</span></div>'+progressBar(tot.n,tot.t)+
+      (ns?'<p class="small"><span class="muted">Prochaine étape · '+esc(guideTitle(ns.e))+' :</span><br>'+esc(ns.s[1])+'</p><div class="toolbar"><a class="btn" href="#mise-en-place">Continuer la mise en place</a></div>':'<p class="small">Tous les outils sont en place. Pensez à revoir les réglages une fois par trimestre.</p>')+'</section>';
+  var sel=kidSel(), k=kid(sel);
+  var kidsBlock = !S.kids.length ? '' : (k ? '<section class="card kid" style="--kc:'+esc(k.color)+'"><div class="toolbar" style="justify-content:space-between"><div class="kidhead">'+avatar(k)+'<h2>'+esc(k.name)+'</h2></div><span class="pill plain">'+ageOf(k)+' ans · '+esc(bandProgress(k).b.n)+'</span></div>'+kidSummary(k)+requestsBlock(k)+'<div class="kicker">À faire</div>'+todoList(k,6)+
+      '<div class="toolbar"><a class="btn ghost" href="#enfants">Voir la fiche de '+esc(k.name)+'</a><button type="button" class="ghost" data-act="child-open" data-kid="'+k.id+'">Ouvrir son espace</button></div></section>' : overviewTiles());
+  return backupBanner()+planCard+kidTabs(true)+kidsBlock+
+  '<section class="grid g2"><div class="card soft"><span class="kicker">Sujet du mois · '+esc(tp.label)+'</span><h3>'+esc(tp.t[0])+'</h3><p class="small">'+esc(tp.t[1])+'</p><a class="small" href="#rituel">Préparer le point famille</a></div>'+
+  '<div class="card"><div class="toolbar" style="justify-content:space-between"><h3>Conseils pour leur âge</h3><a class="small" href="#conseils">Tous les conseils</a></div><div class="pills">'+USAGES.filter(usageFits).slice(0,8).map(function(x){ return '<button type="button" class="chip" data-act="open" data-ref="u:'+x.id+'">'+esc(x.t)+'</button>'; }).join("")+'</div></div></section>'+
+  '<section class="card"><h2>Vos comptes de parent</h2><p class="small muted">Le socle de tout le reste.</p>'+progressBar(PARENT.filter(function(x){return S.checks["parent:"+x[0]];}).length,PARENT.length)+checklist(PARENT,"parent")+'</section>';
+}
+function checklist(list,prefix){
+  return '<div class="checks">'+list.map(function(c){ var key=prefix+":"+c[0], on=!!S.checks[key];
+    return '<label class="chk'+(on?' done':'')+'"><input type="checkbox" id="c-'+esc(key)+'" data-check="'+esc(key)+'"'+(on?' checked':'')+'><span>'+esc(c[1])+(c[2]?'<small>'+esc(c[2])+'</small>':'')+'</span></label>'; }).join("")+'</div>';
+}
+var CHILD_LABEL={utilise:["C'est bon","ok"],discussion:["On en parle","warn"],non:["Pas pour l'instant","plain"]};
+function viewEnfants(){
+  if(!S.kids.length) return '<section class="card"><h2>Mes enfants</h2><p class="small">Ajoutez votre premier enfant.</p><div class="toolbar"><button type="button" data-act="manage-kids">Ajouter un enfant</button></div></section>';
+  if(!kidSel()) UI.kidSel=S.kids[0].id;
+  var k=kid(kidSel()), bp=bandProgress(k);
+  var groups=FAMS.map(function(f){ var its=allItems().filter(function(it){ return famOf(it)===f[0] && u(it.id,k.id).s; }); if(!its.length) return ""; return '<div class="usegroup"><span class="kicker">'+f[1]+'</span><div class="uselist">'+its.map(function(it){ var x=u(it.id,k.id), lab=famOf(it)==="outil"?"Activé":lab2(STATUS,x.s);
+      return '<button type="button" class="userow" data-act="open-item" data-item="'+it.id+'">'+iconFor(it)+'<span class="un">'+esc(it.name)+(x.note?'<small>'+esc(x.note)+'</small>':'')+'</span><span class="pill '+(x.s==="utilise"?(x.ok||!it.settings||!it.settings.length?'ok':'warn'):x.s==="discussion"?'warn':'plain')+'">'+esc(lab)+(x.s==="utilise"&&it.settings&&it.settings.length&&!x.ok?' · à régler':'')+'</span></button>'; }).join("")+'</div></div>'; }).join("");
+  return '<section class="card"><div class="toolbar" style="justify-content:space-between"><h2>Mes enfants</h2><button type="button" class="ghost" data-act="manage-kids">Gérer les enfants</button></div>'+kidTabs(false)+'</section>'+
+    '<section class="card kid" style="--kc:'+esc(k.color)+'"><div class="toolbar" style="justify-content:space-between"><div class="kidhead">'+avatar(k,"lg")+'<div><h2>'+esc(k.name)+'</h2><span class="small muted">'+ageOf(k)+' ans · '+esc(bp.b.n)+'</span></div></div><div class="toolbar"><button type="button" data-act="child-open" data-kid="'+k.id+'">Ouvrir son espace</button><button type="button" class="ghost" data-act="child-export" data-kid="'+k.id+'">Exporter son espace</button></div></div>'+
+      '<p class="lead">'+esc(bp.b.key)+'</p>'+kidSummary(k)+requestsBlock(k)+'</section>'+
+    '<section class="grid g2"><div class="card"><h3>À faire</h3>'+todoList(k)+'</div><div class="card"><h3>Les essentiels pour son âge</h3>'+progressBar(bp.n,bp.t)+checklist(bp.b.items,k.id)+'</div></section>'+
+    '<section class="card"><div class="toolbar" style="justify-content:space-between"><h3>Ce qu\'il ou elle utilise</h3><a class="small" href="#apps" data-act="go-kid-apps" data-kid="'+k.id+'">Modifier</a></div>'+(groups||'<p class="small muted">Rien pour l\'instant.</p>')+'</section>'+
+    '<section class="card"><h3>Conseils pour son âge</h3><div class="pills">'+USAGES.filter(function(x){ var a=ageOf(k); return a>=x.a[0]&&a<=x.a[1]; }).map(function(x){ return '<button type="button" class="chip" data-act="open" data-ref="u:'+x.id+'">'+esc(x.t)+'</button>'; }).join("")+'</div></section>';
+}
+/* ---------- Espace enfant ---------- */
+var KID_REFLEX={
+ p:["Je ne parle pas aux inconnus en ligne, même s'ils sont gentils.","Si je vois quelque chose qui me gêne, je ferme et je le dis à un adulte.","Mes codes sont secrets.","Je demande avant d'installer une app ou un jeu."],
+ c:["Mon téléphone dort hors de ma chambre.","Je ne transfère jamais la photo de quelqu'un sans son accord.","Un inconnu reste un inconnu, même gentil.","Si quelqu'un me menace ou me fait du chantage, j'en parle : ce n'est jamais ma faute.","Je ne donne jamais un code reçu par SMS, même à un ami."],
+ l:["Je règle moi-même la confidentialité de mes comptes.","J'active la double authentification.","Je réfléchis avant de publier : ce qui est en ligne peut rester.","Je sais où trouver de l'aide : le 3018."]
+};
+function parentSees(k){
+  var out=[], us=function(id){ return u(id,k.id).s==="utilise"; };
+  if(us("iphone")||us("ipad")||us("mac")) out.push(["Temps d'écran (Apple)","le temps passé sur chaque app, et tes demandes d'achat ou de temps en plus."]);
+  if(us("android")) out.push(["Family Link","les apps installées, le temps passé, et ta position si on l'a activée ensemble."]);
+  if(us("compte-google")) out.push(["Ton compte Google","les nouvelles connexions à ton compte (par exemple depuis un autre navigateur)."]);
+  if(us("windows")) out.push(["Microsoft Family","le temps passé sur l'ordinateur, les sites visités dans Edge et tes demandes."]);
+  if(us("switch")) out.push(["Console Nintendo","le temps de jeu et les jeux utilisés."]);
+  if(us("instagram")) out.push(["Instagram","tes abonnés, tes abonnements et avec qui tu écris, jamais le contenu des messages."]);
+  if(us("snapchat")) out.push(["Snapchat","ta liste d'amis et avec qui tu as échangé récemment, jamais le contenu."]);
+  if(us("discord")) out.push(["Discord","tes serveurs et tes nouveaux amis, jamais le contenu des messages."]);
+  if(us("whatsapp")) out.push(["WhatsApp","rien, sauf si on active ensemble les contrôles pour les ados (une alerte quand tu rejoins un groupe)."]);
+  return out;
+}
+function childBody(k, forExport){
+  var b=band(ageOf(k)), c=charte(), tp=monthTopics()[0];
+  var items=allItems().filter(function(it){ var s=u(it.id,k.id).s; return s && ["appareil","app","site"].indexOf(famOf(it))>=0 && it.type!=="navigateur"; });
+  var seen=parentSees(k);
+  var reqs=(S.requests||[]).filter(function(r){return r.kid===k.id;}).slice(-5).reverse();
+  return '<section class="ccard hero" style="--kc:'+esc(k.color)+'">'+avatar(k,"xl")+'<div><h1>Salut '+esc(k.name)+'</h1><p class="lead">Ici, tu retrouves ce qu\'on a décidé ensemble pour tes écrans : ce que tu utilises, nos règles, ce que tes parents peuvent voir, et à qui parler si quelque chose ne va pas.</p></div></section>'+
+  '<section class="ccard"><h2>Ce que tu utilises</h2>'+(items.length?'<div class="cgrid">'+items.map(function(it){ var x=u(it.id,k.id), l=CHILD_LABEL[x.s]||["",""]; return '<div class="citem">'+iconFor(it)+'<div><b>'+esc(it.name)+'</b></div><span class="pill '+l[1]+'">'+esc(l[0])+'</span></div>'; }).join("")+'</div>':'<p class="small muted">Rien pour l\'instant.</p>')+
+    '<p class="tiny muted">« On en parle » : on en discute au prochain point famille. « Pas pour l\'instant » : la réponse peut changer en grandissant.</p></section>'+
+  '<section class="ccard"><h2>Ce que tes parents peuvent voir</h2><p class="small">Pas de surveillance cachée : voici exactement ce que les outils montrent.</p><ul class="seen">'+seen.map(function(s){ return '<li><b>'+esc(s[0])+'</b> : '+esc(s[1])+'</li>'; }).join("")+'<li class="never"><b>Jamais</b> : le contenu de tes messages et de tes conversations.</li></ul></section>'+
+  '<section class="cgrid2"><div class="ccard"><h2>Nos règles</h2><ol class="plain">'+c.kids.concat(c.common).map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ol></div>'+
+    '<div class="ccard"><h2>Tes bons réflexes</h2><ul class="plain">'+KID_REFLEX[b].map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul></div></section>'+
+  '<section class="ccard help"><h2>Si quelque chose ne va pas</h2><p>Parles-en à tes parents ou à un adulte de confiance. <b>Tu ne seras jamais puni pour avoir parlé.</b></p><div class="cgrid"><div class="citem"><b class="num">3018</b><div><b>Harcèlement, chantage, photos qui circulent</b><small>Gratuit et confidentiel, 7 j/7 de 9 h à 23 h, par téléphone, tchat ou l\'app 3018.</small></div></div><div class="citem"><b class="num">119</b><div><b>Si tu es en danger</b><small>Gratuit, 24 h/24.</small></div></div></div></section>'+
+  '<section class="ccard"><h2>Le sujet du mois</h2><p><b>'+esc(tp.t[0])+'</b> · '+esc(tp.t[1])+'</p></section>'+
+  (forExport?'<section class="ccard"><h2>Une demande ?</h2><p class="small">Une app, un jeu, un site, plus de temps ? Note-la et parles-en au prochain point famille.</p></section>':
+  '<section class="ccard"><h2>Une demande ?</h2><p class="small">Une app, un jeu, un site, plus de temps ? Écris-la ici : elle apparaîtra chez tes parents pour le prochain point famille.</p><form class="form" id="reqform"><div class="row"><label class="f" for="rq-what">Ce que je voudrais<input type="text" id="rq-what" placeholder="ex. Snapchat, 30 min de plus le samedi"></label><label class="f" for="rq-why">Pourquoi (facultatif)<input type="text" id="rq-why"></label></div><div class="toolbar"><button type="submit">Envoyer ma demande</button></div></form>'+
+    (reqs.length?'<ul class="plain small">'+reqs.map(function(r){ return '<li>'+esc(r.what)+' · <span class="muted">'+(r.status==="traitee"?'vue au point famille':'en attente')+'</span></li>'; }).join("")+'</ul>':'')+'</section>');
+}
+function viewChild(){
+  var k=kid(UI.child);
+  return '<div class="childmode" style="--kc:'+esc(k.color)+'"><header class="ctop"><div class="wrap ctop-row"><div class="brand"><span class="brand-mark" aria-hidden="true">EC</span><div><b>En clair</b><span class="small muted"> · l\'espace de '+esc(k.name)+'</span></div></div><button type="button" class="ghost" data-act="child-exit">Revenir à l\'espace parent</button></div></header><main class="wrap cmain">'+childBody(k,false)+'</main></div>';
+}
+function exportChild(k){
+  var css=document.querySelector("style").textContent;
+  var html='<!DOCTYPE html>\n<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>En clair · l\'espace de '+esc(k.name)+'</title><style>'+css+'</style></head><body><div class="childmode" style="--kc:'+esc(k.color)+'"><header class="ctop"><div class="wrap ctop-row"><div class="brand"><span class="brand-mark" aria-hidden="true">EC</span><div><b>En clair</b><span class="small muted"> · l\'espace de '+esc(k.name)+'</span></div></div><span class="tiny muted">Mis à jour le '+esc(fmtDate(todayISO()))+'</span></div></header><main class="wrap cmain">'+childBody(k,true)+'</main></div></body></html>';
+  download("en-clair-espace-"+slug(k.name)+".html", html, "text/html");
+}
+function statusOpts(it){ return famOf(it)==="outil" ? [["","Non activé"],["utilise","Activé"]] : STATUS; }
+function viewApps(){
+  var sw='<div class="frow seg"><button type="button" class="chip" aria-pressed="'+(UI.appsView!=="ecrans")+'" data-act="apps-view" data-v="liste">Liste</button><button type="button" class="chip" aria-pressed="'+(UI.appsView==="ecrans")+'" data-act="apps-view" data-v="ecrans">Par écran</button></div>';
+  if(UI.appsView==="ecrans") return '<section class="card"><h2>Ce qu\'ils utilisent</h2>'+sw+'</section>'+viewMatrix();
+  return viewAppsList(sw);
+}
+function viewAppsList(sw){
+  var list=allItems().filter(function(it){
+    if(UI.fFam && famOf(it)!==UI.fFam) return false;
+    if(UI.fType && it.type!==UI.fType) return false;
+    var ks = UI.fKid ? S.kids.filter(function(k){return k.id===UI.fKid;}) : S.kids;
+    if(UI.fUsed && !ks.some(function(k){ var s=u(it.id,k.id).s; return s==="utilise"||s==="discussion"; })) return false;
+    if(UI.fTodo && !ks.some(function(k){ var x=u(it.id,k.id); return (x.s==="utilise" && !x.ok) || ((x.s==="utilise"||x.s==="discussion") && under(it,k)) || x.s==="discussion"; })) return false;
+    if(UI.q && (it.name+" "+(it.what||"")+" "+(it.ctl||"")).toLowerCase().indexOf(UI.q.toLowerCase())<0) return false;
+    return true;
+  });
+  var ks = UI.fKid ? S.kids.filter(function(k){return k.id===UI.fKid;}) : S.kids;
+  return '<section class="card"><div class="toolbar" style="justify-content:space-between"><div><h2>Ce qu\'ils utilisent</h2><p class="small muted">Appareils, comptes, applications, sites web et outils parentaux. Indiquez pour chaque enfant ce qu\'il utilise, puis cochez « Réglages faits ». Touchez un nom pour sa fiche.</p></div><button type="button" class="ghost" data-act="new-item">Ajouter un élément</button></div>'+sw+
+    '<div class="famtabs" role="group" aria-label="Familles">'+[["","Tout","globe"]].concat(FAMS.map(function(f){return [f[0],f[1],{appareil:"phone",compte:"key",app:"chat",site:"globe",outil:"shield"}[f[0]]];})).map(function(f){ var n=allItems().filter(function(i){return !f[0]||famOf(i)===f[0];}).length; return '<button type="button" class="famtab'+(f[0]?' fam-'+f[0]:'')+'" aria-pressed="'+(UI.fFam===f[0])+'" data-act="f-fam" data-v="'+f[0]+'"><span class="ic'+(f[0]?' fam-'+f[0]:'')+'">'+svgIcon(f[2])+'</span><span>'+f[1]+'</span><span class="tiny muted">'+n+'</span></button>'; }).join("")+'</div>'+
+    (UI.fFam?'<p class="small">'+esc(FAMS.filter(function(f){return f[0]===UI.fFam;})[0][2])+'</p>':'')+
+    '<div class="filters">'+
+      '<div class="frow"><span class="lbl">Enfant</span><button type="button" class="chip" aria-pressed="'+(!UI.fKid)+'" data-act="f-kid" data-kid="">Tous</button>'+S.kids.map(function(k){return '<button type="button" class="chip" aria-pressed="'+(UI.fKid===k.id)+'" data-act="f-kid" data-kid="'+k.id+'">'+esc(k.name)+'</button>';}).join("")+'</div>'+
+      '<div class="frow"><span class="lbl">Afficher</span><button type="button" class="chip" aria-pressed="'+UI.fUsed+'" data-act="f-used">Seulement ce qui est utilisé</button><button type="button" class="chip" aria-pressed="'+UI.fTodo+'" data-act="f-todo">Seulement ce qui demande une action</button></div>'+
+      (UI.fFam==="app"?'<div class="frow"><span class="lbl">Catégorie</span><button type="button" class="chip" aria-pressed="'+(!UI.fType)+'" data-act="f-type" data-type="">Toutes</button>'+TYPES.filter(function(t){return famOf({type:t[0]})==="app";}).map(function(t){return '<button type="button" class="chip" aria-pressed="'+(UI.fType===t[0])+'" data-act="f-type" data-type="'+t[0]+'">'+t[1]+'</button>';}).join("")+'</div>':'')+
+      '<div class="frow"><span class="lbl">Chercher</span><input type="search" id="q" value="'+esc(UI.q)+'" placeholder="Nom d\'une app…" aria-label="Chercher une app"></div>'+
+    '</div><p class="small muted">'+plural(list.length,"élément")+'</p></section>'+
+    '<section class="items">'+(list.length?list.map(function(it){
+      return '<div class="item"><div class="nm"><div class="nmrow">'+iconFor(it)+'<button type="button" class="quiet" data-act="open-item" data-item="'+it.id+'">'+esc(it.name)+'</button></div><div class="pills"><span class="pill plain">'+esc(famLabel(famOf(it)))+(famOf(it)==="app"?' · '+esc(typeLabel(it.type)):'')+'</span>'+(it.age?'<span class="pill">'+it.age+' ans minimum</span>':'')+'</div>'+
+        (it.feats&&it.feats.length?'<span class="tiny muted">À surveiller : '+esc(it.feats.map(function(f){return (FEATS[f]||f).toLowerCase();}).join(", "))+'</span>':'')+'</div>'+
+        '<div class="kids">'+ks.map(function(k){ var x=u(it.id,k.id), sid="st-"+it.id+"-"+k.id, oid="ok-"+it.id+"-"+k.id;
+          return '<div class="kidctl"><span class="who">'+kidDot(k)+esc(k.name)+'</span><label for="'+sid+'" class="hide">Statut pour '+esc(k.name)+'</label><select id="'+sid+'" data-status="1" data-item="'+it.id+'" data-kid="'+k.id+'">'+statusOpts(it).map(function(s){return '<option value="'+s[0]+'"'+((x.s||"")===s[0]?' selected':'')+'>'+s[1]+'</option>';}).join("")+'</select>'+
+            (x.s==="utilise"&&it.settings&&it.settings.length?'<label for="'+oid+'"><input type="checkbox" id="'+oid+'" data-ok="1" data-item="'+it.id+'" data-kid="'+k.id+'"'+(x.ok?' checked':'')+'>Réglages faits</label>':'')+
+            ((x.s==="utilise"||x.s==="discussion")&&under(it,k)?'<span class="flag">Âge minimum non atteint</span>':'')+'</div>'; }).join("")+'</div></div>';
+    }).join(""):'<div class="card"><p class="muted">Rien ne correspond. Retirez un filtre ou ajoutez l\'app.</p></div>')+'</section>';
+}
+function viewRituel(){
+  var mt=monthTopics();
+  var j=(S.journal||[]).slice().sort(function(a,b){return a.date<b.date?1:-1;});
+  var minAge=Math.min.apply(null,S.kids.map(ageOf).filter(function(a){return a!=null;}).concat([99]));
+  return '<section class="grid g3">'+
+    '<div class="card"><span class="kicker">Chaque semaine · 10 minutes</span><h3>La météo numérique</h3><ul class="plain small"><li>Regarder ensemble le temps passé, sans reproche</li><li>Une chose sympa vue ou apprise</li><li>Une chose bizarre ou désagréable, s\'il y en a</li></ul></div>'+
+    '<div class="card"><span class="kicker">Chaque mois · 30 minutes</span><h3>Le point famille</h3><ol class="plain small"><li>Ce qui s\'est bien passé</li><li>Les nouvelles demandes (apps, réseaux, achats)</li><li>Le sujet du mois</li><li>Ce qu\'on assouplit ou ce qu\'on resserre</li></ol></div>'+
+    '<div class="card"><span class="kicker">Chaque trimestre</span><h3>Revoir les règles</h3><ul class="plain small"><li>Relire la charte ensemble</li><li>Lever une restriction devenue inutile</li><li>Aligner les règles entre les adultes</li></ul></div></section>'+
+  '<section class="card"><h2>Noter un point famille</h2><form class="form" id="jform"><div class="row"><label class="f" for="jdate">Date<input type="date" id="jdate" value="'+todayISO()+'"></label><label class="f" for="jwho">Avec<select id="jwho"><option>Toute la famille</option>'+S.kids.map(function(k){return '<option>'+esc(k.name)+'</option>';}).join("")+'</select></label></div>'+
+    '<label class="f" for="jgood">Ce qui va bien<textarea id="jgood"></textarea></label><label class="f" for="jwatch">Ce qui demande de l\'attention<textarea id="jwatch"></textarea></label><label class="f" for="jdec">Ce qu\'on a décidé<textarea id="jdec"></textarea></label>'+
+    '<div class="toolbar"><button type="submit">Enregistrer</button></div></form></section>'+
+  '<section class="card"><h2>Journal</h2>'+(j.length?j.map(function(e){ return '<div class="entry"><div class="toolbar"><b>'+esc(fmtDate(e.date))+'</b><span class="pill plain">'+esc(e.who)+'</span><button type="button" class="quiet" data-act="del-journal" data-id="'+esc(e.id)+'">Supprimer</button></div><dl>'+(e.good?'<dt>Bien</dt><dd>'+esc(e.good)+'</dd>':'')+(e.watch?'<dt>Attention</dt><dd>'+esc(e.watch)+'</dd>':'')+(e.decisions?'<dt>Décidé</dt><dd>'+esc(e.decisions)+'</dd>':'')+'</dl></div>'; }).join(""):'<p class="muted small">Aucun point noté pour l\'instant.</p>')+'</section>'+
+  '<section class="card"><h2>Un sujet par mois</h2><p class="small muted">Adaptés à l\'âge de vos enfants. Cochez quand le sujet a été abordé.</p><div class="months">'+mt.map(function(m,ix){ var on=!!S.topics[m.key];
+    var forYoung = m.t[2] <= minAge;
+    return '<div class="month'+(ix===0?' now':'')+'"><span class="m">'+esc(m.label)+'</span><b>'+esc(m.t[0])+'</b><span class="small muted">'+esc(m.t[1])+'</span>'+(forYoung?'':'<span class="tiny muted">À partir de '+m.t[2]+' ans</span>')+
+      '<label class="chk'+(on?' done':'')+'" style="padding:4px 0"><input type="checkbox" id="t-'+m.key+'" data-topic="'+m.key+'"'+(on?' checked':'')+'><span class="small">Abordé</span></label></div>'; }).join("")+'</div></section>';
+}
+function viewCharte(){
+  var c=charte();
+  function block(key,title){
+    if(UI.chEdit) return '<div class="card"><label class="f" for="ch-'+key+'">'+title+' (un engagement par ligne)<textarea id="ch-'+key+'" rows="7">'+esc(c[key].join("\n"))+'</textarea></label></div>';
+    return '<div class="card"><h3>'+title+'</h3><ol class="small">'+c[key].map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ol></div>';
+  }
+  return '<section class="card"><div class="toolbar" style="justify-content:space-between"><div><h2>Notre charte numérique'+(S.family?' · '+esc(S.family):'')+'</h2><p class="tiny muted">Préparée avec En clair</p><p class="small muted">Une base à discuter et à réécrire ensemble, puis à signer et afficher.</p></div><div class="toolbar no-print">'+
+    (UI.chEdit?'<button type="button" data-act="ch-save">Enregistrer</button><button type="button" class="ghost" data-act="ch-cancel">Annuler</button>':'<button type="button" class="ghost" data-act="ch-edit">Modifier</button><button type="button" data-act="print">Imprimer</button>')+'</div></div></section>'+
+  '<section class="charter">'+block("parent","Ce que je m'engage à faire, en tant que parent")+block("kids","Ce que je m'engage à faire, en tant qu'enfant")+block("common","Nos règles communes")+'</section>'+
+  (UI.chEdit?'':'<section class="card"><p class="small">Signatures : '+S.kids.map(function(k){return esc(k.name)+' ____________';}).join(" · ")+' · Parent(s) ____________</p></section>');
+}
+function viewSauvegarde(){
+  var d=daysSince(S.lastExport);
+  return '<section class="grid g2"><div class="card"><h2>Sauvegarder</h2><p class="small">Crée un fichier avec toutes vos informations. Rangez-le où vous voulez (Documents, clé USB, Drive). Il sert aussi à reprendre l\'outil sur un autre ordinateur ou à le partager avec l\'autre parent.</p>'+
+    '<p class="small muted">'+(d===null?'Aucune sauvegarde pour l\'instant.':'Dernière sauvegarde : '+(d===0?'aujourd\'hui':'il y a '+plural(d,"jour"))+'.')+'</p><div class="toolbar"><button type="button" data-act="export">Télécharger la sauvegarde</button><button type="button" class="ghost" data-act="csv">Exporter le tableau (Excel)</button></div></div>'+
+  '<div class="card"><h2>Reprendre une sauvegarde</h2><p class="small">Ouvrez un fichier de sauvegarde créé avec cet outil.</p><div class="toolbar"><button type="button" class="ghost" data-act="import">Choisir le fichier</button></div>'+
+    (UI.pendingImport?'<div class="banner" style="display:grid;gap:10px"><span class="small">Fichier « '+esc(UI.pendingImport.name)+' » : '+plural(UI.pendingImport.data.kids.length,"enfant")+', '+plural((UI.pendingImport.data.journal||[]).length,"point")+' au journal. Que faire ?</span><div class="toolbar"><button type="button" data-act="imp-replace">Remplacer mes données</button><button type="button" class="ghost" data-act="imp-merge">Ajouter à mes données</button><button type="button" class="quiet" data-act="imp-cancel">Annuler</button></div></div>':'')+
+    (UI.msg?'<p class="small">'+esc(UI.msg)+'</p>':'')+'</div></section>'+
+  '<section class="grid g2"><div class="card"><h3>Où sont mes informations ?</h3><p class="small">Uniquement dans ce navigateur, sur cet ordinateur. Rien n\'est envoyé sur Internet. Si vous videz l\'historique du navigateur ou changez d\'ordinateur, il faudra reprendre votre sauvegarde.</p><p class="small">Sur iPhone ou iPad, Safari peut effacer les données d\'un site après quelques jours sans visite. Ajoutez En clair à l\'écran d\'accueil (bouton Partager › Sur l\'écran d\'accueil) et gardez une sauvegarde récente.</p></div>'+
+  '<div class="card"><h3>Vos ajouts à la liste</h3><p class="small">'+((S.custom||[]).length?plural(S.custom.length,"élément")+' ajouté'+(S.custom.length>1?'s':'')+' par vous : '+S.custom.map(function(c){return esc(c.name);}).join(", ")+'.':'Vous n\'avez encore rien ajouté. Une app manque ? « Ajouter un élément » dans Ce qu\'ils utilisent.')+' Partagez-les avec un autre parent : il les reprend avec « Choisir le fichier », sans toucher à ses données.</p><div class="toolbar"><button type="button" class="ghost" data-act="export-cat"'+((S.custom||[]).length?'':' disabled')+'>Partager mes ajouts</button><button type="button" class="ghost" data-act="new-item">Ajouter un élément</button></div></div>'+
+  '<div class="card"><h3>Icônes des applications</h3><p class="small">Ajoutez plusieurs icônes d\'un coup : nommez chaque image comme l\'élément (par exemple <code>whatsapp.png</code>, <code>instagram.png</code>, <code>nintendo-switch.png</code>), puis sélectionnez-les toutes.</p><div class="toolbar"><label class="btn ghost" for="icons-bulk">Importer des icônes<input type="file" id="icons-bulk" accept="image/*" multiple class="hide"></label>'+(Object.keys(S.icons||{}).length?'<span class="small muted">'+plural(Object.keys(S.icons).length,"icône")+' personnalisée'+(Object.keys(S.icons).length>1?'s':'')+'</span>':'')+'</div>'+(UI.iconMsg?'<p class="small">'+esc(UI.iconMsg)+'</p>':'')+'<details><summary class="small">Voir les noms de fichiers reconnus</summary><p class="tiny muted">'+allItems().map(function(it){return esc(it.id)+'.png';}).join(" · ")+'</p></details></div>'+
+  '<div class="card"><h3>Repartir de zéro</h3><p class="small">Efface toutes les informations de cet ordinateur. Faites une sauvegarde avant.</p><div class="toolbar"><button type="button" class="danger" data-act="wipe">'+(UI.wipeArmed?'Confirmer l\'effacement':'Tout effacer')+'</button>'+(UI.wipeArmed?'<button type="button" class="quiet" data-act="wipe-cancel">Annuler</button>':'')+'</div></div></section>'+
+  '<section class="card"><label class="f" for="family">Nom de la famille (facultatif, apparaît sur la charte et le fichier)<input type="text" id="family" value="'+esc(S.family)+'" placeholder="ex. Famille Martin"></label></section>';
+}
+
+/* ============ Fiche d'une app ============ */
+var openId=null;
+function openItem(id){ openId=id.indexOf(":")>=0||id==="__new"||id==="assist"||id==="kids"?id:"i:"+id; renderDialog(); var d=document.getElementById("dlg"); if(d.showModal && !d.open) d.showModal(); else if(!d.showModal) d.setAttribute("open",""); }
+function closeDialog(){ var d=document.getElementById("dlg"); openId=null; if(d.close) d.close(); else d.removeAttribute("open"); }
+function renderDialog(){
+  var b=document.getElementById("dlg-body");
+  if(openId==="__new"){ b.innerHTML=newItemForm(); return; }
+  if(openId.indexOf("e:")===0){ var ce=item(openId.slice(2)); b.innerHTML=ce?newItemForm(ce):""; return; }
+  if(openId==="assist"){ b.innerHTML=assistantBody(); return; }
+  if(openId==="kids"){ b.innerHTML='<button type="button" class="quiet close" data-act="close">Fermer</button><h2 id="dlg-title">Gérer les enfants</h2><p class="small muted">Prénom, année de naissance et couleur. Les conseils s\'adaptent à l\'âge.</p>'+kidRows()+'<div class="toolbar"><button type="button" class="ghost" data-act="add-kid">Ajouter un enfant</button></div>'; return; }
+  if(openId.indexOf("m:")===0){ var mp=openId.split(":"); b.innerHTML=cellBody(mp[1],mp[2]); return; }
+  var pre=openId.split(":")[0], rid=openId.slice(pre.length+1);
+  if(pre==="u"){ var x=usage(rid); b.innerHTML='<button type="button" class="quiet close" data-act="close">Fermer</button><div><span class="kicker">Conseil · '+x.a[0]+' à '+x.a[1]+' ans</span><h2 id="dlg-title">'+esc(x.t)+'</h2></div>'+usageBody(x)+'<p class="tiny muted">En cas de besoin : 3018 (cyberharcèlement, chantage), 119 (enfance en danger), 17 (urgence).</p>'; return; }
+  if(pre==="g"){ b.innerHTML='<button type="button" class="quiet close" data-act="close">Fermer</button><div><span class="kicker">Guide de mise en place</span><h2 id="dlg-title">'+esc(GUIDES[rid].t)+'</h2></div>'+guideBody(rid)+usageLinks(relatedUsages("g:"+rid)); return; }
+  var it=item(rid); if(!it){ b.innerHTML=""; return; }
+  var isNet = it.type==="reseau";
+  b.innerHTML='<button type="button" class="quiet close" data-act="close">Fermer</button>'+
+    '<div class="dhead">'+iconFor(it)+'<div><span class="kicker">'+esc(famLabel(famOf(it)))+(famOf(it)==="app"?' · '+esc(typeLabel(it.type)):'')+'</span><h2 id="dlg-title">'+esc(it.name)+'</h2><div class="toolbar icontools"><label class="linklike" for="icon-file">Changer l\'icône<input type="file" id="icon-file" accept="image/*" class="hide" data-icon-for="'+it.id+'"></label>'+((S.icons||{})[it.id]?'<button type="button" class="quiet" data-act="icon-reset" data-item="'+it.id+'">Icône par défaut</button>':'')+'</div></div></div>'+
+    (it.what?'<section><span class="kicker">En bref</span><p>'+esc(it.what)+'</p></section>':'')+
+    '<section class="agebox"><span class="kicker">Âge minimum</span><p class="small">'+(it.age?'<b>'+it.age+' ans</b>, fixé par l\'éditeur dans ses conditions d\'utilisation. Avec une fausse date de naissance, l\'enfant perd les protections prévues pour son âge.':'Aucun âge minimum général : vérifiez le classement (PEGI ou boutique d\'applications).')+'</p>'+
+      '<div class="toolbar">'+(it.tos?'<a class="btn ghost" href="'+esc(it.tos)+'" target="_blank" rel="noopener">Conditions d\'utilisation</a>':'')+(it.url?'<a class="btn ghost" href="'+esc(it.url)+'" target="_blank" rel="noopener">Aide et contrôle parental officiels</a>':'')+(it.guide&&GUIDES[it.guide]?'<button type="button" data-act="open" data-ref="g:'+it.guide+'">Guide de mise en place</button>':'')+'</div></section>'+
+    (it.risks&&it.risks.length?'<section><span class="kicker">Points de vigilance</span><ul class="plain small">'+it.risks.map(function(r){return '<li>'+esc(r)+'</li>';}).join("")+'</ul></section>':'')+
+    (it.settings&&it.settings.length?'<section><span class="kicker">Les réglages à faire</span><ol class="plain small">'+it.settings.map(function(r){return '<li>'+esc(r)+'</li>';}).join("")+'</ol></section>':'')+
+    (it.ctl?'<section><span class="kicker">Outil à utiliser</span><p class="small">'+esc(it.ctl)+'</p></section>':'')+
+    (isNet?'<section><span class="kicker">Ouvrir ce réseau pas à pas</span><ol class="steps small">'+OPENING.map(function(s){return '<li><span>'+esc(s)+'</span></li>';}).join("")+'</ol></section>':'')+
+    '<section><span class="kicker">Pour vos enfants</span><div class="kids" style="display:grid;gap:8px">'+S.kids.map(function(k){ var x=u(it.id,k.id), sid="dst-"+k.id, oid="dok-"+k.id, nid="dn-"+k.id;
+      return '<div class="kidctl"><span class="who">'+kidDot(k)+esc(k.name)+' · '+ageOf(k)+' ans'+(under(it,k)?' <span class="flag">· âge minimum non atteint</span>':'')+'</span>'+
+        '<div class="toolbar"><label for="'+sid+'" class="hide">Statut</label><select id="'+sid+'" data-status="1" data-item="'+it.id+'" data-kid="'+k.id+'">'+statusOpts(it).map(function(s){return '<option value="'+s[0]+'"'+((x.s||"")===s[0]?' selected':'')+'>'+s[1]+'</option>';}).join("")+'</select>'+
+        (x.s==="utilise"&&it.settings&&it.settings.length?'<label for="'+oid+'"><input type="checkbox" id="'+oid+'" data-ok="1" data-item="'+it.id+'" data-kid="'+k.id+'"'+(x.ok?' checked':'')+'>Réglages faits</label>':'')+'</div>'+
+        (isNet&&x.s==="discussion"?'<div class="checks">'+READY.map(function(r){ var key=k.id+":"+it.id+":"+r[0], on=!!S.checks[key]; return '<label class="chk'+(on?' done':'')+'"><input type="checkbox" id="c-'+esc(key)+'" data-check="'+esc(key)+'"'+(on?' checked':'')+'><span class="small">'+esc(r[1])+'</span></label>'; }).join("")+'</div>':'')+
+        '<label class="f" for="'+nid+'">Note<input type="text" id="'+nid+'" data-note="1" data-item="'+it.id+'" data-kid="'+k.id+'" value="'+esc(x.note||"")+'" placeholder="ex. règle convenue, réglage particulier"></label></div>'; }).join("")+'</div></section>'+
+    (MATRIX[it.id]?'<section><span class="kicker">Sur quels écrans</span><div class="screens">'+IFACES.map(function(f){ var c=MATRIX[it.id].cells[f[0]]||["non"]; return '<button type="button" class="screenrow" data-act="open" data-ref="m:'+it.id+':'+f[0]+'"'+(c[0]==="non"?' disabled':'')+'>'+svgIcon(f[2])+'<span>'+esc(f[1])+(c[1]?'<small>'+esc(c[1])+'</small>':'')+'</span>'+cellBadge(c)+'</button>'; }).join("")+'</div>'+(MATRIX[it.id].tip?'<p class="small">'+esc(MATRIX[it.id].tip)+'</p>':'')+'</section>':'')+
+    (isNet?'<section><span class="kicker">Réglages communs à tous les réseaux</span><ul class="plain small">'+COMMON_SOCIAL.map(function(s){return '<li>'+esc(s)+'</li>';}).join("")+'</ul></section>':'')+
+    usageLinks(relatedUsages("i:"+it.id))+
+    (it.custom?'<div class="toolbar"><button type="button" class="ghost" data-act="edit-item" data-item="'+it.id+'">Modifier</button><button type="button" class="danger" data-act="del-item" data-item="'+it.id+'">Supprimer</button></div>':'');
+}
+function newItemForm(edit){
+  var c=edit||{}, ed=!!edit, v=function(x){ return esc(x==null?"":x); }, sc=c.screens||[];
+  return '<button type="button" class="quiet close" data-act="close">Fermer</button><h2 id="dlg-title">'+(ed?'Modifier « '+esc(c.name)+' »':'Ajouter un élément')+'</h2><p class="small muted">Une app, un site, un appareil ou un outil absent de la liste. Seul le nom est obligatoire ; le reste peut se compléter plus tard.</p><form class="form" id="newform"'+(ed?' data-edit="'+esc(c.id)+'"':'')+'>'+
+    '<label class="f" for="ni-name">Nom<input type="text" id="ni-name" required value="'+v(c.name)+'"></label>'+
+    '<div class="row"><label class="f" for="ni-type">Type<select id="ni-type">'+TYPES.concat([["site","Site web"]]).map(function(t){return '<option value="'+t[0]+'"'+(t[0]===(c.type||"reseau")?' selected':'')+'>'+t[1]+'</option>';}).join("")+'</select></label><label class="f" for="ni-age">Âge minimum (si connu)<input type="number" id="ni-age" min="0" max="21" value="'+v(c.age)+'"></label></div>'+
+    '<div class="row"><label class="f" for="ni-icon">Icône (image carrée, facultatif)<input type="file" id="ni-icon" accept="image/*"></label>'+(ed&&(S.icons||{})[c.id]?'<span class="small muted" style="align-self:end">'+iconFor(c)+' icône actuelle</span>':'')+'</div>'+
+    '<fieldset style="border:1px solid var(--line);border-radius:8px;padding:10px"><legend class="tiny muted">Ce qu\'elle permet</legend><div class="pills">'+Object.keys(FEATS).map(function(f){return '<label class="small" style="display:flex;gap:6px;align-items:center;margin-right:10px" for="nf-'+f+'"><input type="checkbox" id="nf-'+f+'" data-nf="'+f+'"'+((c.feats||[]).indexOf(f)>=0?' checked':'')+'>'+FEATS[f]+'</label>';}).join("")+'</div></fieldset>'+
+    '<fieldset style="border:1px solid var(--line);border-radius:8px;padding:10px"><legend class="tiny muted">Sur quels écrans</legend><div class="pills">'+IFACES.map(function(f){return '<label class="small" style="display:flex;gap:6px;align-items:center;margin-right:10px" for="ns-'+f[0]+'"><input type="checkbox" id="ns-'+f[0]+'" data-ns="'+f[0]+'"'+(sc.indexOf(f[0])>=0?' checked':'')+'>'+f[1]+'</label>';}).join("")+'</div></fieldset>'+
+    '<label class="f" for="ni-what">En une phrase, c\'est quoi ?<input type="text" id="ni-what" value="'+v(c.what)+'"></label>'+
+    '<label class="f" for="ni-risk">Points d\'attention (un par ligne)<textarea id="ni-risk">'+v((c.risks||[]).join("\n"))+'</textarea></label>'+
+    '<label class="f" for="ni-set">Réglages à faire (un par ligne)<textarea id="ni-set">'+v((c.settings||[]).join("\n"))+'</textarea></label>'+
+    '<label class="f" for="ni-ctl">Outil de contrôle (si connu)<input type="text" id="ni-ctl" value="'+v(c.ctl)+'"></label>'+
+    '<div class="row"><label class="f" for="ni-url">Site ou page d\'aide officielle<input type="url" id="ni-url" placeholder="https://" value="'+v(c.url)+'"></label><label class="f" for="ni-tos">Conditions d\'utilisation<input type="url" id="ni-tos" placeholder="https://" value="'+v(c.tos)+'"></label></div>'+
+    '<div class="toolbar"><button type="submit">'+(ed?'Enregistrer':'Ajouter')+'</button></div></form>';
+}
+
+/* ============ Rendu ============ */
+function currentTab(){ var h=(location.hash||"").replace("#",""); return TABS.some(function(t){return t[0]===h;})?h:"accueil"; }
+var rendering=false;
+function render(){
+  if(rendering){ setTimeout(render,0); return; }
+  rendering=true;
+  try { syncCustom(); renderInner(); } finally { rendering=false; }
+}
+function renderInner(){
+  var a=document.activeElement, fid=a&&a.id, pos=null; try{ pos=a.selectionStart; }catch(e){}
+  var app=document.getElementById("app");
+  if(!S.onboarded){ app.innerHTML=viewWizard(); }
+  else if(UI.child && kid(UI.child)){ app.innerHTML=viewChild(); }
+  else {
+    var tab=currentTab();
+    var v={"mise-en-place":viewConfigurer,conseils:viewConseils,accueil:viewAccueil,enfants:viewEnfants,apps:viewApps,rituel:viewRituel,charte:viewCharte,sauvegarde:viewSauvegarde}[tab]();
+    app.innerHTML='<header class="top"><div class="wrap"><div class="top-row"><div class="brand"><span class="brand-mark" aria-hidden="true">EC</span><div><h1>En clair</h1><p class="small muted">'+(S.family?esc(S.family)+' · ':'')+'la vie numérique de vos enfants, expliquée</p></div></div>'+
+      '<div class="toolbar"><label for="hq" class="hide">Chercher un conseil</label><input type="search" id="hq" class="hsearch" value="'+esc(UI.cq||"")+'" placeholder="Une question ? ex. sommeil, Snapchat…"><span class="saved'+(storageOK?'':' warn')+'"><span class="dot"></span>'+(storageOK?'Enregistré sur cet ordinateur':'Non enregistré : sauvegardez')+'</span><button type="button" class="ghost" data-act="export">Sauvegarder</button></div></div>'+
+      '<nav class="tabs" aria-label="Sections">'+TABS.map(function(t){return '<a href="#'+t[0]+'"'+(t[0]===tab?' aria-current="page"':'')+'>'+svgIcon(TAB_ICON[t[0]]||"globe")+t[1]+'</a>';}).join("")+'</nav></div></header><main class="wrap">'+v+'</main>'+(window.EC_SITE?'<footer class="wrap sitefoot"><span>Vos informations restent dans ce navigateur : rien n\'est envoyé sur Internet.</span> <a href="mentions-legales.html">Mentions légales et confidentialité</a></footer>':'');
+  }
+  if(fid){ var f=document.getElementById(fid); if(f && f!==document.activeElement){ f.focus(); try{ if(pos!=null) f.setSelectionRange(pos,pos); }catch(e){} } }
+  if(openId) renderDialog();
+}
+
+/* ============ Actions ============ */
+function rerender(){ save(); render(); }
+function download(name, text, type){
+  var blob=new Blob([text],{type:type}); var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+function slug(s){ return (s||"famille").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"famille"; }
+function doExport(){
+  S.lastExport=new Date().toISOString(); save();
+  download("en-clair-"+slug(S.family)+"-"+todayISO()+".json", JSON.stringify({app:"vie-numerique-famille",version:1,exported:S.lastExport,data:S},null,2), "application/json");
+  render();
+}
+function doExportCatalog(){
+  var ic={}; (S.custom||[]).forEach(function(c){ if((S.icons||{})[c.id]) ic[c.id]=S.icons[c.id]; });
+  download("en-clair-ajouts-"+todayISO()+".json", JSON.stringify({app:"vie-numerique-famille",version:1,kind:"catalogue",exported:new Date().toISOString(),custom:S.custom||[],icons:ic},null,2), "application/json");
+}
+function doCsv(){
+  var rows=[["Élément","Type","Âge minimum","Enfant","Âge de l'enfant","Statut","Réglages faits","Note"]];
+  allItems().forEach(function(it){ S.kids.forEach(function(k){ var x=u(it.id,k.id); if(!x.s && !x.note) return; rows.push([it.name,typeLabel(it.type),it.age||"",k.name,ageOf(k),(STATUS.filter(function(s){return s[0]===(x.s||"");})[0]||["",""])[1],x.ok?"oui":"non",x.note||""]); }); });
+  var csv="﻿"+rows.map(function(r){ return r.map(function(c){ c=String(c==null?"":c); return /[;"\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c; }).join(";"); }).join("\r\n");
+  download("en-clair-"+slug(S.family)+"-"+todayISO()+".csv", csv, "text/csv;charset=utf-8");
+}
+function readImport(file){
+  var r=new FileReader();
+  r.onload=function(){
+    try {
+      var j=JSON.parse(r.result); var d=j&&j.data;
+      if(j && j.app==="vie-numerique-famille" && j.kind==="catalogue" && Array.isArray(j.custom)){ var nAdd=0; j.custom.forEach(function(c){ if(c&&c.id&&c.name&&!item(c.id)){ c.custom=true; S.custom.push(c); nAdd++; } }); S.icons=Object.assign({}, j.icons||{}, S.icons||{}); save(); UI.msg=nAdd?plural(nAdd,"élément")+" ajouté"+(nAdd>1?"s":"")+" à votre liste.":"Ces éléments étaient déjà dans votre liste."; location.hash="#sauvegarde"; render(); return; }
+      if(!j || j.app!=="vie-numerique-famille" || !d || !Array.isArray(d.kids)) throw new Error("format");
+      UI.pendingImport={name:file.name,data:d}; UI.msg="";
+      if(!S.onboarded){ applyImport("replace"); return; }
+      location.hash="#sauvegarde"; render();
+    } catch(e){ UI.msg="Ce fichier n'est pas une sauvegarde de cet outil."; render(); }
+  };
+  r.readAsText(file);
+}
+function applyImport(mode){
+  var d=UI.pendingImport.data;
+  if(mode==="replace"){ S=Object.assign(blank(), d); S.onboarded=true; }
+  else {
+    d.kids.forEach(function(k){ if(!kid(k.id)) S.kids.push(k); });
+    Object.keys(d.use||{}).forEach(function(i){ S.use[i]=Object.assign({}, d.use[i], S.use[i]||{}); });
+    (d.custom||[]).forEach(function(c){ if(!item(c.id)) S.custom.push(c); });
+    Object.assign(S.checks, d.checks||{}); S.icons=Object.assign({}, d.icons||{}, S.icons||{}); Object.assign(S.topics, d.topics||{});
+    (d.journal||[]).forEach(function(e){ if(!S.journal.some(function(x){return x.id===e.id;})) S.journal.push(e); });
+  }
+  UI.pendingImport=null; UI.msg="Sauvegarde reprise."; save(); location.hash="#accueil"; render();
+}
+
+document.addEventListener("click", function(ev){
+  var t=ev.target.closest("[data-act]"); if(!t) return;
+  var a=t.dataset.act, k=t.dataset.kid, i=t.dataset.item;
+  switch(a){
+    case "add-kid": S.kids.push({id:uid("k"),name:"",year:"",month:"",color:COLORS[S.kids.length%COLORS.length]}); rerender(); break;
+    case "del-kid": if(!t.dataset.armed){ t.dataset.armed="1"; t.textContent="Confirmer"; return; } S.kids=S.kids.filter(function(x){return x.id!==k;}); Object.keys(S.use).forEach(function(id){ delete S.use[id][k]; }); rerender(); break;
+    case "kid-color": kid(k).color=t.dataset.color; rerender(); break;
+    case "w-next":
+      if(UI.step===1){ S.kids=S.kids.filter(function(x){return x.name.trim()||x.year;}); if(!S.kids.length || S.kids.some(function(x){return !x.name.trim()||!x.year;})){ if(!S.kids.length) S.kids.push({id:uid("k"),name:"",year:"",month:"",color:COLORS[0]}); UI.msg="Indiquez un prénom et une année de naissance pour chaque enfant."; render(); return; } }
+      UI.msg=""; UI.step++; rerender(); window.scrollTo(0,0); break;
+    case "w-back": UI.step--; render(); window.scrollTo(0,0); break;
+    case "w-done": S.onboarded=true; S.parentDone=true; location.hash="#mise-en-place"; rerender(); window.scrollTo(0,0); break;
+    case "toggle-use": var cur=u(i,k).s; setU(i,k,{s:cur==="utilise"?"":"utilise"}); render(); break;
+    case "open-item": ev.preventDefault(); openItem(i); break;
+    case "open": ev.preventDefault(); openItem(t.dataset.ref); break;
+    case "assist": UI.as={k:t.dataset.k}; if(t.dataset.k==="box"){ openItem("g:box"); } else openItem("assist"); break;
+    case "as-set": UI.as[t.dataset.f]=t.dataset.v; renderDialog(); break;
+    case "as-add": if(UI.as.item&&UI.as.kid){ setU(UI.as.item,UI.as.kid,{s:t.dataset.s}); render(); renderDialog(); } break;
+    case "as-site-add": var sn=(UI.as.site||"").trim(); if(sn){ var nid=uid("c"); S.custom.push({id:nid,custom:true,name:sn,type:"site",feats:[],what:"Site ajouté depuis l'aide à la configuration.",risks:[],settings:[]}); S.kids.forEach(function(kk){ setU(nid,kk.id,{s:UI.as.mode==="autoriser"?"utilise":"non"}); }); save(); openItem("i:"+nid); render(); } break;
+    case "apps-view": UI.appsView=t.dataset.v; render(); break;
+    case "mx-used": UI.mxUsed=!UI.mxUsed; render(); break;
+    case "kid-sel": UI.kidSel=k; if(t.tagName==="A") return; render(); break;
+    case "manage-kids": openItem("kids"); break;
+    case "child-open": UI.child=k; closeDialog(); render(); window.scrollTo(0,0); break;
+    case "child-exit": UI.child=""; location.hash="#enfants"; render(); window.scrollTo(0,0); break;
+    case "child-export": exportChild(kid(k)); break;
+    case "req-done": (S.requests||[]).forEach(function(r){ if(r.id===t.dataset.id) r.status="traitee"; }); rerender(); break;
+    case "go-kid-apps": UI.fKid=k; UI.appsView="liste"; break;
+    case "icon-reset": if(S.icons) delete S.icons[i]; rerender(); break;
+    case "f-fam": UI.fFam=t.dataset.v; UI.fType=""; render(); break;
+    case "cview": UI.cview=t.dataset.v; UI.cq=""; render(); break;
+    case "close": closeDialog(); if(t.getAttribute("href")) return; break;
+    case "new-item": openItem("__new"); break;
+    case "edit-item": openItem("e:"+i); break;
+    case "export-cat": doExportCatalog(); break;
+    case "del-item": if(!t.dataset.armed){ t.dataset.armed="1"; t.textContent="Confirmer la suppression"; return; } S.custom=S.custom.filter(function(x){return x.id!==i;}); delete S.use[i]; closeDialog(); rerender(); break;
+    case "f-kid": UI.fKid=k; render(); break;
+    case "f-type": UI.fType=t.dataset.type; render(); break;
+    case "f-used": UI.fUsed=!UI.fUsed; render(); break;
+    case "f-todo": UI.fTodo=!UI.fTodo; render(); break;
+    case "go-todo": UI.fKid=k; UI.fTodo=true; break;
+    case "answer": S.parent=S.parent||{}; S.parent[t.dataset.q]=t.dataset.v; rerender(); break;
+    case "q-done": S.parentDone=true; UI.qEdit=false; rerender(); window.scrollTo(0,0); break;
+    case "q-edit": UI.qEdit=true; render(); break;
+    case "export": doExport(); break;
+    case "csv": doCsv(); break;
+    case "import": document.getElementById("import-file").value=""; document.getElementById("import-file").click(); break;
+    case "imp-replace": applyImport("replace"); break;
+    case "imp-merge": applyImport("merge"); break;
+    case "imp-cancel": UI.pendingImport=null; render(); break;
+    case "wipe": if(!UI.wipeArmed){ UI.wipeArmed=true; render(); return; } S=blank(); UI.wipeArmed=false; UI.step=1; try{ localStorage.removeItem(STORE); }catch(e){} location.hash=""; render(); break;
+    case "wipe-cancel": UI.wipeArmed=false; render(); break;
+    case "ch-edit": UI.chEdit=true; render(); break;
+    case "ch-cancel": UI.chEdit=false; render(); break;
+    case "ch-save": var c={}; ["parent","kids","common"].forEach(function(key){ c[key]=document.getElementById("ch-"+key).value.split("\n").map(function(s){return s.trim();}).filter(Boolean); }); S.charte=c; UI.chEdit=false; rerender(); break;
+    case "print": window.print(); break;
+    case "del-journal": if(!t.dataset.armed){ t.dataset.armed="1"; t.textContent="Confirmer"; return; } S.journal=S.journal.filter(function(e){return e.id!==t.dataset.id;}); rerender(); break;
+  }
+});
+document.addEventListener("change", function(ev){
+  var t=ev.target, ds=t.dataset||{};
+  if(t.id==="icons-bulk"){ bulkIcons(Array.prototype.slice.call(t.files||[])); return; }
+  if(ds.iconFor){ if(t.files&&t.files[0]) setIcon(ds.iconFor,t.files[0]); return; }
+  if(t.id==="import-file"){ if(t.files&&t.files[0]) readImport(t.files[0]); return; }
+  if(ds.kfield){ var kk=kid(ds.kid); if(kk){ if(ds.kfield==="name"){ kk.name=t.value.trim(); save(); } else { kk[ds.kfield]=t.value?+t.value:""; rerender(); } } return; }
+  if(ds.status){ setU(ds.item,ds.kid,{s:t.value, ok: t.value==="utilise"?u(ds.item,ds.kid).ok:false}); render(); return; }
+  if(ds.ok){ setU(ds.item,ds.kid,{ok:t.checked}); render(); return; }
+  if(ds.note){ setU(ds.item,ds.kid,{note:t.value.trim()}); return; }
+  if(ds.check){ if(t.checked) S.checks[ds.check]=true; else delete S.checks[ds.check]; rerender(); return; }
+  if(ds.topic){ if(t.checked) S.topics[ds.topic]=true; else delete S.topics[ds.topic]; rerender(); return; }
+  if(t.id==="family"){ S.family=t.value.trim(); rerender(); return; }
+  if(t.id==="as-site"){ UI.as.site=t.value; renderDialog(); return; }
+});
+document.addEventListener("input", function(ev){
+  var t=ev.target;
+  if(t.id==="q"){ UI.q=t.value; render(); }
+  else if(t.id==="hq"||t.id==="cq"){ UI.cq=t.value; if(currentTab()!=="conseils"){ location.hash="#conseils"; } else render(); }
+  else if(t.dataset && t.dataset.kfield==="name"){ var kk=kid(t.dataset.kid); if(kk){ kk.name=t.value; save(); } }
+});
+document.addEventListener("submit", function(ev){
+  ev.preventDefault(); var f=ev.target, g=function(id){ var e=document.getElementById(id); return e?e.value.trim():""; };
+  if(f.id==="reqform"){ var w=g("rq-what"); if(!w) return; S.requests=S.requests||[]; S.requests.push({id:uid("r"),kid:UI.child,what:w,why:g("rq-why"),date:todayISO(),status:"nouvelle"}); rerender(); return; }
+  if(f.id==="jform"){ if(!g("jgood")&&!g("jwatch")&&!g("jdec")) return; S.journal.push({id:uid("j"),date:g("jdate")||todayISO(),who:g("jwho"),good:g("jgood"),watch:g("jwatch"),decisions:g("jdec")}); rerender(); }
+  if(f.id==="newform"){ var n=g("ni-name"); if(!n) return; var feats=[], scr=[], lines=function(id){ return g(id).split("\n").map(function(x){return x.trim();}).filter(Boolean); }, okUrl=function(x){ return /^https?:\/\//i.test(x)?x:""; };
+    Array.prototype.forEach.call(f.querySelectorAll("[data-nf]"),function(c){ if(c.checked) feats.push(c.dataset.nf); });
+    Array.prototype.forEach.call(f.querySelectorAll("[data-ns]"),function(c){ if(c.checked) scr.push(c.dataset.ns); });
+    var eid=f.dataset.edit, it=eid?item(eid):{id:uid("c"),custom:true};
+    Object.assign(it,{name:n,type:g("ni-type"),fam:g("ni-type")==="site"?"site":undefined,age:g("ni-age")?+g("ni-age"):null,feats:feats,screens:scr,what:g("ni-what"),ctl:g("ni-ctl"),url:okUrl(g("ni-url")),tos:okUrl(g("ni-tos")),risks:lines("ni-risk"),settings:lines("ni-set")});
+    if(!eid) S.custom.push(it);
+    var fi=document.getElementById("ni-icon"); if(fi && fi.files && fi.files[0]) setIcon(it.id,fi.files[0]);
+    save(); openItem(it.id); render(); }
+});
+document.addEventListener("toggle", function(ev){ var d=ev.target; if(d && d.dataset && d.dataset.g){ UI.openG[d.dataset.g]=d.open; } }, true);
+document.getElementById("dlg").addEventListener("close", function(){ openId=null; });
+window.addEventListener("hashchange", function(){ render(); window.scrollTo(0,0); });
+render();
+})();
+</script>
+</body>
+</html>

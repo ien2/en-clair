@@ -1,0 +1,24 @@
+{
+ "name": "En clair",
+ "short_name": "En clair",
+ "description": "La vie numérique de vos enfants, expliquée.",
+ "lang": "fr",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#f4f5f8",
+ "theme_color": "#0f1b3d",
+ "icons": [
+  {
+   "src": "app-icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "app-icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  }
+ ]
+}
