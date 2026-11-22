@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; manifest-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#0f1b3d">
-<meta name="apple-mobile-web-app-title" content="En clair">
+<meta name="apple-mobile-web-app-title" content="Jiminy">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="app-icon-192.png" type="image/png">
@@ -15,7 +15,7 @@
 <script>window.EC_SITE=true;</script>
 <script src="icones.js"></script>
 
-<title>En clair · la vie numérique de vos enfants, expliquée</title>
+<title>Jiminy · la vie numérique de vos enfants, expliquée</title>
 <style>
 :root{
   /* Outil familial hors ligne : parcours guidé, cartes par enfant, fiches pratiques ; bleu ardoise + ambre signal */
@@ -1294,7 +1294,7 @@ function viewWizard(){
   var body="";
   if(UI.step===1){
     if(!S.kids.length) S.kids.push({id:uid("k"),name:"",year:"",month:"",color:COLORS[0]});
-    body='<div><span class="brand-mark big" aria-hidden="true">EC</span><h1>Bienvenue dans En clair</h1><p class="lead muted" style="margin-top:8px">La vie numérique de vos enfants, expliquée. Cet outil vous aide à suivre la vie numérique de vos enfants : ce qu\'ils utilisent, les réglages à faire, et des repères pour en parler avec eux. Tout reste sur cet ordinateur.</p></div>'+
+    body='<div><span class="brand-mark big" aria-hidden="true">J</span><h1>Bienvenue dans Jiminy</h1><p class="lead muted" style="margin-top:8px">La vie numérique de vos enfants, expliquée. Cet outil vous aide à suivre la vie numérique de vos enfants : ce qu\'ils utilisent, les réglages à faire, et des repères pour en parler avec eux. Tout reste sur cet ordinateur.</p></div>'+
       '<div class="card"><h2>Vos enfants</h2><p class="small muted">Le prénom et l\'année de naissance suffisent. L\'âge sert à adapter les conseils.</p>'+kidRows()+
       '<div class="toolbar"><button type="button" class="ghost" data-act="add-kid">Ajouter un enfant</button></div></div>'+
       '<div class="toolbar"><button type="button" data-act="w-next">Continuer</button><button type="button" class="quiet" data-act="import">J\'ai déjà un fichier de sauvegarde</button></div>';
@@ -1411,12 +1411,12 @@ function childBody(k, forExport){
 }
 function viewChild(){
   var k=kid(UI.child);
-  return '<div class="childmode" style="--kc:'+esc(k.color)+'"><header class="ctop"><div class="wrap ctop-row"><div class="brand"><span class="brand-mark" aria-hidden="true">EC</span><div><b>En clair</b><span class="small muted"> · l\'espace de '+esc(k.name)+'</span></div></div><button type="button" class="ghost" data-act="child-exit">Revenir à l\'espace parent</button></div></header><main class="wrap cmain">'+childBody(k,false)+'</main></div>';
+  return '<div class="childmode" style="--kc:'+esc(k.color)+'"><header class="ctop"><div class="wrap ctop-row"><div class="brand"><span class="brand-mark" aria-hidden="true">J</span><div><b>Jiminy</b><span class="small muted"> · l\'espace de '+esc(k.name)+'</span></div></div><button type="button" class="ghost" data-act="child-exit">Revenir à l\'espace parent</button></div></header><main class="wrap cmain">'+childBody(k,false)+'</main></div>';
 }
 function exportChild(k){
   var css=document.querySelector("style").textContent;
-  var html='<!DOCTYPE html>\n<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>En clair · l\'espace de '+esc(k.name)+'</title><style>'+css+'</style></head><body><div class="childmode" style="--kc:'+esc(k.color)+'"><header class="ctop"><div class="wrap ctop-row"><div class="brand"><span class="brand-mark" aria-hidden="true">EC</span><div><b>En clair</b><span class="small muted"> · l\'espace de '+esc(k.name)+'</span></div></div><span class="tiny muted">Mis à jour le '+esc(fmtDate(todayISO()))+'</span></div></header><main class="wrap cmain">'+childBody(k,true)+'</main></div></body></html>';
-  download("en-clair-espace-"+slug(k.name)+".html", html, "text/html");
+  var html='<!DOCTYPE html>\n<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Jiminy · l\'espace de '+esc(k.name)+'</title><style>'+css+'</style></head><body><div class="childmode" style="--kc:'+esc(k.color)+'"><header class="ctop"><div class="wrap ctop-row"><div class="brand"><span class="brand-mark" aria-hidden="true">J</span><div><b>Jiminy</b><span class="small muted"> · l\'espace de '+esc(k.name)+'</span></div></div><span class="tiny muted">Mis à jour le '+esc(fmtDate(todayISO()))+'</span></div></header><main class="wrap cmain">'+childBody(k,true)+'</main></div></body></html>';
+  download("jiminy-espace-"+slug(k.name)+".html", html, "text/html");
 }
 function statusOpts(it){ return famOf(it)==="outil" ? [["","Non activé"],["utilise","Activé"]] : famOf(it)==="compte" ? STATUS_ACCT : STATUS; }
 function viewRituel(){
@@ -1444,7 +1444,7 @@ function viewCharte(){
     if(UI.chEdit) return '<div class="card"><label class="f" for="ch-'+key+'">'+title+' (un engagement par ligne)<textarea id="ch-'+key+'" rows="7">'+esc(c[key].join("\n"))+'</textarea></label></div>';
     return '<div class="card"><h3>'+title+'</h3><ol class="small">'+c[key].map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ol></div>';
   }
-  return '<section class="card"><div class="toolbar" style="justify-content:space-between"><div><h2>Notre charte numérique'+(S.family?' · '+esc(S.family):'')+'</h2><p class="tiny muted">Préparée avec En clair</p><p class="small muted">Une base à discuter et à réécrire ensemble, puis à signer et afficher.</p></div><div class="toolbar no-print">'+
+  return '<section class="card"><div class="toolbar" style="justify-content:space-between"><div><h2>Notre charte numérique'+(S.family?' · '+esc(S.family):'')+'</h2><p class="tiny muted">Préparée avec Jiminy</p><p class="small muted">Une base à discuter et à réécrire ensemble, puis à signer et afficher.</p></div><div class="toolbar no-print">'+
     (UI.chEdit?'<button type="button" data-act="ch-save">Enregistrer</button><button type="button" class="ghost" data-act="ch-cancel">Annuler</button>':'<button type="button" class="ghost" data-act="ch-edit">Modifier</button><button type="button" data-act="print">Imprimer</button>')+'</div></div></section>'+
   '<section class="charter">'+block("parent","Ce que je m'engage à faire, en tant que parent")+block("kids","Ce que je m'engage à faire, en tant qu'enfant")+block("common","Nos règles communes")+'</section>'+
   (UI.chEdit?'':'<section class="card"><p class="small">Signatures : '+S.kids.map(function(k){return esc(k.name)+' ____________';}).join(" · ")+' · Parent(s) ____________</p></section>');
@@ -1456,7 +1456,7 @@ function viewSauvegarde(){
   '<div class="card"><h2>Reprendre une sauvegarde</h2><p class="small">Ouvrez un fichier de sauvegarde créé avec cet outil.</p><div class="toolbar"><button type="button" class="ghost" data-act="import">Choisir le fichier</button></div>'+
     (UI.pendingImport?'<div class="banner" style="display:grid;gap:10px"><span class="small">Fichier « '+esc(UI.pendingImport.name)+' » : '+plural(UI.pendingImport.data.kids.length,"enfant")+', '+plural((UI.pendingImport.data.journal||[]).length,"point")+' au journal. Que faire ?</span><div class="toolbar"><button type="button" data-act="imp-replace">Remplacer mes données</button><button type="button" class="ghost" data-act="imp-merge">Ajouter à mes données</button><button type="button" class="quiet" data-act="imp-cancel">Annuler</button></div></div>':'')+
     (UI.msg?'<p class="small">'+esc(UI.msg)+'</p>':'')+'</div></section>'+
-  '<section class="grid g2"><div class="card"><h3>Où sont mes informations ?</h3><p class="small">Uniquement dans ce navigateur, sur cet ordinateur. Rien n\'est envoyé sur Internet. Si vous videz l\'historique du navigateur ou changez d\'ordinateur, il faudra reprendre votre sauvegarde.</p><p class="small">Sur iPhone ou iPad, Safari peut effacer les données d\'un site après quelques jours sans visite. Ajoutez En clair à l\'écran d\'accueil (bouton Partager › Sur l\'écran d\'accueil) et gardez une sauvegarde récente.</p></div>'+
+  '<section class="grid g2"><div class="card"><h3>Où sont mes informations ?</h3><p class="small">Uniquement dans ce navigateur, sur cet ordinateur. Rien n\'est envoyé sur Internet. Si vous videz l\'historique du navigateur ou changez d\'ordinateur, il faudra reprendre votre sauvegarde.</p><p class="small">Sur iPhone ou iPad, Safari peut effacer les données d\'un site après quelques jours sans visite. Ajoutez Jiminy à l\'écran d\'accueil (bouton Partager › Sur l\'écran d\'accueil) et gardez une sauvegarde récente.</p></div>'+
   '<div class="card"><h3>Vos ajouts à la bibliothèque</h3><p class="small">'+((S.custom||[]).length?plural(S.custom.length,"élément")+' ajouté'+(S.custom.length>1?'s':'')+' par vous : '+S.custom.map(function(c){return esc(c.name);}).join(", ")+'.':'Vous n\'avez encore rien ajouté. Une app manque ? « Créer un élément » dans la Bibliothèque.')+' Partagez-les avec un autre parent : il les reprend avec « Choisir le fichier », sans toucher à ses données.</p><div class="toolbar"><button type="button" class="ghost" data-act="export-cat"'+((S.custom||[]).length?'':' disabled')+'>Partager mes ajouts</button><button type="button" class="ghost" data-act="new-item">Ajouter un élément</button></div></div>'+
   '<div class="card"><h3>Icônes des applications</h3><p class="small">Ajoutez plusieurs icônes d\'un coup : nommez chaque image comme l\'élément (par exemple <code>whatsapp.png</code>, <code>instagram.png</code>, <code>nintendo-switch.png</code>), puis sélectionnez-les toutes.</p><div class="toolbar"><label class="btn ghost" for="icons-bulk">Importer des icônes<input type="file" id="icons-bulk" accept="image/*" multiple class="hide"></label>'+(Object.keys(S.icons||{}).length?'<span class="small muted">'+plural(Object.keys(S.icons).length,"icône")+' personnalisée'+(Object.keys(S.icons).length>1?'s':'')+'</span>':'')+'</div>'+(UI.iconMsg?'<p class="small">'+esc(UI.iconMsg)+'</p>':'')+'<details><summary class="small">Voir les noms de fichiers reconnus</summary><p class="tiny muted">'+allItems().map(function(it){return esc(it.id)+'.png';}).join(" · ")+'</p></details></div>'+
   '<div class="card"><h3>Repartir de zéro</h3><p class="small">Efface toutes les informations de cet ordinateur. Faites une sauvegarde avant.</p><div class="toolbar"><button type="button" class="danger" data-act="wipe">'+(UI.wipeArmed?'Confirmer l\'effacement':'Tout effacer')+'</button>'+(UI.wipeArmed?'<button type="button" class="quiet" data-act="wipe-cancel">Annuler</button>':'')+'</div></div></section>'+
@@ -1669,7 +1669,7 @@ function renderInner(){
   else {
     var tab=currentTab();
     var v={accueil:viewAccueil,enfants:viewEnfants,bibliotheque:viewBibliotheque,guides:viewGuides,famille:viewFamille,reglages:viewReglages}[tab]();
-    app.innerHTML='<header class="top"><div class="wrap"><div class="top-row"><div class="brand"><span class="brand-mark" aria-hidden="true">EC</span><div><h1>En clair</h1><p class="small muted">'+(S.family?esc(S.family)+' · ':'')+'la vie numérique de vos enfants, expliquée</p></div></div>'+
+    app.innerHTML='<header class="top"><div class="wrap"><div class="top-row"><div class="brand"><span class="brand-mark" aria-hidden="true">J</span><div><h1>Jiminy</h1><p class="small muted">'+(S.family?esc(S.family)+' · ':'')+'la vie numérique de vos enfants, expliquée</p></div></div>'+
       '<div class="toolbar"><span class="saved'+(storageOK?'':' warn')+'"><span class="dot"></span>'+(storageOK?'Enregistré sur cet ordinateur':'Non enregistré : sauvegardez')+'</span><button type="button" class="ghost" data-act="export">Sauvegarder</button><a class="btn ghost iconbtn" href="#reglages" aria-label="Réglages, enfants et sauvegarde" title="Réglages"'+(tab==="reglages"?' aria-current="page"':'')+'>'+svgIcon("gear")+'</a></div></div>'+
       '<nav class="tabs" aria-label="Sections">'+TABS.map(function(t){return '<a href="#'+t[0]+'"'+(t[0]===tab?' aria-current="page"':'')+'>'+svgIcon(TAB_ICON[t[0]]||"globe")+t[1]+'</a>';}).join("")+'</nav></div></header><main class="wrap">'+v+'</main>'+(window.EC_SITE?'<footer class="wrap sitefoot"><span>Vos informations restent dans ce navigateur : rien n\'est envoyé sur Internet.</span> <a href="mentions-legales.html">Mentions légales et confidentialité</a></footer>':'')+bottomNav(tab);
   }
@@ -1686,18 +1686,18 @@ function download(name, text, type){
 function slug(s){ return (s||"famille").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"famille"; }
 function doExport(){
   S.lastExport=new Date().toISOString(); save();
-  download("en-clair-"+slug(S.family)+"-"+todayISO()+".json", JSON.stringify({app:"vie-numerique-famille",version:1,exported:S.lastExport,data:S},null,2), "application/json");
+  download("jiminy-"+slug(S.family)+"-"+todayISO()+".json", JSON.stringify({app:"vie-numerique-famille",version:1,exported:S.lastExport,data:S},null,2), "application/json");
   render();
 }
 function doExportCatalog(){
   var ic={}; (S.custom||[]).forEach(function(c){ if((S.icons||{})[c.id]) ic[c.id]=S.icons[c.id]; });
-  download("en-clair-ajouts-"+todayISO()+".json", JSON.stringify({app:"vie-numerique-famille",version:1,kind:"catalogue",exported:new Date().toISOString(),custom:S.custom||[],icons:ic},null,2), "application/json");
+  download("jiminy-ajouts-"+todayISO()+".json", JSON.stringify({app:"vie-numerique-famille",version:1,kind:"catalogue",exported:new Date().toISOString(),custom:S.custom||[],icons:ic},null,2), "application/json");
 }
 function doCsv(){
   var rows=[["Élément","Type","Âge minimum","Enfant","Âge de l'enfant","Statut","Réglages faits","Note","Comptes et accès"]];
   allItems().forEach(function(it){ S.kids.forEach(function(k){ var x=u(it.id,k.id); if(!x.s && !x.note) return; rows.push([it.name,typeLabel(it.type),it.age||"",k.name,ageOf(k),lab2(statusOpts(it),x.s||""),x.ok?"oui":"non",x.note||"",accessLine(it,k)]); }); });
   var csv="﻿"+rows.map(function(r){ return r.map(function(c){ c=String(c==null?"":c); return /[;"\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c; }).join(";"); }).join("\r\n");
-  download("en-clair-"+slug(S.family)+"-"+todayISO()+".csv", csv, "text/csv;charset=utf-8");
+  download("jiminy-"+slug(S.family)+"-"+todayISO()+".csv", csv, "text/csv;charset=utf-8");
 }
 function readImport(file){
   var r=new FileReader();
