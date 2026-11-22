@@ -329,6 +329,31 @@ nav.tabs a[aria-current="page"]{border-bottom-color:var(--accent);color:var(--in
 button,.btn{border-radius:var(--r)}
 .kicker{letter-spacing:.07em}
 .sitefoot{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between;font-size:.85rem;color:var(--muted);padding-top:8px;padding-bottom:32px}
+/* Direction E : sobre (gris, noir), sous-onglets, icônes plus grandes */
+:root{--bg:#f5f5f6; --ink:#18181b; --muted:#5d5f66; --line:#e3e3e6; --accent:#18181b; --accent-soft:#ececee; --navy:#18181b;
+  --fa:#3f3f46; --fc:#3f3f46; --fp:#3f3f46; --fs:#3f3f46; --fo:#3f3f46; --shadow:0 1px 2px rgba(0,0,0,.05),0 6px 20px rgba(0,0,0,.05)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121214;--surface:#1c1c1f;--ink:#ececee;--muted:#a1a1a8;--line:#2e2e33;--accent:#ececee;--accent-soft:#2a2a2e;--navy:#0c0c0e;--fa:#c4c4ca;--fc:#c4c4ca;--fp:#c4c4ca;--fs:#c4c4ca;--fo:#c4c4ca}}
+:root[data-theme="dark"]{--bg:#121214;--surface:#1c1c1f;--ink:#ececee;--muted:#a1a1a8;--line:#2e2e33;--accent:#ececee;--accent-soft:#2a2a2e;--navy:#0c0c0e;--fa:#c4c4ca;--fc:#c4c4ca;--fp:#c4c4ca;--fs:#c4c4ca;--fo:#c4c4ca}
+header.top .brand p,header.top .saved,header.top input.hsearch::placeholder{color:#b4b4ba}
+nav.tabs a{color:#d6d6da}
+a{text-underline-offset:2px}
+button.quiet{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+button.quiet:hover{text-decoration-color:currentColor}
+.ic{width:44px;height:44px;border-radius:12px}
+.ic svg{width:24px;height:24px}
+.ic.img{border-radius:50%}
+.userow .ic{width:40px;height:40px}
+table.mx th[scope="row"] .ic{width:34px;height:34px} table.mx th[scope="row"] .ic svg{width:20px;height:20px}
+.dhead .ic{width:60px;height:60px} .dhead .ic svg{width:32px;height:32px}
+.nmrow{gap:12px}
+.subtabs{display:flex;gap:4px;overflow-x:auto;background:var(--surface);padding:5px;border-radius:999px;box-shadow:var(--shadow);position:sticky;top:10px;z-index:5;width:max-content;max-width:100%;margin:0 0 4px;scrollbar-width:none}
+.subtabs::-webkit-scrollbar{display:none}
+.subtabs button{border:none;background:transparent;color:var(--muted);border-radius:999px;padding:8px 14px;font-weight:600;white-space:nowrap;display:flex;gap:7px;align-items:center;box-shadow:none;min-height:0}
+.subtabs button svg{width:17px;height:17px}
+.subtabs button:hover{color:var(--ink);background:var(--accent-soft)}
+.subtabs button[aria-selected="true"]{background:var(--ink);color:var(--surface)}
+.subtabs .n{font-size:.78rem;opacity:.65;font-weight:500}
+@media print{.subtabs{display:none}}
 </style>
 </head>
 <body>
@@ -339,7 +364,9 @@ button,.btn{border-radius:var(--r)}
 (function(){
 "use strict";
 var STORE = "vie-numerique-famille.v1";
-var COLORS = ["#2f4fb5","#8a3fa0","#1f7a4d","#c0560f","#0f7c8c","#b42318"];
+var COLORS = ["#4a5a6e","#7a5c74","#55705f","#8a6a4a","#3f6b73","#7d4e4e"];
+var OLD_COLORS = ["#2f4fb5","#8a3fa0","#1f7a4d","#c0560f","#0f7c8c","#b42318"];
+function migrateColors(){ (S.kids||[]).forEach(function(k){ var i=OLD_COLORS.indexOf((k.color||"").toLowerCase()); if(i>=0) k.color=COLORS[i]; }); }
 
 /* ============ Catalogue : ce que l'outil sait expliquer ============ */
 var TYPES = [["appareil","Appareils"],["compte","Comptes"],["reseau","Messageries et réseaux"],["jeu","Jeux"],["video","Vidéo"],["ecole","École et apprentissage"],["ia","Intelligence artificielle"],["achat","Achats et ventes"],["outil","Outils de contrôle"],["navigateur","Navigateurs"]];
@@ -443,7 +470,23 @@ var CAT = [
   what:"Un outil payant qui filtre le web sur plusieurs appareils et navigateurs à la fois.",
   risks:["Règles en double avec les outils d'Apple, Google ou Microsoft"],
   settings:["Choisir un seul outil pour limiter le temps, l'autre pour filtrer","Vérifier qu'il couvre tous les navigateurs installés"]},
- {id:"navigateurs",name:"Autres navigateurs (Firefox, Chrome sur iPhone…)",type:"navigateur",ctl:"Souvent aucun",url:"",feats:["public"],
+ {id:"safari",name:"Safari",type:"navigateur",ctl:"Temps d'écran (Apple)",url:"",feats:["public"],
+  what:"Le navigateur d'Apple, sur iPhone, iPad et Mac. Les filtres de Temps d'écran s'y appliquent directement.",
+  risks:["Sites choquants si aucun filtre n'est réglé","Navigation privée sans historique"],
+  settings:["Temps d'écran › Contenu et confidentialité › Restrictions de contenu › Contenu web : « Limiter les sites pour adultes »","Ajouter les sites toujours autorisés ou toujours bloqués dans la même rubrique","Vérifier que les autres navigateurs installés sont filtrés ou bloqués"]},
+ {id:"chrome",name:"Google Chrome",type:"navigateur",ctl:"Family Link (compte Google supervisé)",url:"https://families.google/familylink/",feats:["public"],
+  what:"Le navigateur de Google, sur tous les appareils. Les filtres de Family Link s'y appliquent quand l'enfant est connecté avec son compte Google supervisé.",
+  risks:["Une autre session ou un profil invité échappe aux filtres du compte","Extensions installées sans accord"],
+  settings:["Connecter Chrome au compte Google supervisé de l'enfant","Family Link › Contrôles › Google Chrome : bloquer les sites explicites","Sur un ordinateur, désactiver le mode invité et l'ajout d'autres profils","Tester un site bloqué pour vérifier que le filtre fonctionne"]},
+ {id:"firefox",name:"Firefox",type:"navigateur",ctl:"Aucun outil parental intégré",url:"https://support.mozilla.org/fr/",feats:["public"],
+  what:"Le navigateur indépendant de Mozilla. Les filtres de Family Link et de Microsoft Family ne s'y appliquent pas : c'est une porte de sortie fréquente.",
+  risks:["Navigation sans filtre","Contournement des règles fixées dans les autres outils"],
+  settings:["Le bloquer avec Microsoft Family (Windows), Family Link (Android) ou Temps d'écran si vous ne filtrez pas autrement","Ou filtrer au niveau de la box ou d'une suite de sécurité qui couvre tous les navigateurs","S'il reste autorisé, vérifier en testant qu'un site bloqué l'est aussi dans Firefox"]},
+ {id:"edge",name:"Microsoft Edge",type:"navigateur",ctl:"Microsoft Family Safety",url:"https://family.microsoft.com",feats:["public"],
+  what:"Le navigateur de Microsoft, installé sur Windows. C'est là que s'appliquent les filtres web de Microsoft Family.",
+  risks:["Filtres inopérants si l'enfant utilise un autre navigateur"],
+  settings:["Microsoft Family › Filtres de contenu : activer « Filtrer les sites et recherches inappropriés »","Vérifier que les autres navigateurs (Chrome, Firefox) sont bloqués ou filtrés","Ajouter les sites toujours autorisés (ENT, sites scolaires)"]},
+ {id:"navigateurs",name:"Autres navigateurs (Opera, Brave, DuckDuckGo…)",type:"navigateur",ctl:"Souvent aucun",url:"",feats:["public"],
   what:"Les filtres d'un outil ne s'appliquent souvent que dans un navigateur précis. Un autre navigateur peut passer à côté.",
   risks:["Navigation sans filtre"],
   settings:["Savoir quels navigateurs sont installés","Les bloquer, ou utiliser un outil qui les couvre tous"]}
@@ -616,6 +659,8 @@ var UI = {step:1, kidSel:"", child:"", appsView:"liste", mxUsed:false, as:{}, fF
 /* ============ Utilitaires ============ */
 function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];}); }
 function uid(p){ return p+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function subnav(k,items,cur){ return '<nav class="subtabs" role="tablist" aria-label="Sous-sections">'+items.map(function(x){ return '<button type="button" role="tab" aria-selected="'+(x[0]===cur)+'" data-act="sub" data-k="'+k+'" data-v="'+x[0]+'">'+(x[2]?svgIcon(x[2]):'')+'<span>'+esc(x[1])+'</span>'+(x[3]!=null?'<span class="n">'+x[3]+'</span>':'')+'</button>'; }).join("")+'</nav>'; }
+function subOf(k,def,valid){ var v=(UI.sub||{})[k]; return valid.indexOf(v)>=0?v:def; }
 function allItems(){ return CAT.concat(S.custom||[]); }
 function syncCustom(){ (S.custom||[]).forEach(function(c){ if(c.screens && c.screens.length){ var cells={}; c.screens.forEach(function(f){ cells[f]=[c.type==="site"?"web":(f==="web"?"web":"app")]; }); MATRIX[c.id]={acct:c.ctl||"",cells:cells,tip:"",custom:true}; } else if(MATRIX[c.id]&&MATRIX[c.id].custom){ delete MATRIX[c.id]; } }); }
 function item(id){ return allItems().filter(function(i){return i.id===id;})[0]; }
@@ -943,7 +988,10 @@ function viewConseils(){
   var hits=searchHits(UI.cq||"");
   var head='<section class="card"><h2>Conseils</h2><p class="small muted">Par situation de la vie de tous les jours, ou par outil. Touchez un sujet pour l\'ouvrir.</p>'+
     '<label class="f" for="cq">Chercher un conseil<input type="search" id="cq" value="'+esc(UI.cq||"")+'" placeholder="ex. sommeil, Snapchat, harcèlement, achats…"></label>'+
-    '<div class="frow"><button type="button" class="chip" aria-pressed="'+(UI.cview!=="outils")+'" data-act="cview" data-v="situations">Par situation</button><button type="button" class="chip" aria-pressed="'+(UI.cview==="outils")+'" data-act="cview" data-v="outils">Par outil</button></div></section>';
+    '</section>';
+  var fit=USAGES.filter(usageFits), other=USAGES.filter(function(x){return !usageFits(x);});
+  var cs=UI.cview==="outils"?"outils":subOf("conseils","age",["age","tard","aide"]);
+  head=subnav("conseils",[["age","Pour l'âge de vos enfants","heart",fit.length]].concat(other.length?[["tard","Pour plus tard","book",other.length]]:[]).concat([["outils","Par outil","shield"],["aide","En cas de problème","lock"]]),hits?"":cs)+head;
   if(hits){
     return head+'<section class="card"><h2>'+plural(hits.length,"résultat")+'</h2>'+(hits.length?'<div class="items" style="gap:6px">'+hits.map(function(h){ return h.ref==="h"?'<p class="small"><span class="pill plain">'+h.k+'</span> '+esc(h.t)+'</p>':'<button type="button" class="hit" data-act="open" data-ref="'+esc(h.ref)+'"><span class="pill plain">'+h.k+'</span> '+esc(h.t)+'</button>'; }).join("")+'</div>':'<p class="muted small">Rien trouvé. Essayez un autre mot, ou regardez les situations ci-dessous.</p>')+'</section>'+helpCard();
   }
@@ -952,9 +1000,9 @@ function viewConseils(){
     return head+'<section class="card"><h2>Guides de mise en place</h2><div class="items" style="gap:6px">'+Object.keys(GUIDES).map(function(id){ return '<button type="button" class="hit" data-act="open" data-ref="g:'+id+'">'+esc(GUIDES[id].t)+(pl.indexOf(id)>=0?' <span class="pill ok">Dans votre plan</span>':'')+'</button>'; }).join("")+'</div></section>'+
       FAMS.map(function(f){ var its=allItems().filter(function(i){return famOf(i)===f[0];}); if(!its.length) return ""; return '<section class="card"><h3>'+f[1]+'</h3><p class="small muted">'+esc(f[2])+'</p><div class="pills">'+its.map(function(it){ return '<button type="button" class="chip" data-act="open" data-ref="i:'+it.id+'">'+iconFor(it)+esc(it.name)+'</button>'; }).join("")+'</div></section>'; }).join("")+helpCard();
   }
-  var fit=USAGES.filter(usageFits), other=USAGES.filter(function(x){return !usageFits(x);});
   function cards(list){ return '<div class="grid g3">'+list.map(function(x){ return '<button type="button" class="ucard" data-act="open" data-ref="u:'+x.id+'"><b>'+esc(x.t)+'</b><span class="small muted">'+esc(x.intro)+'</span></button>'; }).join("")+'</div>'; }
-  return head+'<section class="grid" style="gap:12px"><h2>Pour l\'âge de vos enfants</h2>'+cards(fit)+'</section>'+(other.length?'<section class="grid" style="gap:12px"><h2>Pour plus tard</h2>'+cards(other)+'</section>':'')+helpCard();
+  if(cs==="aide") return head+helpCard();
+  return head+(cs==="tard"?'<section class="grid" style="gap:12px"><h2>Pour plus tard</h2>'+cards(other)+'</section>':'<section class="grid" style="gap:12px"><h2>Pour l\'âge de vos enfants</h2>'+cards(fit)+'</section>');
 }
 
 /* ============ Aide à la configuration ============ */
@@ -1218,15 +1266,17 @@ var CHILD_LABEL={utilise:["C'est bon","ok"],discussion:["On en parle","warn"],no
 function viewEnfants(){
   if(!S.kids.length) return '<section class="card"><h2>Mes enfants</h2><p class="small">Ajoutez votre premier enfant.</p><div class="toolbar"><button type="button" data-act="manage-kids">Ajouter un enfant</button></div></section>';
   if(!kidSel()) UI.kidSel=S.kids[0].id;
-  var k=kid(kidSel()), bp=bandProgress(k);
+  var k=kid(kidSel()), bp=bandProgress(k), ksub=subOf("kid","vue",["vue","essentiels","utilise","conseils"]);
   var groups=FAMS.map(function(f){ var its=allItems().filter(function(it){ return famOf(it)===f[0] && u(it.id,k.id).s; }); if(!its.length) return ""; return '<div class="usegroup"><span class="kicker">'+f[1]+'</span><div class="uselist">'+its.map(function(it){ var x=u(it.id,k.id), lab=famOf(it)==="outil"?"Activé":lab2(STATUS,x.s);
       return '<button type="button" class="userow" data-act="open-item" data-item="'+it.id+'">'+iconFor(it)+'<span class="un">'+esc(it.name)+(x.note?'<small>'+esc(x.note)+'</small>':'')+'</span><span class="pill '+(x.s==="utilise"?(x.ok||!it.settings||!it.settings.length?'ok':'warn'):x.s==="discussion"?'warn':'plain')+'">'+esc(lab)+(x.s==="utilise"&&it.settings&&it.settings.length&&!x.ok?' · à régler':'')+'</span></button>'; }).join("")+'</div></div>'; }).join("");
   return '<section class="card"><div class="toolbar" style="justify-content:space-between"><h2>Mes enfants</h2><button type="button" class="ghost" data-act="manage-kids">Gérer les enfants</button></div>'+kidTabs(false)+'</section>'+
     '<section class="card kid" style="--kc:'+esc(k.color)+'"><div class="toolbar" style="justify-content:space-between"><div class="kidhead">'+avatar(k,"lg")+'<div><h2>'+esc(k.name)+'</h2><span class="small muted">'+ageOf(k)+' ans · '+esc(bp.b.n)+'</span></div></div><div class="toolbar"><button type="button" data-act="child-open" data-kid="'+k.id+'">Ouvrir son espace</button><button type="button" class="ghost" data-act="child-export" data-kid="'+k.id+'">Exporter son espace</button></div></div>'+
-      '<p class="lead">'+esc(bp.b.key)+'</p>'+kidSummary(k)+requestsBlock(k)+'</section>'+
-    '<section class="grid g2"><div class="card"><h3>À faire</h3>'+todoList(k)+'</div><div class="card"><h3>Les essentiels pour son âge</h3>'+progressBar(bp.n,bp.t)+checklist(bp.b.items,k.id)+'</div></section>'+
-    '<section class="card"><div class="toolbar" style="justify-content:space-between"><h3>Ce qu\'il ou elle utilise</h3><a class="small" href="#apps" data-act="go-kid-apps" data-kid="'+k.id+'">Modifier</a></div>'+(groups||'<p class="small muted">Rien pour l\'instant.</p>')+'</section>'+
-    '<section class="card"><h3>Conseils pour son âge</h3><div class="pills">'+USAGES.filter(function(x){ var a=ageOf(k); return a>=x.a[0]&&a<=x.a[1]; }).map(function(x){ return '<button type="button" class="chip" data-act="open" data-ref="u:'+x.id+'">'+esc(x.t)+'</button>'; }).join("")+'</div></section>';
+      '<p class="lead">'+esc(bp.b.key)+'</p></section>'+
+    subnav("kid",[["vue","Vue d'ensemble","home"],["essentiels","Essentiels pour son âge","lock",bp.n+"/"+bp.t],["utilise","Ce qu'il ou elle utilise","phone"],["conseils","Conseils","heart"]],ksub)+
+    (ksub==="vue"?'<section class="card">'+kidSummary(k)+requestsBlock(k)+'</section><section class="card"><h3>À faire</h3>'+todoList(k)+'</section>':'')+
+    (ksub==="essentiels"?'<section class="card"><h3>Les essentiels pour son âge</h3>'+progressBar(bp.n,bp.t)+checklist(bp.b.items,k.id)+'</section>':'')+
+    (ksub==="utilise"?'<section class="card"><div class="toolbar" style="justify-content:space-between"><h3>Ce qu\'il ou elle utilise</h3><a class="small" href="#apps" data-act="go-kid-apps" data-kid="'+k.id+'">Modifier</a></div>'+(groups||'<p class="small muted">Rien pour l\'instant.</p>')+'</section>':'')+
+    (ksub!=="conseils"?'':'<section class="card"><h3>Conseils pour son âge</h3><div class="pills">'+USAGES.filter(function(x){ var a=ageOf(k); return a>=x.a[0]&&a<=x.a[1]; }).map(function(x){ return '<button type="button" class="chip" data-act="open" data-ref="u:'+x.id+'">'+esc(x.t)+'</button>'; }).join("")+'</div></section>');
 }
 /* ---------- Espace enfant ---------- */
 var KID_REFLEX={
@@ -1275,13 +1325,15 @@ function exportChild(k){
 }
 function statusOpts(it){ return famOf(it)==="outil" ? [["","Non activé"],["utilise","Activé"]] : STATUS; }
 function viewApps(){
-  var sw='<div class="frow seg"><button type="button" class="chip" aria-pressed="'+(UI.appsView!=="ecrans")+'" data-act="apps-view" data-v="liste">Liste</button><button type="button" class="chip" aria-pressed="'+(UI.appsView==="ecrans")+'" data-act="apps-view" data-v="ecrans">Par écran</button></div>';
-  if(UI.appsView==="ecrans") return '<section class="card"><h2>Ce qu\'ils utilisent</h2>'+sw+'</section>'+viewMatrix();
+  if(!UI.fFam) UI.fFam="appareil";
+  var FI={appareil:"phone",compte:"key",app:"chat",site:"globe",outil:"shield"};
+  var sw=subnav("apps",FAMS.map(function(f){ return [f[0],f[1],FI[f[0]],allItems().filter(function(i){return famOf(i)===f[0];}).length]; }).concat([["ecrans","Par écran","browser"]]),UI.appsView==="ecrans"?"ecrans":UI.fFam);
+  if(UI.appsView==="ecrans") return sw+viewMatrix();
   return viewAppsList(sw);
 }
 function viewAppsList(sw){
   var list=allItems().filter(function(it){
-    if(UI.fFam && famOf(it)!==UI.fFam) return false;
+    if(UI.fFam && !UI.q && famOf(it)!==UI.fFam) return false;
     if(UI.fType && it.type!==UI.fType) return false;
     var ks = UI.fKid ? S.kids.filter(function(k){return k.id===UI.fKid;}) : S.kids;
     if(UI.fUsed && !ks.some(function(k){ var s=u(it.id,k.id).s; return s==="utilise"||s==="discussion"; })) return false;
@@ -1290,9 +1342,7 @@ function viewAppsList(sw){
     return true;
   });
   var ks = UI.fKid ? S.kids.filter(function(k){return k.id===UI.fKid;}) : S.kids;
-  return '<section class="card"><div class="toolbar" style="justify-content:space-between"><div><h2>Ce qu\'ils utilisent</h2><p class="small muted">Appareils, comptes, applications, sites web et outils parentaux. Indiquez pour chaque enfant ce qu\'il utilise, puis cochez « Réglages faits ». Touchez un nom pour sa fiche.</p></div><button type="button" class="ghost" data-act="new-item">Ajouter un élément</button></div>'+sw+
-    '<div class="famtabs" role="group" aria-label="Familles">'+[["","Tout","globe"]].concat(FAMS.map(function(f){return [f[0],f[1],{appareil:"phone",compte:"key",app:"chat",site:"globe",outil:"shield"}[f[0]]];})).map(function(f){ var n=allItems().filter(function(i){return !f[0]||famOf(i)===f[0];}).length; return '<button type="button" class="famtab'+(f[0]?' fam-'+f[0]:'')+'" aria-pressed="'+(UI.fFam===f[0])+'" data-act="f-fam" data-v="'+f[0]+'"><span class="ic'+(f[0]?' fam-'+f[0]:'')+'">'+svgIcon(f[2])+'</span><span>'+f[1]+'</span><span class="tiny muted">'+n+'</span></button>'; }).join("")+'</div>'+
-    (UI.fFam?'<p class="small">'+esc(FAMS.filter(function(f){return f[0]===UI.fFam;})[0][2])+'</p>':'')+
+  return sw+'<section class="card"><div class="toolbar" style="justify-content:space-between"><div><h2>'+esc(UI.q?'Recherche dans toute la liste':FAMS.filter(function(f){return f[0]===UI.fFam;})[0][1])+'</h2><p class="small muted">'+esc(UI.q?'':FAMS.filter(function(f){return f[0]===UI.fFam;})[0][2])+' Indiquez ce que chaque enfant utilise ; touchez un nom pour sa fiche.</p></div><button type="button" class="ghost" data-act="new-item">Ajouter un élément</button></div>'+
     '<div class="filters">'+
       '<div class="frow"><span class="lbl">Enfant</span><button type="button" class="chip" aria-pressed="'+(!UI.fKid)+'" data-act="f-kid" data-kid="">Tous</button>'+S.kids.map(function(k){return '<button type="button" class="chip" aria-pressed="'+(UI.fKid===k.id)+'" data-act="f-kid" data-kid="'+k.id+'">'+esc(k.name)+'</button>';}).join("")+'</div>'+
       '<div class="frow"><span class="lbl">Afficher</span><button type="button" class="chip" aria-pressed="'+UI.fUsed+'" data-act="f-used">Seulement ce qui est utilisé</button><button type="button" class="chip" aria-pressed="'+UI.fTodo+'" data-act="f-todo">Seulement ce qui demande une action</button></div>'+
@@ -1312,18 +1362,20 @@ function viewRituel(){
   var mt=monthTopics();
   var j=(S.journal||[]).slice().sort(function(a,b){return a.date<b.date?1:-1;});
   var minAge=Math.min.apply(null,S.kids.map(ageOf).filter(function(a){return a!=null;}).concat([99]));
-  return '<section class="grid g3">'+
+  var rs=subOf("rituel","rituel",["rituel","noter","journal","sujets"]);
+  return subnav("rituel",[["rituel","Le rituel","users"],["noter","Noter un point","doc"],["journal","Journal","book",j.length],["sujets","Un sujet par mois","heart"]],rs)+
+  (rs!=="rituel"?'':'<section class="grid g3">'+
     '<div class="card"><span class="kicker">Chaque semaine · 10 minutes</span><h3>La météo numérique</h3><ul class="plain small"><li>Regarder ensemble le temps passé, sans reproche</li><li>Une chose sympa vue ou apprise</li><li>Une chose bizarre ou désagréable, s\'il y en a</li></ul></div>'+
     '<div class="card"><span class="kicker">Chaque mois · 30 minutes</span><h3>Le point famille</h3><ol class="plain small"><li>Ce qui s\'est bien passé</li><li>Les nouvelles demandes (apps, réseaux, achats)</li><li>Le sujet du mois</li><li>Ce qu\'on assouplit ou ce qu\'on resserre</li></ol></div>'+
-    '<div class="card"><span class="kicker">Chaque trimestre</span><h3>Revoir les règles</h3><ul class="plain small"><li>Relire la charte ensemble</li><li>Lever une restriction devenue inutile</li><li>Aligner les règles entre les adultes</li></ul></div></section>'+
-  '<section class="card"><h2>Noter un point famille</h2><form class="form" id="jform"><div class="row"><label class="f" for="jdate">Date<input type="date" id="jdate" value="'+todayISO()+'"></label><label class="f" for="jwho">Avec<select id="jwho"><option>Toute la famille</option>'+S.kids.map(function(k){return '<option>'+esc(k.name)+'</option>';}).join("")+'</select></label></div>'+
+    '<div class="card"><span class="kicker">Chaque trimestre</span><h3>Revoir les règles</h3><ul class="plain small"><li>Relire la charte ensemble</li><li>Lever une restriction devenue inutile</li><li>Aligner les règles entre les adultes</li></ul></div></section>')+
+  (rs!=="noter"?'':'<section class="card"><h2>Noter un point famille</h2><form class="form" id="jform"><div class="row"><label class="f" for="jdate">Date<input type="date" id="jdate" value="'+todayISO()+'"></label><label class="f" for="jwho">Avec<select id="jwho"><option>Toute la famille</option>'+S.kids.map(function(k){return '<option>'+esc(k.name)+'</option>';}).join("")+'</select></label></div>'+
     '<label class="f" for="jgood">Ce qui va bien<textarea id="jgood"></textarea></label><label class="f" for="jwatch">Ce qui demande de l\'attention<textarea id="jwatch"></textarea></label><label class="f" for="jdec">Ce qu\'on a décidé<textarea id="jdec"></textarea></label>'+
-    '<div class="toolbar"><button type="submit">Enregistrer</button></div></form></section>'+
-  '<section class="card"><h2>Journal</h2>'+(j.length?j.map(function(e){ return '<div class="entry"><div class="toolbar"><b>'+esc(fmtDate(e.date))+'</b><span class="pill plain">'+esc(e.who)+'</span><button type="button" class="quiet" data-act="del-journal" data-id="'+esc(e.id)+'">Supprimer</button></div><dl>'+(e.good?'<dt>Bien</dt><dd>'+esc(e.good)+'</dd>':'')+(e.watch?'<dt>Attention</dt><dd>'+esc(e.watch)+'</dd>':'')+(e.decisions?'<dt>Décidé</dt><dd>'+esc(e.decisions)+'</dd>':'')+'</dl></div>'; }).join(""):'<p class="muted small">Aucun point noté pour l\'instant.</p>')+'</section>'+
-  '<section class="card"><h2>Un sujet par mois</h2><p class="small muted">Adaptés à l\'âge de vos enfants. Cochez quand le sujet a été abordé.</p><div class="months">'+mt.map(function(m,ix){ var on=!!S.topics[m.key];
+    '<div class="toolbar"><button type="submit">Enregistrer</button></div></form></section>')+
+  (rs!=="journal"?'':'<section class="card"><h2>Journal</h2>'+(j.length?j.map(function(e){ return '<div class="entry"><div class="toolbar"><b>'+esc(fmtDate(e.date))+'</b><span class="pill plain">'+esc(e.who)+'</span><button type="button" class="quiet" data-act="del-journal" data-id="'+esc(e.id)+'">Supprimer</button></div><dl>'+(e.good?'<dt>Bien</dt><dd>'+esc(e.good)+'</dd>':'')+(e.watch?'<dt>Attention</dt><dd>'+esc(e.watch)+'</dd>':'')+(e.decisions?'<dt>Décidé</dt><dd>'+esc(e.decisions)+'</dd>':'')+'</dl></div>'; }).join(""):'<p class="muted small">Aucun point noté pour l\'instant.</p>')+'</section>'+
+  '')+(rs!=="sujets"?'':'<section class="card"><h2>Un sujet par mois</h2><p class="small muted">Adaptés à l\'âge de vos enfants. Cochez quand le sujet a été abordé.</p><div class="months">'+mt.map(function(m,ix){ var on=!!S.topics[m.key];
     var forYoung = m.t[2] <= minAge;
     return '<div class="month'+(ix===0?' now':'')+'"><span class="m">'+esc(m.label)+'</span><b>'+esc(m.t[0])+'</b><span class="small muted">'+esc(m.t[1])+'</span>'+(forYoung?'':'<span class="tiny muted">À partir de '+m.t[2]+' ans</span>')+
-      '<label class="chk'+(on?' done':'')+'" style="padding:4px 0"><input type="checkbox" id="t-'+m.key+'" data-topic="'+m.key+'"'+(on?' checked':'')+'><span class="small">Abordé</span></label></div>'; }).join("")+'</div></section>';
+      '<label class="chk'+(on?' done':'')+'" style="padding:4px 0"><input type="checkbox" id="t-'+m.key+'" data-topic="'+m.key+'"'+(on?' checked':'')+'><span class="small">Abordé</span></label></div>'; }).join("")+'</div></section>');
 }
 function viewCharte(){
   var c=charte();
@@ -1408,7 +1460,7 @@ var rendering=false;
 function render(){
   if(rendering){ setTimeout(render,0); return; }
   rendering=true;
-  try { syncCustom(); renderInner(); } finally { rendering=false; }
+  try { migrateColors(); syncCustom(); renderInner(); } finally { rendering=false; }
 }
 function renderInner(){
   var a=document.activeElement, fid=a&&a.id, pos=null; try{ pos=a.selectionStart; }catch(e){}
@@ -1495,6 +1547,7 @@ document.addEventListener("click", function(ev){
     case "as-add": if(UI.as.item&&UI.as.kid){ setU(UI.as.item,UI.as.kid,{s:t.dataset.s}); render(); renderDialog(); } break;
     case "as-site-add": var sn=(UI.as.site||"").trim(); if(sn){ var nid=uid("c"); S.custom.push({id:nid,custom:true,name:sn,type:"site",feats:[],what:"Site ajouté depuis l'aide à la configuration.",risks:[],settings:[]}); S.kids.forEach(function(kk){ setU(nid,kk.id,{s:UI.as.mode==="autoriser"?"utilise":"non"}); }); save(); openItem("i:"+nid); render(); } break;
     case "apps-view": UI.appsView=t.dataset.v; render(); break;
+    case "sub": UI.sub=UI.sub||{}; UI.sub[t.dataset.k]=t.dataset.v; if(t.dataset.k==="apps"){ if(t.dataset.v==="ecrans") UI.appsView="ecrans"; else { UI.appsView="liste"; UI.fFam=t.dataset.v; UI.fType=""; } } if(t.dataset.k==="conseils"){ UI.cview=t.dataset.v==="outils"?"outils":"situations"; UI.cq=""; } render(); var mn=document.querySelector("main"); if(mn && window.scrollY>mn.offsetTop) window.scrollTo(0,mn.offsetTop-8); break;
     case "mx-used": UI.mxUsed=!UI.mxUsed; render(); break;
     case "kid-sel": UI.kidSel=k; if(t.tagName==="A") return; render(); break;
     case "manage-kids": openItem("kids"); break;
@@ -1557,7 +1610,7 @@ document.addEventListener("input", function(ev){
 document.addEventListener("submit", function(ev){
   ev.preventDefault(); var f=ev.target, g=function(id){ var e=document.getElementById(id); return e?e.value.trim():""; };
   if(f.id==="reqform"){ var w=g("rq-what"); if(!w) return; S.requests=S.requests||[]; S.requests.push({id:uid("r"),kid:UI.child,what:w,why:g("rq-why"),date:todayISO(),status:"nouvelle"}); rerender(); return; }
-  if(f.id==="jform"){ if(!g("jgood")&&!g("jwatch")&&!g("jdec")) return; S.journal.push({id:uid("j"),date:g("jdate")||todayISO(),who:g("jwho"),good:g("jgood"),watch:g("jwatch"),decisions:g("jdec")}); rerender(); }
+  if(f.id==="jform"){ if(!g("jgood")&&!g("jwatch")&&!g("jdec")) return; S.journal.push({id:uid("j"),date:g("jdate")||todayISO(),who:g("jwho"),good:g("jgood"),watch:g("jwatch"),decisions:g("jdec")}); UI.sub=UI.sub||{}; UI.sub.rituel="journal"; rerender(); }
   if(f.id==="newform"){ var n=g("ni-name"); if(!n) return; var feats=[], scr=[], lines=function(id){ return g(id).split("\n").map(function(x){return x.trim();}).filter(Boolean); }, okUrl=function(x){ return /^https?:\/\//i.test(x)?x:""; };
     Array.prototype.forEach.call(f.querySelectorAll("[data-nf]"),function(c){ if(c.checked) feats.push(c.dataset.nf); });
     Array.prototype.forEach.call(f.querySelectorAll("[data-ns]"),function(c){ if(c.checked) scr.push(c.dataset.ns); });
