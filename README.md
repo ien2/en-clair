@@ -15,3 +15,5 @@ Un outil pour les parents : ce que chaque enfant utilise (appareils, comptes, ap
 - `mentions-legales.html` : mentions légales et confidentialité
 
 Les noms et logos des applications appartiennent à leurs propriétaires respectifs et servent uniquement à les identifier. Contact : contact@intersectionsholding.com
+
+Adresse : https://ien2.github.io/jiminy/
