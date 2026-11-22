@@ -13,7 +13,7 @@
 <link rel="icon" href="favicon-64.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script>window.EC_SITE=true;</script>
-<script src="icones.js"></script>
+<script src="bibliotheque.js"></script>
 
 <title>Jiminy · la petite voix numérique de la famille</title>
 <style>
@@ -533,6 +533,26 @@ var CAT = [
   what:"La messagerie intégrée aux iPhone et iPad.",
   risks:["Messages de numéros inconnus"],
   settings:["Limites de communication : contacts uniquement","Sécurité des communications activée"]},
+ {id:"facebook",name:"Facebook",type:"reseau",age:13,ctl:"Centre familial Meta",url:"https://familycenter.meta.com",feats:["messagerie","inconnus","public","achats","geoloc"],
+  what:"Le réseau social de Meta, avec Messenger pour discuter. Moins utilisé par les ados, mais souvent présent via les groupes, le Marketplace ou un compte créé « pour voir ».",
+  risks:["Demandes d'amis et messages d'inconnus","Groupes et publications publiques","Marketplace : achats et ventes entre particuliers"],
+  settings:["Compte et publications visibles par les amis seulement","Messenger : seuls les amis peuvent écrire","Activer la supervision dans le Centre familial Meta","Masquer la date de naissance et le numéro de téléphone du profil"]},
+ {id:"mon-petit-prono",name:"Mon Petit Prono",type:"jeu",ctl:"Aucun contrôle parental dédié",url:"",feats:["messagerie","achats"],
+  what:"Un jeu de pronostics de football entre amis : on prédit les scores, on gagne des points et on grimpe dans des ligues privées. Sans mise d'argent, mais avec des achats intégrés, et classé 17+ sur l'App Store.",
+  risks:["Achats intégrés","Glissement vers les vrais paris sportifs, interdits aux mineurs","Chat dans les ligues"],
+  settings:["Jouer dans des ligues privées avec des proches","Bloquer les achats intégrés sur l'appareil","Parler de la différence entre ce jeu et les paris d'argent"]},
+ {id:"x",name:"X (ex-Twitter)",type:"reseau",age:13,ctl:"Aucun contrôle parental : réglages du compte",url:"https://help.x.com",feats:["messagerie","inconnus","public"],
+  what:"Le réseau de messages courts et d'actualité. Les contenus y sont peu filtrés et le fil met en avant des comptes que l'on ne suit pas.",
+  risks:["Contenus choquants ou violents dans le fil","Désinformation","Messages privés d'inconnus"],
+  settings:["Protéger les publications (compte privé)","Messages privés : seulement les comptes suivis","Activer le masquage des contenus sensibles","Désactiver la localisation des publications"]},
+ {id:"telegram",name:"Telegram",type:"reseau",age:16,ctl:"Aucun contrôle parental",url:"https://telegram.org/faq",feats:["messagerie","inconnus","public","ephemere","voix"],
+  what:"Une messagerie avec de très grands groupes et des chaînes publiques. 16 ans minimum selon les conditions longtemps en vigueur ; une version récente les porte à 18 ans dans l'UE : vérifiez les conditions avant d'ouvrir un compte.",
+  risks:["Chaînes et groupes publics peu modérés","Contacts d'inconnus","Messages secrets et éphémères","Arnaques et contenus illégaux"],
+  settings:["Confidentialité : numéro de téléphone visible par personne","Groupes : seuls mes contacts peuvent m'ajouter","Code de verrouillage de l'app","Désactiver la recherche par numéro"]},
+ {id:"pinterest",name:"Pinterest",type:"reseau",age:13,ctl:"Réglages du compte (protections par défaut pour les moins de 16 ans)",url:"https://help.pinterest.com",feats:["messagerie","public","achats"],
+  what:"Un catalogue d'images et d'idées (mode, déco, dessin, recettes) que l'on épingle. Plutôt calme, mais les recherches peuvent mener à des contenus sensibles.",
+  risks:["Images liées à l'apparence ou aux régimes","Messages d'inconnus","Liens vers des boutiques"],
+  settings:["Compte privé","Messages : seulement les contacts acceptés","Vérifier la vraie date de naissance (protections renforcées avant 16 ans)"]},
  {id:"instagram",name:"Instagram",type:"reseau",age:13,ctl:"Centre familial Meta",url:"https://familycenter.meta.com/fr/",feats:["messagerie","inconnus","public","ia"],
   what:"Photos, vidéos courtes et messages. Avec une vraie date de naissance, l'enfant obtient un « Compte Ado » mieux protégé.",
   risks:["Comparaison permanente et pression sociale","Messages d'inconnus","Temps passé sur les vidéos"],
@@ -636,6 +656,10 @@ CAT = CAT.concat([
   what:"Films et séries d'Amazon, souvent inclus dans l'abonnement Amazon Prime ou dans une box. On peut y louer ou acheter des films en plus.",
   risks:["Contenus pour adultes depuis un profil adulte","Location ou achat de films en un clic, payés avec la carte du compte Amazon"],
   settings:["Créer un profil Enfants pour les plus jeunes","Définir le code PIN du contrôle parental (Compte et paramètres › Contrôle parental)","Exiger ce code PIN pour les achats et les locations","Choisir la limite d'âge (7+, 13+, 16+ ou 18+) et l'appliquer à tous les appareils"]},
+ {id:"amazon",name:"Amazon",type:"achat",age:18,feats:["achats"],ctl:"Code PIN, Amazon Household, achats en 1-Clic désactivés",url:"https://www.amazon.fr/gp/help/customer/display.html",
+  what:"Le grand site d'achat en ligne. Le compte est celui d'un adulte ; un enfant y passe souvent par le compte familial ou l'appareil d'un parent.",
+  risks:["Achats en un clic avec la carte enregistrée","Applis et livres numériques achetés depuis une tablette","Avis et vendeurs peu fiables"],
+  settings:["Désactiver l'achat en 1-Clic","Ne pas laisser l'appli connectée sur l'appareil de l'enfant","Utiliser un profil adolescent (Amazon Household) si vous lui ouvrez des achats","Vérifier les commandes et abonnements chaque mois"]},
  {id:"vinted",name:"Vinted",type:"achat",age:18,feats:["achats","messagerie","inconnus"],ctl:"Aucun contrôle parental : le compte est celui du parent",url:"https://www.vinted.fr/help/105",
   what:"Achat et vente de vêtements et objets d'occasion entre particuliers. Réservé aux 18 ans et plus : pour un mineur, c'est le parent qui ouvre le compte et en reste responsable.",
   risks:["Arnaques : faux paiements, demandes de payer ou de discuter hors de Vinted","Messages d'inconnus, parfois insistants","Photos de l'enfant ou de la maison dans les annonces","Données personnelles (adresse, nom complet) à l'envoi des colis"],
@@ -671,9 +695,12 @@ var TOS = {
  whatsapp:"https://www.whatsapp.com/legal/terms-of-service-eea", instagram:"https://help.instagram.com/581066165581870", snapchat:"https://www.snap.com/terms",
  tiktok:"https://www.tiktok.com/legal/page/eea/terms-of-service/fr", discord:"https://discord.com/terms", youtube:"https://www.youtube.com/t/terms",
  roblox:"https://en.help.roblox.com/hc/fr/articles/115004647846", minecraft:"https://www.minecraft.net/fr-fr/eula", fortnite:"https://www.epicgames.com/site/fr/tos",
- duolingo:"https://www.duolingo.com/terms", netflix:"https://help.netflix.com/legal/termsofuse", vinted:"https://www.vinted.fr/terms-and-conditions", "prime-video":"https://www.primevideo.com/terms", chatgpt:"https://openai.com/fr-FR/policies/eu-terms-of-use/"
+ duolingo:"https://www.duolingo.com/terms", netflix:"https://help.netflix.com/legal/termsofuse", facebook:"https://www.facebook.com/terms", x:"https://x.com/fr/tos", telegram:"https://telegram.org/tos", pinterest:"https://policy.pinterest.com/fr/terms-of-service", vinted:"https://www.vinted.fr/terms-and-conditions", "prime-video":"https://www.primevideo.com/terms", chatgpt:"https://openai.com/fr-FR/policies/eu-terms-of-use/"
 };
 CAT.forEach(function(it){ if(TOS[it.id]) it.tos=TOS[it.id]; });
+/* Bibliothèque en ligne (bibliotheque.js) : ajouts, corrections et retraits publiés par l'administrateur du site */
+function mergeLib(lib){ if(!lib) return; (lib.items||[]).forEach(function(x){ if(!x||!x.id) return; var i=-1; CAT.forEach(function(c,j){ if(c.id===x.id) i=j; }); if(x.removed){ if(i>=0) CAT.splice(i,1); return; } var y=Object.assign({},x); delete y.custom; if(i>=0) Object.assign(CAT[i],y); else CAT.push(y); }); }
+mergeLib(window.EC_LIB);
 var ICON_OF = {iphone:"phone",android:"phone",ipad:"tablet",windows:"laptop",mac:"laptop",switch:"console",playstation:"console",xbox:"console",
  instagram:"camera",snapchat:"camera",tiktok:"play",youtube:"play","box-fai":"router",recherche:"search",navigateurs:"browser"};
 var TYPE_ICON = {appareil:"phone",compte:"key",reseau:"chat",jeu:"gamepad",video:"play",ecole:"book",ia:"spark",achat:"bag",outil:"shield",navigateur:"browser",site:"globe"};
@@ -706,7 +733,7 @@ var SVG = {
  doc:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/>'
 };
 function svgIcon(k){ return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+(SVG[k]||SVG.globe)+'</svg>'; }
-function iconFor(it){ var img=(S.icons||{})[it.id]||(window.EC_ICONS||{})[it.id]; if(img) return '<span class="ic img fam-'+famOf(it)+'"><img src="'+esc(img)+'" alt=""></span>'; return '<span class="ic fam-'+famOf(it)+'">'+svgIcon(it.ic||ICON_OF[it.id]||TYPE_ICON[it.type]||"globe")+'</span>'; }
+function iconFor(it){ var img=(S.icons||{})[it.id]||((window.EC_LIB||{}).icons||window.EC_ICONS||{})[it.id]; if(img) return '<span class="ic img fam-'+famOf(it)+'"><img src="'+esc(img)+'" alt=""></span>'; return '<span class="ic fam-'+famOf(it)+'">'+svgIcon(it.ic||ICON_OF[it.id]||TYPE_ICON[it.type]||"globe")+'</span>'; }
 function setIcon(itemId,file){
   if(!file || !/^image\//.test(file.type)){ alert2("Choisissez une image (PNG, JPG ou SVG)."); return; }
   var r=new FileReader();
@@ -773,7 +800,8 @@ function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g,function(c){retur
 function uid(p){ return p+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 function subnav(k,items,cur){ return '<nav class="subtabs" role="tablist" aria-label="Sous-sections">'+items.map(function(x){ return '<button type="button" role="tab" aria-selected="'+(x[0]===cur)+'" data-act="sub" data-k="'+k+'" data-v="'+x[0]+'">'+(x[2]?svgIcon(x[2]):'')+'<span>'+esc(x[1])+'</span>'+(x[3]!=null?'<span class="n">'+x[3]+'</span>':'')+'</button>'; }).join("")+'</nav>'; }
 function subOf(k,def,valid){ var v=(UI.sub||{})[k]; return valid.indexOf(v)>=0?v:def; }
-function allItems(){ return CAT.concat(S.custom||[]); }
+function allItems(){ var ids={}; CAT.forEach(function(c){ ids[c.id]=1; }); return CAT.filter(function(c){ return !(S.libRemoved||[]).some(function(r){return r===c.id;}); }).concat((S.custom||[]).filter(function(c){ return !ids[c.id]; })); }
+function applyLibEdits(){ Object.keys(S.libEdits||{}).forEach(function(id){ var c=CAT.filter(function(x){return x.id===id;})[0]; if(c) Object.assign(c,S.libEdits[id]); }); }
 function syncCustom(){ (S.custom||[]).forEach(function(c){ if(c.screens && c.screens.length){ var cells={}; c.screens.forEach(function(f){ cells[f]=[c.type==="site"?"web":(f==="web"?"web":"app")]; }); MATRIX[c.id]={acct:c.ctl||"",cells:cells,tip:"",custom:true}; } else if(MATRIX[c.id]&&MATRIX[c.id].custom){ delete MATRIX[c.id]; } }); }
 function item(id){ return allItems().filter(function(i){return i.id===id;})[0]; }
 function kid(id){ return S.kids.filter(function(k){return k.id===id;})[0]; }
@@ -1245,6 +1273,12 @@ var IFACES = [["ios","iPhone, iPad","phone"],["android","Android","phone"],["web
 var DEVCTL = {ios:"Temps d'écran : limite de temps, blocage de l'app, contenus",android:"Family Link : limite de temps, accord pour installer, blocage",web:"Filtres du navigateur : Microsoft Family (Edge), Temps d'écran (Safari), suite de sécurité ou box",desktop:"Microsoft Family (Windows) ou Temps d'écran (Mac)",console:"Contrôle parental de la console"};
 var AVAIL = {app:["App","ok"],web:["Site","ok"],lim:["Limité","warn"],non:["—",""]};
 var MATRIX = {
+ x:{acct:"",cells:{ios:["app"],android:["app"],web:["web","x.com"],desktop:["lim","Par le navigateur"],console:["non"]},tip:"Beaucoup de contenus se lisent sans compte, dans le navigateur : seuls les filtres de l'appareil ou de la box agissent alors."},
+ telegram:{acct:"",cells:{ios:["app"],android:["app"],web:["lim","Telegram Web, relié au téléphone"],desktop:["app","App Windows ou Mac"],console:["non"]},tip:"Vérifiez la liste des sessions actives : un ordinateur oublié reste connecté."},
+ pinterest:{acct:"",cells:{ios:["app"],android:["app"],web:["web","pinterest.fr"],desktop:["lim","Par le navigateur"],console:["non"]},tip:""},
+ amazon:{acct:"Amazon Household",cells:{ios:["app"],android:["app"],web:["web","amazon.fr"],desktop:["lim","Par le navigateur"],console:["non"]},tip:"Les achats d'applis et de livres numériques passent aussi par les tablettes Fire et Kindle."},
+ facebook:{acct:"Centre familial Meta",cells:{ios:["app"],android:["app"],web:["web","facebook.com"],desktop:["lim","Par le navigateur"],console:["non"]},tip:"Messenger est une app séparée : vérifiez-la aussi."},
+ "mon-petit-prono":{acct:"",cells:{ios:["app"],android:["app"],web:["web","Site du jeu"],desktop:["lim","Par le navigateur"],console:["non"]},tip:""},
  netflix:{acct:"Profils et contrôle parental Netflix",cells:{ios:["app"],android:["app"],web:["web","netflix.com"],desktop:["lim","App Windows ou navigateur"],console:["app","App sur Xbox ou PlayStation"]},tip:"Les réglages d'un profil (âge, code PIN) suivent le compte : ils s'appliquent sur tous les écrans, téléviseur compris."},
  disney:{acct:"Profils Disney+ et code PIN",cells:{ios:["app"],android:["app"],web:["web","disneyplus.com"],desktop:["lim","Par le navigateur"],console:["app","App sur Xbox ou PlayStation"]},tip:"Un profil adulte sans code PIN ouvre tout le catalogue, sur n'importe quel écran."},
  "prime-video":{acct:"Contrôle parental Prime Video (code PIN)",cells:{ios:["app"],android:["app"],web:["web","primevideo.com"],desktop:["lim","App Windows ou navigateur"],console:["app","App sur Xbox ou PlayStation"]},tip:"Le code PIN se règle appareil par appareil ou pour tous d'un coup : choisissez « tous les appareils »."},
@@ -1463,7 +1497,7 @@ function viewSauvegarde(){
     (UI.msg?'<p class="small">'+esc(UI.msg)+'</p>':'')+'</div></section>'+
   '<section class="grid g2"><div class="card"><h3>Où sont mes informations ?</h3><p class="small">Uniquement dans ce navigateur, sur cet ordinateur. Rien n\'est envoyé sur Internet. Si vous videz l\'historique du navigateur ou changez d\'ordinateur, il faudra reprendre votre sauvegarde.</p><p class="small">Sur iPhone ou iPad, Safari peut effacer les données d\'un site après quelques jours sans visite. Ajoutez Jiminy à l\'écran d\'accueil (bouton Partager › Sur l\'écran d\'accueil) et gardez une sauvegarde récente.</p></div>'+
   '<div class="card"><h3>Vos ajouts à la bibliothèque</h3><p class="small">'+((S.custom||[]).length?plural(S.custom.length,"élément")+' ajouté'+(S.custom.length>1?'s':'')+' par vous : '+S.custom.map(function(c){return esc(c.name);}).join(", ")+'.':'Vous n\'avez encore rien ajouté. Une app manque ? « Créer un élément » dans la Bibliothèque.')+' Partagez-les avec un autre parent : il les reprend avec « Choisir le fichier », sans toucher à ses données.</p><div class="toolbar"><button type="button" class="ghost" data-act="export-cat"'+((S.custom||[]).length?'':' disabled')+'>Partager mes ajouts</button><button type="button" class="ghost" data-act="new-item">Ajouter un élément</button></div></div>'+
-  '<div class="card"><h3>Icônes des applications</h3><p class="small">Ajoutez plusieurs icônes d\'un coup : nommez chaque image comme l\'élément (par exemple <code>whatsapp.png</code>, <code>instagram.png</code>, <code>nintendo-switch.png</code>), puis sélectionnez-les toutes.</p><div class="toolbar"><label class="btn ghost" for="icons-bulk">Importer des icônes<input type="file" id="icons-bulk" accept="image/*" multiple class="hide"></label>'+(Object.keys(S.icons||{}).length?'<span class="small muted">'+plural(Object.keys(S.icons).length,"icône")+' personnalisée'+(Object.keys(S.icons).length>1?'s':'')+'</span>':'')+'</div>'+(UI.iconMsg?'<p class="small">'+esc(UI.iconMsg)+'</p>':'')+'<details><summary class="small">Voir les noms de fichiers reconnus</summary><p class="tiny muted">'+allItems().map(function(it){return esc(it.id)+'.png';}).join(" · ")+'</p></details></div>'+
+  '<div class="card"><h3>Icônes des applications</h3><p class="small">Ajoutez plusieurs icônes d\'un coup : nommez chaque image comme l\'élément (par exemple <code>whatsapp.png</code>, <code>instagram.png</code>, <code>nintendo-switch.png</code>), puis sélectionnez-les toutes.</p><div class="toolbar">'+(Object.keys(S.icons||{}).length?'<button type="button" class="quiet" data-act="icons-clear">'+(UI.arm==="icons-clear"?'Confirmer':'Revenir aux icônes de la bibliothèque')+'</button>':'')+'<label class="btn ghost" for="icons-bulk">Importer des icônes<input type="file" id="icons-bulk" accept="image/*" multiple class="hide"></label>'+(Object.keys(S.icons||{}).length?'<span class="small muted">'+plural(Object.keys(S.icons).length,"icône")+' personnalisée'+(Object.keys(S.icons).length>1?'s':'')+'</span>':'')+'</div>'+(UI.iconMsg?'<p class="small">'+esc(UI.iconMsg)+'</p>':'')+'<details><summary class="small">Voir les noms de fichiers reconnus</summary><p class="tiny muted">'+allItems().map(function(it){return esc(it.id)+'.png';}).join(" · ")+'</p></details></div>'+
   '<div class="card"><h3>Repartir de zéro</h3><p class="small">Efface toutes les informations de cet ordinateur. Faites une sauvegarde avant.</p><div class="toolbar"><button type="button" class="danger" data-act="wipe">'+(UI.wipeArmed?'Confirmer l\'effacement':'Tout effacer')+'</button>'+(UI.wipeArmed?'<button type="button" class="quiet" data-act="wipe-cancel">Annuler</button>':'')+'</div></div></section>'+
   '<section class="card"><label class="f" for="family">Nom de la famille (facultatif, apparaît sur la charte et le fichier)<input type="text" id="family" value="'+esc(S.family)+'" placeholder="ex. Famille Martin"></label></section>';
 }
@@ -1499,7 +1533,7 @@ function renderDialog(){
     (isNet?'<section><span class="kicker">Réglages communs à tous les réseaux</span><ul class="plain small">'+COMMON_SOCIAL.map(function(s){return '<li>'+esc(s)+'</li>';}).join("")+'</ul></section>':'')+
     usageLinks(relatedUsages("i:"+it.id))+
     (it.custom?'<div class="toolbar"><button type="button" class="ghost" data-act="edit-item" data-item="'+it.id+'">Modifier</button><button type="button" class="danger" data-act="del-item" data-item="'+it.id+'">Supprimer de la bibliothèque</button></div>':
-      '<div class="toolbar">'+(isHidden(it)?'<button type="button" class="ghost" data-act="unhide-item" data-item="'+it.id+'">Réafficher dans ma bibliothèque</button>':(S.kids.some(function(k){return inList(it,k);})?'':'<button type="button" class="quiet" data-act="hide-item" data-item="'+it.id+'">Masquer de ma bibliothèque</button>'))+'</div>');
+      '<div class="toolbar">'+(S.admin?'<button type="button" class="ghost" data-act="edit-item" data-item="'+it.id+'">Modifier (bibliothèque en ligne)</button><button type="button" class="quiet" data-act="lib-unpublish" data-item="'+it.id+'">'+(UI.arm==="unpub:"+it.id?'Confirmer le retrait':'Retirer de la bibliothèque en ligne')+'</button>':'')+(isHidden(it)?'<button type="button" class="ghost" data-act="unhide-item" data-item="'+it.id+'">Réafficher dans ma bibliothèque</button>':(S.kids.some(function(k){return inList(it,k);})?'':'<button type="button" class="quiet" data-act="hide-item" data-item="'+it.id+'">Masquer de ma bibliothèque</button>'))+'</div>');
 }
 function newItemForm(edit){
   var c=edit||{}, ed=!!edit, v=function(x){ return esc(x==null?"":x); }, sc=c.screens||[];
@@ -1642,8 +1676,15 @@ function viewFamille(){
   UI.sub.rituel=keep;
   return nav+body;
 }
+function adminCard(){
+  var nC=(S.custom||[]).length, nE=Object.keys(S.libEdits||{}).length, nR=(S.libRemoved||[]).length, nI=Object.keys(S.icons||{}).length;
+  return '<section class="card"><h2>Bibliothèque en ligne</h2><p class="small">Mode administrateur : vos ajouts ('+nC+'), corrections ('+nE+'), retraits ('+nR+') et icônes ('+nI+') sont regroupés dans un fichier <code>bibliotheque.js</code>. Une fois déposé sur le site, tous les parents voient la bibliothèque à jour. Leurs données ne sont pas touchées.</p>'+
+    '<ol class="small" style="margin:8px 0 12px 18px"><li>Ajoutez ou corrigez des éléments dans la Bibliothèque (bouton « Modifier » sur chaque fiche), et leurs icônes.</li><li>Cliquez sur « Préparer la mise à jour » : le fichier se télécharge.</li><li>Ouvrez la page de dépôt GitHub, glissez-y le fichier, puis « Commit changes ». Le site est à jour une à deux minutes plus tard.</li></ol>'+
+    '<div class="toolbar"><button type="button" data-act="lib-export">Préparer la mise à jour</button><a class="btn ghost" href="https://github.com/ien2/jiminy/upload/main" target="_blank" rel="noopener">Ouvrir la page de dépôt GitHub</a></div>'+(UI.libMsg2?'<p class="small okline">'+esc(UI.libMsg2)+'</p>':'')+'</section>';
+}
 function viewReglages(){
-  return '<section class="card"><div class="toolbar" style="justify-content:space-between"><h2>Mes enfants</h2></div><p class="small muted">Prénom, année de naissance et couleur. Les conseils s\'adaptent à l\'âge.</p>'+kidRows()+'<div class="toolbar"><button type="button" class="ghost" data-act="add-kid">Ajouter un enfant</button></div></section>'+viewSauvegarde();
+  return (S.admin?adminCard():'')+'<section class="card"><div class="toolbar" style="justify-content:space-between"><h2>Mes enfants</h2></div><p class="small muted">Prénom, année de naissance et couleur. Les conseils s\'adaptent à l\'âge.</p>'+kidRows()+'<div class="toolbar"><button type="button" class="ghost" data-act="add-kid">Ajouter un enfant</button></div></section>'+viewSauvegarde()+
+    '<p class="small" style="margin-top:8px"><label for="admin-mode"><input type="checkbox" id="admin-mode" data-act="admin-toggle"'+(S.admin?' checked':'')+'> Je gère ce site (mode administrateur de la bibliothèque)</label></p>';
 }
 function viewAccueil(){
   var tot=planTotals(), ns=nextStep(), tp=monthTopics()[0];
@@ -1664,7 +1705,7 @@ var rendering=false;
 function render(){
   if(rendering){ setTimeout(render,0); return; }
   rendering=true;
-  try { migrateColors(); syncCustom(); renderInner(); Array.prototype.forEach.call(document.querySelectorAll(".subtabs [aria-selected=true]"),function(b){ var n=b.parentNode; if(n.scrollWidth>n.clientWidth) n.scrollLeft=Math.max(0,b.offsetLeft-(n.clientWidth-b.offsetWidth)/2); }); } finally { rendering=false; }
+  try { migrateColors(); applyLibEdits(); syncCustom(); renderInner(); Array.prototype.forEach.call(document.querySelectorAll(".subtabs [aria-selected=true]"),function(b){ var n=b.parentNode; if(n.scrollWidth>n.clientWidth) n.scrollLeft=Math.max(0,b.offsetLeft-(n.clientWidth-b.offsetWidth)/2); }); } finally { rendering=false; }
 }
 function renderInner(){
   var a=document.activeElement, fid=a&&a.id, pos=null; try{ pos=a.selectionStart; }catch(e){}
@@ -1697,6 +1738,18 @@ function doExport(){
 function doExportCatalog(){
   var ic={}; (S.custom||[]).forEach(function(c){ if((S.icons||{})[c.id]) ic[c.id]=S.icons[c.id]; });
   download("jiminy-ajouts-"+todayISO()+".json", JSON.stringify({app:"vie-numerique-famille",version:1,kind:"catalogue",exported:new Date().toISOString(),custom:S.custom||[],icons:ic},null,2), "application/json");
+}
+function doExportLib(){
+  var base=window.EC_LIB||{items:[],icons:{}}, items=(base.items||[]).slice(), byId={};
+  items.forEach(function(x,i){ byId[x.id]=i; });
+  var put=function(x){ if(byId[x.id]!=null) items[byId[x.id]]=Object.assign({},items[byId[x.id]],x); else { byId[x.id]=items.length; items.push(x); } };
+  (S.custom||[]).forEach(function(c){ var y=Object.assign({},c); delete y.custom; put(y); });
+  Object.keys(S.libEdits||{}).forEach(function(id){ put(Object.assign({id:id},S.libEdits[id])); });
+  (S.libRemoved||[]).forEach(function(id){ put({id:id,removed:true}); });
+  var icons=Object.assign({},base.icons||window.EC_ICONS||{},S.icons||{});
+  var lib={version:todayISO(),items:items,icons:icons};
+  download("bibliotheque.js","/* Bibliothèque de Jiminy : éléments ajoutés ou corrigés, et icônes. Généré depuis Jiminy le "+todayISO()+". Les logos appartiennent à leurs propriétaires et ne servent qu'à identifier les applications. */\nwindow.EC_LIB="+JSON.stringify(lib)+";\n","text/javascript");
+  UI.libMsg2="Fichier bibliotheque.js téléchargé. Déposez-le sur GitHub pour mettre le site à jour."; render();
 }
 function doCsv(){
   var rows=[["Élément","Type","Âge minimum","Enfant","Âge de l'enfant","Statut","Réglages faits","Note","Comptes et accès"]];
@@ -1751,6 +1804,10 @@ document.addEventListener("click", function(ev){
     case "lib-remove": var rk=k+":"+i; if(UI.arm===rk){ delete (S.use[i]||{})[k]; UI.arm=""; UI.accOpen=""; } else UI.arm=rk; rerender(); break;
     case "goto-row": ev.preventDefault(); gotoRow(k,i); break;
     case "goto-kid": UI.kidSel=k; location.hash="#enfants"; break;
+    case "lib-unpublish": if(UI.arm!=="unpub:"+i){ UI.arm="unpub:"+i; renderDialog(); break; } S.libRemoved=(S.libRemoved||[]).concat([i]); UI.arm=""; closeDialog(); rerender(); break;
+    case "admin-toggle": S.admin=!S.admin; rerender(); break;
+    case "lib-export": doExportLib(); break;
+    case "icons-clear": if(UI.arm!=="icons-clear"){ UI.arm="icons-clear"; render(); break; } S.icons={}; UI.arm=""; rerender(); break;
     case "show-hidden": UI.showHidden=!UI.showHidden; render(); break;
     case "hide-item": S.hidden=(S.hidden||[]).concat([i]); closeDialog(); rerender(); break;
     case "unhide-item": S.hidden=(S.hidden||[]).filter(function(x){return x!==i;}); rerender(); break;
@@ -1834,6 +1891,7 @@ document.addEventListener("submit", function(ev){
     var eid=f.dataset.edit, it=eid?item(eid):{id:uid("c"),custom:true};
     Object.assign(it,{name:n,type:g("ni-type"),fam:g("ni-type")==="site"?"site":undefined,age:g("ni-age")?+g("ni-age"):null,feats:feats,screens:scr,what:g("ni-what"),ctl:g("ni-ctl"),url:okUrl(g("ni-url")),tos:okUrl(g("ni-tos")),risks:lines("ni-risk"),settings:lines("ni-set")});
     if(!eid) S.custom.push(it);
+    if(eid && !it.custom){ S.libEdits=S.libEdits||{}; S.libEdits[eid]={name:it.name,type:it.type,fam:it.fam,age:it.age,feats:it.feats,screens:it.screens,what:it.what,ctl:it.ctl,url:it.url,tos:it.tos,risks:it.risks,settings:it.settings}; }
     var fi=document.getElementById("ni-icon"); if(fi && fi.files && fi.files[0]) setIcon(it.id,fi.files[0]);
     save(); openItem(it.id); render(); }
 });

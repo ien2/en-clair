@@ -11,7 +11,7 @@ Un outil pour les parents : ce que chaque enfant utilise (appareils, comptes, ap
 ## Fichiers
 
 - `index.html` : l'outil
-- `icones.js` : icônes affichées par défaut
+- `bibliotheque.js` : la bibliothèque en ligne (ajouts, corrections, icônes), générée depuis Jiminy en mode administrateur
 - `mentions-legales.html` : mentions légales et confidentialité
 
 Les noms et logos des applications appartiennent à leurs propriétaires respectifs et servent uniquement à les identifier. Contact : contact@intersectionsholding.com
