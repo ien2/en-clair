@@ -425,6 +425,44 @@ details.card>summary{cursor:pointer}
 header.top .brand-mark{--bmbg:#fff}
 .ctop .brand-mark{--bmbg:var(--navy);color:#fff}
 .brand-mark.big{width:72px;height:72px;padding:6px}
+/* Compagnon */
+.chkrow{display:flex;gap:8px;align-items:center}
+.chkrow>.chk{flex:1}
+.chkrow.na .chk{opacity:.55}
+.chkrow.na .chk span{text-decoration:line-through;text-decoration-color:var(--muted)}
+.nabtn{flex:none;border:1px dashed var(--line);background:transparent;color:var(--muted);font:inherit;font-size:.75rem;font-weight:600;padding:4px 8px;border-radius:999px;min-height:0;box-shadow:none;cursor:pointer;white-space:nowrap}
+.nabtn:hover{border-color:var(--ink);color:var(--ink)}
+.nabtn.on{border-style:solid;border-color:var(--ink);color:var(--ink);background:var(--accent-soft)}
+.todoact{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.scorecard .scorehead{display:flex;gap:18px;align-items:center}
+.ring{position:relative;display:inline-grid;place-items:center;flex:none}
+.ring svg{position:absolute;inset:0;width:100%;height:100%}
+.ring b{font-family:var(--display);font-size:1.35rem}
+.scorekids{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.scorekid{display:inline-flex;align-items:center;gap:8px;background:var(--bg);border:none;border-radius:999px;padding:6px 12px 6px 6px;font:inherit;color:var(--ink);cursor:pointer;min-height:0;box-shadow:none}
+.scorekid svg{width:20px;height:20px;margin-left:4px}
+.scorekid b{font-family:var(--display)}
+.scorekid.static{cursor:default}
+.rvlist{display:grid;gap:10px;margin-top:10px}
+.rvq{display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.seg3{display:flex;gap:4px}
+@media (max-width:760px){.rvq{grid-template-columns:1fr}}
+.hist{display:flex;gap:10px;align-items:flex-end;height:150px;margin-top:10px}
+.histbar{flex:1;max-width:64px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-size:.75rem;color:var(--muted)}
+.histbar i{display:block;width:100%;background:var(--ink);border-radius:6px 6px 0 0;min-height:3px}
+.histbar b{color:var(--ink)}
+.term{border:none;background:none;padding:0;margin:0;font:inherit;color:inherit;text-decoration:underline dotted;text-decoration-thickness:1.5px;text-underline-offset:3px;cursor:help;min-height:0;box-shadow:none;display:inline}
+.term:hover{color:var(--ink);background:var(--accent-soft);border-radius:3px}
+#tip{position:fixed;z-index:1000;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:12px 14px;font-size:.92rem;line-height:1.45}
+#tip p{margin:6px 0 8px}
+.faq details{border-top:1px solid var(--line);padding:10px 0}
+.faq summary{cursor:pointer;font-weight:600}
+.faq p{margin:8px 0}
+dl.lex{display:grid;gap:10px;margin:10px 0 0}
+dl.lex>div{padding:10px 12px;background:var(--bg);border-radius:var(--rs)}
+dl.lex>div.hi{outline:2px solid var(--ink)}
+dl.lex dt{font-weight:700}
+dl.lex dd{margin:4px 0 0;font-size:.92rem}
 /* Navigation mobile */
 .tablewrap{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
 table.via-mx th[scope="row"]{position:sticky;left:0;background:var(--surface);z-index:1}
@@ -1028,7 +1066,7 @@ function viewSetup(){
     var open = UI.openG[key]!==undefined ? UI.openG[key] : start;
     return '<details class="guide card'+(complete?' done':'')+'" data-g="'+esc(key)+'"'+(open?' open':'')+(e.kid?' style="--kc:'+esc(e.kid.color)+'"':'')+'><summary><span class="gt">'+(e.kid?kidDot(e.kid)+' ':'')+esc(guideTitle(e))+'</span><span class="pills">'+(start&&p.level==="debut"?'<span class="pill">Commencez ici</span>':'')+'<span class="pill '+(complete?'ok':'plain')+'">'+(complete?'Terminé':d+' / '+t)+'</span></span></summary>'+
       '<div class="gbody"><p class="small">'+esc(G.why)+(e.why?' <span class="muted">Concerne : '+esc(e.why)+'.</span>':'')+'</p>'+
-      '<div class="checks">'+G.steps.map(function(s,j){ var k2=gKey(e,s[0]), on=!!S.checks[k2]; return '<label class="chk'+(on?' done':'')+'"><input type="checkbox" id="c-'+esc(k2)+'" data-check="'+esc(k2)+'"'+(on?' checked':'')+'><span><b class="tiny muted">Étape '+(j+1)+'</b> '+esc(s[1])+(s[2]==="f"&&e.kid?'<small>Une seule fois pour toute la famille.</small>':'')+'</span></label>'; }).join("")+'</div>'+
+      '<div class="checks">'+G.steps.map(function(s,j){ var k2=gKey(e,s[0]), on=!!S.checks[k2], na=isNA(k2); return '<div class="chkrow'+(na?' na':'')+'"><label class="chk'+(on?' done':'')+'"><input type="checkbox" id="c-'+esc(k2)+'" data-check="'+esc(k2)+'"'+(on?' checked':'')+(na?' disabled':'')+'><span><b class="tiny muted">Étape '+(j+1)+'</b> '+gloss(esc(s[1]))+(s[2]==="f"&&e.kid?'<small>Une seule fois pour toute la famille.</small>':'')+'</span></label>'+(on?'':naBtn(k2))+'</div>'; }).join("")+'</div>'+
       (G.limits&&G.limits.length?'<div><span class="kicker">Bon à savoir</span><ul class="plain small">'+G.limits.map(function(l){return '<li>'+esc(l)+'</li>';}).join("")+'</ul></div>':'')+
       (G.url?'<a class="small" href="'+esc(G.url)+'" target="_blank" rel="noopener">Aide officielle</a>':'')+usageLinks(relatedUsages("g:"+e.g))+'</div></details>';
   }).join("")+(pl.length?'':'<div class="card"><p class="muted">Indiquez dans « Apps et appareils » ce que vos enfants utilisent pour obtenir votre plan.</p></div>')+'</section>'+
@@ -1142,16 +1180,16 @@ function refName(r){ var p=r.split(":"), id=p.slice(1).join(":"); if(p[0]==="g")
 function refLinks(list){ return '<div class="pills">'+list.filter(function(r){ var p=r.split(":"); return p[0]==="g"?!!GUIDES[p[1]]:!!item(p.slice(1).join(":")); }).map(function(r){ return '<button type="button" class="chip" data-act="open" data-ref="'+esc(r)+'">'+esc(refName(r))+'</button>'; }).join("")+'</div>'; }
 function relatedUsages(ref){ return USAGES.filter(function(x){ return x.tools.indexOf(ref)>=0; }); }
 function usageLinks(list){ if(!list.length) return ""; return '<section><span class="kicker">Conseils liés</span><div class="pills">'+list.map(function(x){ return '<button type="button" class="chip" data-act="open" data-ref="u:'+x.id+'">'+esc(x.t)+'</button>'; }).join("")+'</div></section>'; }
-function listBlock(title,arr,cls){ if(!arr||!arr.length) return ""; return '<section class="'+(cls||"")+'"><span class="kicker">'+title+'</span><ul class="plain small">'+arr.map(function(s){return '<li>'+esc(s)+'</li>';}).join("")+'</ul></section>'; }
+function listBlock(title,arr,cls){ if(!arr||!arr.length) return ""; return '<section class="'+(cls||"")+'"><span class="kicker">'+title+'</span><ul class="plain small">'+arr.map(function(s){return '<li>'+gloss(esc(s))+'</li>';}).join("")+'</ul></section>'; }
 function usageBody(x){
-  return '<p>'+esc(x.intro)+'</p>'+listBlock("Les bons réflexes",x.doo)+
+  return '<p>'+gloss(esc(x.intro))+'</p>'+listBlock("Les bons réflexes",x.doo)+
     (x.talk?'<section><span class="kicker">Pour en parler</span>'+x.talk.map(function(s){return '<p class="small talk">'+esc(s)+'</p>';}).join("")+'</section>':'')+
     listBlock("Signaux d'alerte",x.signals)+listBlock("Si ça arrive",x.ifh,"ifh")+
     (x.tools&&x.tools.length?'<section><span class="kicker">Les réglages utiles</span>'+refLinks(x.tools)+'</section>':'');
 }
 function guideBody(id){
   var G=GUIDES[id]; var inPlan=plan().filter(function(e){return e.g===id;});
-  return '<p>'+esc(G.why)+'</p><section><span class="kicker">Étapes</span><ol class="plain small">'+G.steps.map(function(s){return '<li>'+esc(s[1])+'</li>';}).join("")+'</ol></section>'+
+  return '<p>'+gloss(esc(G.why))+'</p><section><span class="kicker">Étapes</span><ol class="plain small">'+G.steps.map(function(s){return '<li>'+esc(s[1])+'</li>';}).join("")+'</ol></section>'+
     listBlock("Bon à savoir",G.limits)+(G.url?'<a class="small" href="'+esc(G.url)+'" target="_blank" rel="noopener">Aide officielle</a>':'')+
     (inPlan.length?'<p class="small"><span class="pill ok">Dans votre plan</span> <a href="#mise-en-place" data-act="close">Cocher les étapes dans « Mise en place »</a></p>':'');
 }
@@ -1161,6 +1199,8 @@ function searchHits(q){
   var out=[];
   USAGES.forEach(function(x){ if(has(x.t,x.intro,(x.doo||[]).join(" "),(x.ifh||[]).join(" "),(x.signals||[]).join(" "),(x.talk||[]).join(" "))) out.push({ref:"u:"+x.id,t:x.t,k:"Situation"}); });
   Object.keys(GUIDES).forEach(function(id){ var G=GUIDES[id]; if(has(G.t,G.why,G.steps.map(function(s){return s[1];}).join(" "),(G.limits||[]).join(" "))) out.push({ref:"g:"+id,t:G.t,k:"Guide"}); });
+  FAQ.forEach(function(f,i){ if(has(f[0],f[1])) out.push({ref:"faq:"+i,t:f[0],k:"FAQ"}); });
+  LEX.forEach(function(l){ if(has(l.t,l.d,l.v.join(" "))) out.push({ref:"lex:"+l.id,t:l.t,k:"Lexique"}); });
   allItems().forEach(function(it){ if(has(it.name,it.what||"",(it.risks||[]).join(" "),(it.settings||[]).join(" "),it.ctl||"")) out.push({ref:"i:"+it.id,t:it.name,k:"Fiche"}); });
   HELP.forEach(function(h){ if(has(h.n,h.d)) out.push({ref:"h",t:h.n+" : "+h.d,k:"Aide"}); });
   return out;
@@ -1305,7 +1345,7 @@ var MATRIX = {
 function familyIfaces(){ var on={}; S.kids.forEach(function(k){ if(["iphone","ipad"].some(function(d){return u(d,k.id).s==="utilise";})) on.ios=1; if(u("android",k.id).s==="utilise") on.android=1; if(["windows","mac"].some(function(d){return u(d,k.id).s==="utilise";})){ on.web=1; on.desktop=1; } if(["switch","playstation","xbox"].some(function(d){return u(d,k.id).s==="utilise";})) on.console=1; }); return on; }
 function cellBadge(c){ var a=AVAIL[c[0]]||AVAIL.non; return '<span class="pill '+(a[1]||"plain")+'">'+a[0]+'</span>'; }
 function matrixTable(ids,compact){
-  var on=familyIfaces();
+  var on=familyIfaces(); S.kids.forEach(function(k){ if(u("tv",k.id).s==="utilise") on.tv=1; });
   return '<div class="tablewrap"><table class="mx"><thead><tr><th>Application ou site</th>'+IFACES.map(function(f){ return '<th class="'+(on[f[0]]?'hl':'')+'"><span class="thic">'+svgIcon(f[2])+'</span>'+esc(f[1])+(on[f[0]]?'<span class="tiny muted"> · chez vous</span>':'')+'</th>'; }).join("")+'</tr></thead><tbody>'+
     ids.map(function(id){ var m=MATRIX[id], it=item(id); if(!m||!it) return ""; return '<tr><th scope="row"><button type="button" class="quiet" data-act="open" data-ref="i:'+id+'">'+iconFor(it)+esc(it.name)+'</button></th>'+IFACES.map(function(f){ var c=m.cells[f[0]]||["non"]; return '<td class="'+(on[f[0]]?'hl':'')+'">'+(c[0]==="non"?'<span class="muted">—</span>':'<button type="button" class="cell" data-act="open" data-ref="m:'+id+':'+f[0]+'" aria-label="'+esc(it.name)+' sur '+esc(f[1])+'">'+cellBadge(c)+(c[1]&&!compact?'<span class="tiny muted">'+esc(c[1])+'</span>':'')+'</button>')+'</td>'; }).join("")+'</tr>'; }).join("")+'</tbody></table></div>';
 }
@@ -1472,7 +1512,7 @@ function viewRituel(){
   (rs!=="noter"?'':'<section class="card"><h2>Noter un point famille</h2><form class="form" id="jform"><div class="row"><label class="f" for="jdate">Date<input type="date" id="jdate" value="'+todayISO()+'"></label><label class="f" for="jwho">Avec<select id="jwho"><option>Toute la famille</option>'+S.kids.map(function(k){return '<option>'+esc(k.name)+'</option>';}).join("")+'</select></label></div>'+
     '<label class="f" for="jgood">Ce qui va bien<textarea id="jgood"></textarea></label><label class="f" for="jwatch">Ce qui demande de l\'attention<textarea id="jwatch"></textarea></label><label class="f" for="jdec">Ce qu\'on a décidé<textarea id="jdec"></textarea></label>'+
     '<div class="toolbar"><button type="submit">Enregistrer</button></div></form></section>')+
-  (rs!=="journal"?'':'<section class="card"><h2>Journal</h2>'+(j.length?j.map(function(e){ return '<div class="entry"><div class="toolbar"><b>'+esc(fmtDate(e.date))+'</b><span class="pill plain">'+esc(e.who)+'</span><button type="button" class="quiet" data-act="del-journal" data-id="'+esc(e.id)+'">Supprimer</button></div><dl>'+(e.good?'<dt>Bien</dt><dd>'+esc(e.good)+'</dd>':'')+(e.watch?'<dt>Attention</dt><dd>'+esc(e.watch)+'</dd>':'')+(e.decisions?'<dt>Décidé</dt><dd>'+esc(e.decisions)+'</dd>':'')+'</dl></div>'; }).join(""):'<p class="muted small">Aucun point noté pour l\'instant.</p>')+'</section>'+
+  (rs!=="journal"?'':'<section class="card"><h2>Journal</h2>'+(j.length?j.map(function(e){ return '<div class="entry"><div class="toolbar"><b>'+esc(fmtDate(e.date))+'</b><span class="pill plain">'+esc(e.who)+'</span><button type="button" class="quiet" data-act="del-journal" data-id="'+esc(e.id)+'">Supprimer</button></div><dl>'+(e.good?'<dt>Bien</dt><dd>'+esc(e.good)+'</dd>':'')+(e.watch?'<dt>Attention</dt><dd>'+esc(e.watch)+'</dd>':'')+(e.decisions?'<dt>Décidé</dt><dd>'+esc(e.decisions)+'</dd>':'')+'</dl>'+(e.score!=null?'<p class="small">Score de la famille : <b>'+e.score+'</b></p>':'')+(e.conseils&&e.conseils.length?'<div class="pills"><span class="tiny muted">Conseils pour le mois :</span>'+e.conseils.filter(function(id){return usage(id);}).map(function(id){ return '<button type="button" class="chip" data-act="open" data-ref="u:'+id+'">'+esc(usage(id).t)+'</button>'; }).join("")+'</div>':'')+'</div>'; }).join(""):'<p class="muted small">Aucun point noté pour l\'instant.</p>')+'</section>'+
   '')+(rs!=="sujets"?'':'<section class="card"><h2>Un sujet par mois</h2><p class="small muted">Adaptés à l\'âge de vos enfants. Cochez quand le sujet a été abordé.</p><div class="months">'+mt.map(function(m,ix){ var on=!!S.topics[m.key];
     var forYoung = m.t[2] <= minAge;
     return '<div class="month'+(ix===0?' now':'')+'"><span class="m">'+esc(m.label)+'</span><b>'+esc(m.t[0])+'</b><span class="small muted">'+esc(m.t[1])+'</span>'+(forYoung?'':'<span class="tiny muted">À partir de '+m.t[2]+' ans</span>')+
@@ -1522,10 +1562,10 @@ function renderDialog(){
   var isNet = it.type==="reseau";
   b.innerHTML='<button type="button" class="quiet close" data-act="close">Fermer</button>'+
     '<div class="dhead">'+iconFor(it)+'<div><span class="kicker">'+esc(famLabel(famOf(it)))+(famOf(it)==="app"?' · '+esc(typeLabel(it.type)):'')+'</span><h2 id="dlg-title">'+esc(it.name)+'</h2><div class="toolbar icontools"><label class="linklike" for="icon-file">Changer l\'icône<input type="file" id="icon-file" accept="image/*" class="hide" data-icon-for="'+it.id+'"></label>'+((S.icons||{})[it.id]?'<button type="button" class="quiet" data-act="icon-reset" data-item="'+it.id+'">Icône par défaut</button>':'')+'</div></div></div>'+
-    (it.what?'<section><span class="kicker">En bref</span><p>'+esc(it.what)+'</p></section>':'')+
+    (it.what?'<section><span class="kicker">En bref</span><p>'+gloss(esc(it.what))+'</p></section>':'')+
     '<section class="agebox"><span class="kicker">Âge minimum</span><p class="small">'+(it.age?'<b>'+it.age+' ans</b>, fixé par l\'éditeur dans ses conditions d\'utilisation. Avec une fausse date de naissance, l\'enfant perd les protections prévues pour son âge.':'Aucun âge minimum général : vérifiez le classement (PEGI ou boutique d\'applications).')+'</p>'+
       '<div class="toolbar">'+(it.tos?'<a class="btn ghost" href="'+esc(it.tos)+'" target="_blank" rel="noopener">Conditions d\'utilisation</a>':'')+(it.url?'<a class="btn ghost" href="'+esc(it.url)+'" target="_blank" rel="noopener">Aide et contrôle parental officiels</a>':'')+(it.guide&&GUIDES[it.guide]?'<button type="button" data-act="open" data-ref="g:'+it.guide+'">Guide de mise en place</button>':'')+'</div></section>'+
-    (it.risks&&it.risks.length?'<section><span class="kicker">Points de vigilance</span><ul class="plain small">'+it.risks.map(function(r){return '<li>'+esc(r)+'</li>';}).join("")+'</ul></section>':'')+
+    (it.risks&&it.risks.length?'<section><span class="kicker">Points de vigilance</span><ul class="plain small">'+it.risks.map(function(r){return '<li>'+gloss(esc(r))+'</li>';}).join("")+'</ul></section>':'')+
     (it.settings&&it.settings.length?'<section><span class="kicker">Les réglages à faire</span><ol class="plain small">'+it.settings.map(function(r){return '<li>'+esc(r)+'</li>';}).join("")+'</ol></section>':'')+
     (it.ctl?'<section><span class="kicker">Outil à utiliser</span><p class="small">'+esc(it.ctl)+'</p></section>':'')+
     (isNet?'<section><span class="kicker">Ouvrir ce réseau pas à pas</span><ol class="steps small">'+OPENING.map(function(s){return '<li><span>'+esc(s)+'</span></li>';}).join("")+'</ol></section>':'')+
@@ -1584,7 +1624,7 @@ function kidRow(it,k){
   var body='<div class="rowbody"><div class="toolbar"><label for="'+sid+'" class="hide">Statut</label><select id="'+sid+'" data-status="1" data-item="'+it.id+'" data-kid="'+k.id+'">'+rowStatusOpts(it).map(function(s){ return '<option value="'+s[0]+'"'+(x.s===s[0]?' selected':'')+'>'+s[1]+'</option>'; }).join("")+'</select>'+
       '<button type="button" class="ghost" data-act="open-item" data-item="'+it.id+'">Voir la fiche</button><button type="button" class="quiet" data-act="lib-remove" data-item="'+it.id+'" data-kid="'+k.id+'">'+(UI.arm===key?'Confirmer : retirer':'Retirer de sa liste')+'</button></div>'+
     (under(it,k)&&x.s!=="non"?'<p class="small flagline">Âge minimum fixé par '+esc(it.name)+' : '+it.age+' ans. '+esc(k.name)+' en a '+ageOf(k)+'.</p>':'')+
-    (x.s==="utilise"&&r.t?'<div class="sets"><span class="kicker">Réglages à faire</span>'+it.settings.map(function(st,i){ var cid="st-"+it.id+"-"+k.id+"-"+i, on=r.d.indexOf(i)>=0; return '<label class="chk'+(on?' done':'')+'" for="'+cid+'"><input type="checkbox" id="'+cid+'" data-set="'+i+'" data-item="'+it.id+'" data-kid="'+k.id+'"'+(on?' checked':'')+'><span class="small">'+esc(st)+'</span></label>'; }).join("")+'</div>':'')+
+    (x.s==="utilise"&&r.t?'<div class="sets"><span class="kicker">Réglages à faire</span>'+it.settings.map(function(st,i){ var cid="st-"+it.id+"-"+k.id+"-"+i, on=r.d.indexOf(i)>=0, nk="s:"+k.id+":"+it.id+":"+i, na=isNA(nk); return '<div class="chkrow'+(na?' na':'')+'"><label class="chk'+(on?' done':'')+'" for="'+cid+'"><input type="checkbox" id="'+cid+'" data-set="'+i+'" data-item="'+it.id+'" data-kid="'+k.id+'"'+(on?' checked':'')+(na?' disabled':'')+'><span class="small">'+gloss(esc(st))+'</span></label>'+(on?'':naBtn(nk))+'</div>'; }).join("")+'</div>':'')+
     (isNet&&x.s==="discussion"?'<div class="sets"><span class="kicker">Avant d\'ouvrir ce réseau</span>'+READY.map(function(rd){ var ck=k.id+":"+it.id+":"+rd[0], on=!!S.checks[ck]; return '<label class="chk'+(on?' done':'')+'"><input type="checkbox" id="c-'+esc(ck)+'" data-check="'+esc(ck)+'"'+(on?' checked':'')+'><span class="small">'+esc(rd[1])+'</span></label>'; }).join("")+'</div>':'')+
     accessFields(it,k)+
     (x.s!=="non"||x.note?'<label class="f" for="'+nid+'">Note<input type="text" id="'+nid+'" data-note="1" data-item="'+it.id+'" data-kid="'+k.id+'" value="'+esc(x.note||"")+'" placeholder="ex. règle convenue, raison du refus"></label>':'')+
@@ -1694,19 +1734,271 @@ function viewAccueil(){
   var acts=[]; S.kids.forEach(function(k){ todos(k).forEach(function(x){ acts.push({k:k,x:x}); }); });
   acts.sort(function(a,b){ return (b.x.warn?1:0)-(a.x.warn?1:0); });
   var reqs=[]; S.kids.forEach(function(k){ pendingRequests(k.id).forEach(function(r){ reqs.push({k:k,r:r}); }); });
-  var todo='<section class="card"><h2>À faire maintenant</h2>'+(acts.length?'<ul class="todo">'+acts.slice(0,5).map(function(a){ return '<li class="'+(a.x.warn?'warn':'')+'">'+avatar(a.k,"sm")+'<span class="small"><b>'+esc(a.k.name)+'</b> · '+esc(a.x.t)+'</span><button type="button" class="quiet" data-act="goto-row" data-kid="'+a.k.id+'" data-item="'+a.x.id+'">'+(a.x.warn?'Voir':'Régler')+'</button></li>'; }).join("")+'</ul>'+(acts.length>5?'<p class="small muted">Et '+plural(acts.length-5,"autre action")+' dans la page de chaque enfant.</p>':''):'<p class="small">Rien d\'urgent. Pensez au point famille du mois.</p>')+
+  var todo='<section class="card"><h2>À faire maintenant</h2>'+(acts.length?'<ul class="todo">'+acts.slice(0,5).map(function(a){ return '<li class="'+(a.x.warn?'warn':'')+'">'+avatar(a.k,"sm")+'<span class="small"><b>'+esc(a.k.name)+'</b> · '+esc(a.x.t)+'</span><span class="todoact">'+(a.x.warn?'<button type="button" class="quiet" data-act="ack" data-key="'+esc(ackKey(a.k,a.x))+'">Compris</button>':'')+'<button type="button" class="quiet" data-act="goto-row" data-kid="'+a.k.id+'" data-item="'+a.x.id+'">'+(a.x.warn?'Voir':'Régler')+'</button></span></li>'; }).join("")+'</ul>'+(acts.length>5?'<p class="small muted">Et '+plural(acts.length-5,"autre action")+' dans la page de chaque enfant.</p>':''):'<p class="small">Rien d\'urgent. Pensez au point famille du mois.</p>')+
     (reqs.length?'<div class="reqs"><span class="kicker">Demandes des enfants</span>'+reqs.map(function(q){ return '<div class="req">'+avatar(q.k,"sm")+'<div><b>'+esc(q.r.what)+'</b>'+(q.r.why?'<span class="small muted"> · '+esc(q.r.why)+'</span>':'')+'</div><button type="button" class="quiet" data-act="req-done" data-id="'+esc(q.r.id)+'">Vu au point famille</button></div>'; }).join("")+'</div>':'')+'</section>';
   var tiles=S.kids.length?'<section class="kidgrid">'+S.kids.map(function(k){ var sc=kidScore(k), n=todos(k).length; return '<button type="button" class="kidtile" style="--kc:'+esc(k.color)+'" data-act="goto-kid" data-kid="'+k.id+'"><span class="kidhead">'+avatar(k)+'<span><b>'+esc(k.name)+'</b><small>'+ageOf(k)+' ans · '+esc(bandProgress(k).b.n)+'</small></span></span>'+(sc.t?progressBar(sc.n,sc.t):'')+'<span class="pills"><span class="pill plain">'+plural(kidItems(k).length,"élément")+'</span>'+(n?'<span class="pill warn">'+plural(n,"action")+'</span>':'')+'</span></button>'; }).join("")+'</section>':'';
-  return backupBanner()+plan+todo+tiles+
+  return backupBanner()+plan+(S.kids.length?scoreCard():'')+todo+tiles+
     '<section class="card soft"><span class="kicker">Sujet du mois · '+esc(tp.label)+'</span><h3>'+esc(tp.t[0])+'</h3><p class="small">'+esc(tp.t[1])+'</p><a class="small" href="#famille">Préparer le point famille</a></section>';
 }
 function gotoRow(kidId,itemId){ UI.kidSel=kidId; UI.sub=UI.sub||{}; UI.sub.kid="ecrans"; UI.accOpen=kidId+":"+itemId; closeDialog(); if(location.hash!=="#enfants") location.hash="#enfants"; render(); setTimeout(function(){ var d=document.querySelector('details.accrow[data-acc="'+kidId+':'+itemId+'"]'); if(d) d.scrollIntoView({block:"center"}); },60); }
+
+/* ============ Compagnon du quotidien : TV, choix assumés, point numérique, score, FAQ, lexique ============ */
+SVG.tv='<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 20h8M12 17v3"/>';
+SVG.star='<path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.8z"/>';
+SVG.help='<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.6V14M12 17h.01"/>';
+SVG.abc='<path d="M4 18l4-12 4 12M5.5 14h5M14 6h3.5a2.5 2.5 0 0 1 0 5H14zm0 5h4a2.5 2.5 0 0 1 0 5h-4z"/>';
+ICON_OF.tv="tv";
+if(!CAT.some(function(c){return c.id==="tv";})) CAT.splice(CAT.findIndex(function(c){return c.type!=="appareil";}),0,
+ {id:"tv",name:"Téléviseur connecté (Smart TV)",type:"appareil",ic:"tv",ctl:"Contrôle parental du téléviseur, puis de chaque app (code PIN)",url:"",feats:["achats","public"],
+  what:"La télévision du salon ou de la chambre, avec ses apps : YouTube, Netflix, Disney+, Prime Video, navigateur… Ses réglages sont séparés de ceux du téléphone.",
+  risks:["Profils adultes des apps de streaming accessibles sans code","YouTube sans compte supervisé","Achats et locations depuis la télécommande","Télévision dans la chambre, le soir"],
+  settings:["Activer le contrôle parental du téléviseur et choisir un code PIN","Mettre un code PIN sur les profils adultes de chaque app de streaming","Bloquer les achats et locations sans code","Désinstaller le navigateur ou les apps inutiles","Garder la télévision hors des chambres"]});
+IFACES.push(["tv","Téléviseur","tv"]);
+DEVCTL.tv="Contrôle parental du téléviseur et code PIN de chaque app";
+[["netflix","app","App Netflix de la TV"],["disney","app","App Disney+ de la TV"],["prime-video","app","App Prime Video de la TV"],["youtube","lim","App YouTube de la TV : profil supervisé selon les modèles"],["tiktok","non",""],["instagram","non",""]].forEach(function(r){ if(MATRIX[r[0]]) MATRIX[r[0]].cells.tv=r[2]?[r[1],r[2]]:[r[1]]; });
+
+/* ---- Côté parent : plusieurs appareils ---- */
+QUESTIONS.forEach(function(q){
+  if(q.k==="phone"){ q.multi=true; q.q="Quels téléphones avez-vous ? (plusieurs choix possibles)"; }
+  if(q.k==="computer"){ q.multi=true; q.q="Quels ordinateurs avez-vous ? (plusieurs choix possibles)"; q.o=[["windows","Windows"],["mac","Mac"],["chromebook","Chromebook"],["aucun","Aucun"]]; }
+});
+if(!QUESTIONS.some(function(q){return q.k==="tablet";})) QUESTIONS.splice(2,0,{k:"tablet",multi:true,q:"Quelles tablettes avez-vous ? (plusieurs choix possibles)",o:[["ipad","iPad"],["android","Tablette Android"],["aucune","Aucune"]]});
+function pVals(k){ var v=(S.parent||{})[k]; return Array.isArray(v)?v:(v?[v]:[]); }
+function pHas(k,v){ return pVals(k).indexOf(v)>=0; }
+function hasApple(){ var p=S.parent||{}; if(!pVals("phone").length) return true; return pHas("phone","iphone")||pHas("computer","mac")||pHas("tablet","ipad"); }
+function questionsHtml(){
+  var p=S.parent||{};
+  return QUESTIONS.map(function(q){
+    return '<div class="q" role="group" aria-labelledby="ql-'+q.k+'"><b id="ql-'+q.k+'">'+esc(q.q)+'</b>'+(q.h?'<span class="tiny muted">'+esc(q.h)+'</span>':'')+
+      '<div class="pills">'+q.o.map(function(o){ var on=q.multi?pHas(q.k,o[0]):p[q.k]===o[0]; return '<button type="button" class="chip" aria-pressed="'+on+'" data-act="answer" data-q="'+q.k+'" data-v="'+esc(o[0])+'">'+esc(o[1])+'</button>'; }).join("")+'</div></div>';
+  }).join("");
+}
+
+/* ---- Choix assumés (« sans objet ») ---- */
+function isNA(key){ return !!(S.na||{})[key]; }
+function naBtn(key){ return '<button type="button" class="nabtn'+(isNA(key)?' on':'')+'" data-act="na" data-key="'+esc(key)+'" title="À cocher quand ce point ne s\'applique pas chez vous, ou quand vous assumez un autre choix">'+(isNA(key)?'Choix assumé ✓':'Choix assumé')+'</button>'; }
+function resolved(key){ return !!S.checks[key] || isNA(key); }
+function checklist(list,prefix){
+  return '<div class="checks">'+list.map(function(c){ var key=prefix+":"+c[0], on=!!S.checks[key], na=isNA(key);
+    return '<div class="chkrow'+(na?' na':'')+'"><label class="chk'+(on?' done':'')+'"><input type="checkbox" id="c-'+esc(key)+'" data-check="'+esc(key)+'"'+(on?' checked':'')+(na?' disabled':'')+'><span>'+esc(c[1])+(c[2]?'<small>'+esc(c[2])+'</small>':'')+'</span></label>'+(on?'':naBtn(key))+'</div>'; }).join("")+'</div>';
+}
+function bandProgress(k){ var b=BANDS[band(ageOf(k))]; var n=b.items.filter(function(x){return resolved(k.id+":"+x[0]);}).length; return {n:n,t:b.items.length,b:b}; }
+function gDone(e){ return GUIDES[e.g].steps.filter(function(s){ return resolved(gKey(e,s[0])); }).length; }
+function nextStep(){ var pl=plan(); for(var i=0;i<pl.length;i++){ var e=pl[i]; var st=GUIDES[e.g].steps; for(var j=0;j<st.length;j++){ if(!resolved(gKey(e,st[j][0]))) return {e:e,s:st[j]}; } } return null; }
+function setsOf(it,k){
+  var x=u(it.id,k.id), n=(it.settings||[]).length; if(!n) return {n:0,t:0,d:[],na:[]};
+  var na=it.settings.map(function(_,i){return i;}).filter(function(i){ return isNA("s:"+k.id+":"+it.id+":"+i); });
+  var d=x.set || (x.ok && !na.length ? it.settings.map(function(_,i){return i;}) : []);
+  var res={}; d.concat(na).forEach(function(i){ res[i]=1; });
+  return {n:Object.keys(res).length,t:n,d:d,na:na};
+}
+
+/* ---- Alertes comprises ---- */
+function ackKey(k,x){ return k.id+":"+x.id+":"+(x.kind||"age"); }
+function todosAll(k){
+  var out=[];
+  allItems().forEach(function(it){
+    var x=u(it.id,k.id);
+    if(x.s==="utilise" && under(it,k)) out.push({warn:true,kind:"age",t:it.name+" : âge minimum "+it.age+" ans, "+k.name+" en a "+ageOf(k)+".",id:it.id,btn:"Comprendre"});
+    else if(x.s==="discussion" && under(it,k)) out.push({warn:true,kind:"age",t:it.name+" est en discussion : âge minimum "+it.age+" ans.",id:it.id,btn:"Le parcours"});
+    if(x.s==="utilise" && it.settings && it.settings.length){ var r=setsOf(it,k); if(r.n<r.t) out.push({kind:"set",t:"Faire les réglages : "+it.name+" ("+r.n+"/"+r.t+")",id:it.id,btn:"Comment faire"}); }
+    if(x.s==="discussion" && !under(it,k)) out.push({kind:"open",t:"Préparer l'ouverture : "+it.name,id:it.id,btn:"Le parcours"});
+  });
+  out.sort(function(a,b){ return (b.warn?1:0)-(a.warn?1:0); });
+  return out;
+}
+function todos(k){ return todosAll(k).filter(function(x){ return !(x.warn && (S.ack||{})[ackKey(k,x)]); }); }
+function ackedOf(k){ return todosAll(k).filter(function(x){ return x.warn && (S.ack||{})[ackKey(k,x)]; }); }
+function todoList(k,max){
+  var td=todos(k), ak=ackedOf(k);
+  var body=!td.length?'<ul class="todo"><li class="done"><span class="ico">✓</span><span class="small">Rien d\'urgent. Pensez au point numérique du mois.</span><span></span></li></ul>':
+    '<ul class="todo">'+td.slice(0,max||99).map(function(x){ return '<li class="'+(x.warn?'warn':'')+'"><span class="ico">'+(x.warn?'!':'→')+'</span><span class="small">'+esc(x.t)+'</span><span class="todoact">'+(x.warn?'<button type="button" class="quiet" data-act="ack" data-key="'+esc(ackKey(k,x))+'" title="Vous avez pris connaissance de ce point et vous assumez la décision">Compris</button>':'')+'<button type="button" class="quiet" data-act="goto-row" data-kid="'+k.id+'" data-item="'+x.id+'">'+x.btn+'</button></span></li>'; }).join("")+'</ul>';
+  return body+(ak.length&&!max?'<p class="small muted" style="margin-top:8px">'+plural(ak.length,"alerte comprise")+' : '+esc(ak.map(function(x){return item(x.id).name;}).join(", "))+'. <button type="button" class="quiet" data-act="unack" data-kid="'+k.id+'">Les réafficher</button></p>':'');
+}
+
+/* ---- Point numérique en famille ---- */
+var REVIEW_KID=[
+ ["sommeil","Le téléphone ou la tablette dort hors de la chambre la nuit","sommeil"],
+ ["temps","Le temps passé sur les écrans paraît raisonnable, à l'enfant comme aux parents","temps-ecran"],
+ ["humeur","Après les écrans, on se sent bien : pas énervé, pas triste, pas « vidé »","temps-ecran"],
+ ["activites","Chaque jour, il y a aussi des moments sans écran : sport, lecture, amis, jeux","temps-ecran"],
+ ["repas","Pas d'écran pendant les repas","temps-ecran"],
+ ["inconnus","Il ou elle sait quoi faire si un inconnu écrit ou demande une photo","inconnus"],
+ ["parler","Il ou elle nous en parlerait s'il voyait ou recevait quelque chose de gênant","contenus-choquants"],
+ ["prive","Les comptes sont privés et la position n'est partagée qu'avec la famille","localisation"],
+ ["codes","Les mots de passe restent secrets, sauf pour les parents","arnaques"],
+ ["respect","En ligne, on reste respectueux, dans les groupes comme dans les jeux","groupes-classe"],
+ ["regles","Les règles de la charte sont tenues","contournement"]
+];
+var REVIEW_PARENT=[
+ ["exemple","Nous montrons l'exemple : pas de téléphone à table, ni tard le soir","temps-ecran"],
+ ["connaitre","Nous savons ce que nos enfants utilisent, et pourquoi","reseaux-sociaux"],
+ ["sujet","Nous avons parlé d'un sujet numérique avec eux ce mois-ci",""],
+ ["comptes","Nos propres comptes sont protégés (double authentification)","arnaques"],
+ ["alignes","Les adultes de la famille appliquent les mêmes règles","deux-maisons"]
+];
+var RV_OPTS=[[2,"Oui"],[1,"En partie"],[0,"Pas encore"]];
+function lastReview(){ var r=(S.reviews||[]).slice().sort(function(a,b){return a.date<b.date?1:-1;}); return r[0]||null; }
+function configScore(k){
+  var n=0,t=0; kidItems(k).forEach(function(it){ if(u(it.id,k.id).s==="utilise"){ var r=setsOf(it,k); n+=r.n; t+=r.t; } });
+  var bp=bandProgress(k); n+=bp.n; t+=bp.t; return t?Math.round(100*n/t):null;
+}
+function usageScore(rv,kidId){ var a=rv&&rv.answers&&rv.answers[kidId]; if(!a) return null; var ks=Object.keys(a).filter(function(q){return a[q]!=null;}); if(!ks.length) return null; return Math.round(100*ks.reduce(function(s,q){return s+(+a[q]);},0)/(2*ks.length)); }
+function parentScore(rv){
+  var tot=planTotals(), cfg=tot.t?100*tot.n/tot.t:null, pv=PARENT.filter(function(x){return resolved("parent:"+x[0]);}).length/PARENT.length*100;
+  var parts=[pv]; if(cfg!=null) parts.push(cfg);
+  if(rv&&rv.parent){ var ks=Object.keys(rv.parent).filter(function(q){return rv.parent[q]!=null;}); if(ks.length) parts.push(100*ks.reduce(function(s,q){return s+(+rv.parent[q]);},0)/(2*ks.length)); }
+  return Math.round(parts.reduce(function(a,b){return a+b;},0)/parts.length);
+}
+function kidScore100(k,rv){ var c=configScore(k), us=usageScore(rv||lastReview(),k.id); if(c==null&&us==null) return null; if(us==null) return c; if(c==null) return us; return Math.round((c+us)/2); }
+function familyScore(rv){ rv=rv||lastReview(); var vals=S.kids.map(function(k){return kidScore100(k,rv);}).filter(function(v){return v!=null;}); vals.push(parentScore(rv)); return Math.round(vals.reduce(function(a,b){return a+b;},0)/vals.length); }
+function scoreLabel(v){ return v==null?"À démarrer":v<40?"À démarrer":v<65?"En progrès":v<85?"Bien installé":"Très solide"; }
+function scoreRing(v,size){ size=size||64; var r=size/2-5, c=2*Math.PI*r, p=v==null?0:v/100; return '<span class="ring" style="width:'+size+'px;height:'+size+'px"><svg viewBox="0 0 '+size+' '+size+'" aria-hidden="true"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--line)" stroke-width="6"/><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+(c*p).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 '+size/2+' '+size/2+')"/></svg><b>'+(v==null?"–":v)+'</b></span>'; }
+function scoreCard(){
+  var rv=lastReview(), fs=familyScore(rv), d=rv?daysSince(rv.date):null, prev=(S.reviews||[]).slice().sort(function(a,b){return a.date<b.date?1:-1;})[1];
+  var trend=prev?fs-(prev.scores&&prev.scores.family!=null?prev.scores.family:fs):null;
+  return '<section class="card scorecard"><div class="scorehead">'+scoreRing(fs,84)+'<div><span class="kicker">Score numérique de la famille</span><h2>'+esc(scoreLabel(fs))+'</h2><p class="small muted">Réglages faits ou assumés, essentiels de chaque âge, et réponses au dernier point numérique.'+(trend!=null&&trend!==0?' <b>'+(trend>0?'+':'')+trend+'</b> depuis le point précédent.':'')+'</p></div></div>'+
+    '<div class="scorekids">'+S.kids.map(function(k){ var v=kidScore100(k,rv); return '<button type="button" class="scorekid" data-act="goto-kid" data-kid="'+k.id+'">'+avatar(k,"sm")+'<span>'+esc(k.name)+'</span><b>'+(v==null?'–':v)+'</b></button>'; }).join("")+'<span class="scorekid static">'+svgIcon("users")+'<span>Parents</span><b>'+parentScore(rv)+'</b></span></div>'+
+    '<div class="toolbar"><a class="btn" href="#famille" data-act="review-start">'+(rv?'Faire le point numérique':'Faire un premier point numérique')+'</a><span class="small muted">'+(rv?'Dernier point : '+(d===0?'aujourd\'hui':'il y a '+plural(d,"jour"))+(d>30?' · c\'est le moment d\'en refaire un':''):'Environ 20 minutes, en famille, une fois par mois.')+'</span></div></section>';
+}
+function reviewForm(){
+  var R=UI.rv; var kids=S.kids;
+  var q3=function(scope,qid,label,cur,adv){ return '<div class="rvq"><span>'+esc(label)+'</span><div class="seg3" role="group" aria-label="'+esc(label)+'">'+RV_OPTS.map(function(o){ return '<button type="button" class="chip" aria-pressed="'+(cur===o[0])+'" data-act="rv-set" data-scope="'+scope+'" data-q="'+qid+'" data-v="'+o[0]+'">'+o[1]+'</button>'; }).join("")+'</div></div>'; };
+  return '<section class="card"><h2>Le point numérique en famille</h2><p class="small">À faire ensemble, parents et enfants, une fois par mois : 20 minutes, sans reproches. On répond honnêtement ; le but est de voir ce qui progresse et ce qu\'on ajuste. Jiminy propose ensuite des conseils et les range dans le journal.</p>'+
+    '<div class="row"><label class="f" for="rv-date">Date<input type="date" id="rv-date" value="'+esc(R.date)+'"></label></div></section>'+
+    kids.map(function(k){ var a=R.answers[k.id]||{}; return '<section class="card kid" style="--kc:'+esc(k.color)+'"><div class="kidhead">'+avatar(k)+'<h3>Avec '+esc(k.name)+'</h3></div><div class="rvlist">'+REVIEW_KID.map(function(q){ return q3("kid:"+k.id,q[0],q[1],a[q[0]]); }).join("")+'</div></section>'; }).join("")+
+    '<section class="card"><h3>Pour les parents</h3><div class="rvlist">'+REVIEW_PARENT.map(function(q){ return q3("parent",q[0],q[1],R.parent[q[0]]); }).join("")+'</div></section>'+
+    '<section class="card"><label class="f" for="rv-good">Ce qui va bien<textarea id="rv-good">'+esc(R.good||"")+'</textarea></label><label class="f" for="rv-dec">Ce qu\'on décide pour le mois prochain<textarea id="rv-dec">'+esc(R.dec||"")+'</textarea></label>'+
+    '<div class="toolbar"><button type="button" data-act="rv-save">Enregistrer le point</button><button type="button" class="quiet" data-act="rv-cancel">Annuler</button></div></section>';
+}
+function reviewAdvice(rv){
+  var ids={}, weak=[];
+  S.kids.forEach(function(k){ var a=(rv.answers||{})[k.id]||{}; REVIEW_KID.forEach(function(q){ if(a[q[0]]!=null && +a[q[0]]<2){ if(q[2]) ids[q[2]]=1; weak.push(k.name+" : "+q[1].toLowerCase()); } }); });
+  REVIEW_PARENT.forEach(function(q){ var v=(rv.parent||{})[q[0]]; if(v!=null && +v<2){ if(q[2]) ids[q[2]]=1; weak.push("Parents : "+q[1].toLowerCase()); } });
+  return {conseils:Object.keys(ids).filter(function(id){return usage(id);}),weak:weak};
+}
+function saveReview(){
+  var R=UI.rv; var g=function(id){ var e=document.getElementById(id); return e?e.value.trim():""; };
+  R.date=g("rv-date")||todayISO(); R.good=g("rv-good"); R.dec=g("rv-dec");
+  var rv={id:uid("rv"),date:R.date,answers:R.answers,parent:R.parent,good:R.good,decisions:R.dec};
+  rv.scores={family:null,kids:{}}; S.kids.forEach(function(k){ rv.scores.kids[k.id]=kidScore100(k,rv); }); rv.scores.family=familyScore(rv);
+  S.reviews=(S.reviews||[]).concat([rv]);
+  var adv=reviewAdvice(rv);
+  S.journal.push({id:uid("j"),date:rv.date,who:"Point numérique",good:R.good,watch:adv.weak.slice(0,6).join(" · "),decisions:R.dec,conseils:adv.conseils,review:rv.id,score:rv.scores.family});
+  UI.rv=null; UI.sub=UI.sub||{}; UI.sub.famille="point"; rerender();
+}
+function viewPoint(){
+  if(UI.rv) return reviewForm();
+  var rvs=(S.reviews||[]).slice().sort(function(a,b){return a.date<b.date?1:-1;});
+  return scoreCard()+
+    (rvs.length?'<section class="card"><h3>Les points précédents</h3><div class="hist">'+rvs.slice(0,12).reverse().map(function(r){ var v=r.scores?r.scores.family:null; return '<div class="histbar" title="'+esc(fmtDate(r.date))+' : '+v+'"><i style="height:'+(v||2)+'%"></i><span>'+esc(fmtDate(r.date).replace(/ \d{4}$/,""))+'</span><b>'+(v==null?'–':v)+'</b></div>'; }).join("")+'</div></section>':'')+
+    '<section class="card"><h3>Comment se passe un point numérique ?</h3><ol class="small" style="margin:6px 0 0 18px"><li>On s\'installe ensemble, téléphones posés.</li><li>Chaque enfant répond à quelques questions sur ses usages ; les parents aussi.</li><li>On note ce qui va bien et ce qu\'on décide.</li><li>Jiminy calcule le score et range dans le journal les conseils utiles pour le mois.</li></ol></section>';
+}
+function viewFamille(){
+  var fs=subOf("famille","point",["point","rituel","journal","charte"]);
+  var nav=subnav("famille",[["point","Point numérique","star"],["rituel","Le rituel","users"],["journal","Journal","book",(S.journal||[]).length],["charte","Charte","doc"]],fs);
+  UI.sub=UI.sub||{}; var keep=UI.sub.rituel, body;
+  if(fs==="point") body=viewPoint();
+  else if(fs==="charte") body=viewCharte();
+  else if(fs==="journal"){ UI.sub.rituel="noter"; body=stripNav(viewRituel()); UI.sub.rituel="journal"; body+=stripNav(viewRituel()); }
+  else { UI.sub.rituel="rituel"; body=stripNav(viewRituel()); UI.sub.rituel="sujets"; body+=topicsLinks()+stripNav(viewRituel()); }
+  UI.sub.rituel=keep;
+  return nav+body;
+}
+var TOPIC_LINKS=[["arnaques"],["arnaques"],["reseaux-sociaux","localisation"],["cyberharcelement"],["ia-devoirs","contenus-choquants"],["images-chantage"],["jeux-en-ligne","achats"],["localisation"],["sommeil"],["groupes-classe"],["ia-devoirs"],["temps-ecran"]];
+function topicsLinks(){ var tp=monthTopics()[0], ix=TOPICS.indexOf(tp.t), ids=(TOPIC_LINKS[ix]||[]).filter(function(id){return usage(id);});
+  return '<section class="card soft"><span class="kicker">Sujet du mois · '+esc(tp.label)+'</span><h3>'+esc(tp.t[0])+'</h3><p class="small">'+esc(tp.t[1])+'</p>'+(ids.length?'<div class="pills">'+ids.map(function(id){ return '<button type="button" class="chip" data-act="open" data-ref="u:'+id+'">'+esc(usage(id).t)+'</button>'; }).join("")+'</div>':'')+'</section>'; }
+
+/* ---- FAQ et lexique ---- */
+var LEX=[
+ {id:"controle-parental",t:"Contrôle parental",v:["contrôle parental","contrôles parentaux"],d:"L'ensemble des réglages qui permettent à un parent de limiter le temps, filtrer les contenus, autoriser les apps ou les achats. Il existe à plusieurs niveaux : appareil, compte, app, box internet."},
+ {id:"temps-ecran",t:"Temps d'écran",v:["Temps d'écran"],d:"Le contrôle parental d'Apple (iPhone, iPad, Mac). Il limite le temps par app, bloque des contenus et des achats, et se gère depuis l'appareil d'un parent grâce au Partage familial."},
+ {id:"family-link",t:"Family Link",v:["Family Link"],d:"L'outil gratuit de Google pour superviser le compte Google d'un enfant et, sur Android, l'appareil lui-même : apps, temps, position, filtres de recherche."},
+ {id:"partage-familial",t:"Partage familial",v:["Partage familial"],d:"Le groupe familial d'Apple. Il relie les comptes de la famille et permet au parent de gérer Temps d'écran et les demandes d'achat de l'enfant."},
+ {id:"compte-supervise",t:"Compte supervisé",v:["compte supervisé","comptes supervisés","supervision"],d:"Un compte d'enfant rattaché au compte d'un parent, qui peut en voir et en régler certains paramètres. La supervision ne donne pas accès au contenu des messages."},
+ {id:"double-auth",t:"Double authentification",v:["double authentification","validation en deux étapes","vérification en deux étapes"],d:"En plus du mot de passe, un code reçu par SMS ou dans une app est demandé pour se connecter. Elle protège un compte même si le mot de passe a fuité."},
+ {id:"hameconnage",t:"Hameçonnage",v:["hameçonnage","phishing"],d:"Un faux message (SMS, e-mail, DM) qui imite une marque ou un proche pour voler un mot de passe, un code ou de l'argent. Règle d'or : ne jamais donner un code reçu par SMS."},
+ {id:"cyberharcelement",t:"Cyberharcèlement",v:["cyberharcèlement","harcèlement"],d:"Des moqueries, menaces ou humiliations répétées en ligne. C'est un délit, y compris pour ceux qui relaient. Le 3018 aide gratuitement à faire retirer les contenus."},
+ {id:"sextorsion",t:"Sextorsion",v:["sextorsion","chantage"],d:"Un chantage à partir d'une image intime, vraie ou truquée. On ne paie pas, on ne répond plus, on fait des captures et on appelle le 3018. L'enfant n'est jamais fautif."},
+ {id:"grooming",t:"Pédopiégeage",v:["pédopiégeage","grooming"],d:"Un adulte qui gagne peu à peu la confiance d'un enfant en ligne (compliments, cadeaux, secrets) pour l'isoler et obtenir des images ou une rencontre. Signal d'alerte : « ne le dis pas à tes parents »."},
+ {id:"pegi",t:"PEGI",v:["PEGI"],d:"La classification européenne des jeux vidéo par âge (3, 7, 12, 16, 18 ans), avec des pictogrammes pour la violence, la peur, les achats intégrés ou les échanges en ligne."},
+ {id:"achats-integres",t:"Achats intégrés",v:["achats intégrés","achat intégré"],d:"Des achats possibles à l'intérieur d'une app ou d'un jeu (monnaie virtuelle, objets, abonnements). On peut exiger l'accord d'un parent ou les bloquer dans le contrôle parental."},
+ {id:"loot-box",t:"Coffre à butin",v:["coffre à butin","loot box","loot boxes"],d:"Un achat dont on ne connaît pas le contenu à l'avance, proche du jeu de hasard. Fréquent dans les jeux en ligne ; à expliquer et à limiter."},
+ {id:"safesearch",t:"SafeSearch",v:["SafeSearch"],d:"Le filtre des moteurs de recherche qui masque les résultats explicites. Il se règle dans le compte de l'enfant ou est imposé par Family Link."},
+ {id:"navigation-privee",t:"Navigation privée",v:["navigation privée"],d:"Un mode du navigateur qui ne garde pas l'historique sur l'appareil. Elle ne rend pas anonyme et n'empêche pas les filtres, sauf s'ils dépendent de l'historique."},
+ {id:"vpn",t:"VPN",v:["VPN"],d:"Un service qui fait passer la connexion par un autre serveur. Utile pour la sécurité, mais il peut servir à contourner les filtres de la box ou de l'école."},
+ {id:"messages-ephemeres",t:"Messages éphémères",v:["messages éphémères","éphémère","éphémères"],d:"Des messages ou photos qui disparaissent après lecture (Snapchat, WhatsApp, Telegram). Ils peuvent quand même être capturés à l'écran : rien n'est vraiment effacé."},
+ {id:"geolocalisation",t:"Géolocalisation",v:["géolocalisation","localisation","position"],d:"Le partage de la position de l'appareil, en direct ou dans une photo. À réserver à la famille, et à désactiver dans les cartes des réseaux sociaux."},
+ {id:"algorithme",t:"Algorithme de recommandation",v:["algorithme","recommandation"],d:"Le programme qui choisit les vidéos et publications à montrer pour garder l'utilisateur le plus longtemps possible. Il amplifie ce qu'on regarde, y compris ce qui fait du mal."},
+ {id:"defilement",t:"Défilement infini",v:["défilement infini","lecture automatique","enchaînement automatique"],d:"Les vidéos ou publications qui s'enchaînent sans fin. Conçu pour retenir l'attention : désactiver la lecture automatique aide à s'arrêter."},
+ {id:"influenceur",t:"Influenceur",v:["influenceur","influenceurs","influenceuse"],d:"Une personne qui gagne de l'argent en ligne grâce à son audience. En France, la publicité doit être signalée clairement dans ses contenus."},
+ {id:"deepfake",t:"Hypertrucage",v:["hypertrucage","deepfake","image fabriquée par IA","image truquée"],d:"Une image, une voix ou une vidéo fabriquée ou modifiée par une IA pour paraître réelle. Elle sert aussi au harcèlement et au chantage : on vérifie avant de croire ou de partager."},
+ {id:"ia-generative",t:"IA générative",v:["IA générative","IA","chatbot","chatbots"],d:"Un programme (ChatGPT, Gemini, Claude…) qui produit du texte ou des images à la demande. Il peut se tromper avec assurance et retenir ce qu'on lui confie."},
+ {id:"donnees-perso",t:"Données personnelles",v:["données personnelles"],d:"Tout ce qui permet d'identifier quelqu'un : nom, photo, adresse, école, voix, position. En France, avant 15 ans, leur traitement par un réseau social demande l'accord d'un parent."},
+ {id:"majorite-numerique",t:"Majorité numérique",v:["majorité numérique"],d:"L'âge à partir duquel un jeune peut s'inscrire seul sur un réseau social. La France a voté en 2023 une majorité numérique à 15 ans ; son application et les règles européennes évoluent encore : vérifiez où en sont les textes."},
+ {id:"pharos",t:"Pharos",v:["Pharos"],d:"La plateforme officielle de signalement des contenus illicites en ligne (internet-signalement.gouv.fr) : pédocriminalité, menaces, haine, escroqueries."},
+ {id:"3018",t:"3018",v:["3018"],d:"Le numéro national gratuit et anonyme pour les jeunes victimes de violences numériques et leurs parents, géré par l'association e-Enfance. Il aide aussi à faire retirer des contenus."},
+ {id:"streak",t:"Série (streak)",v:["streak","série de flammes","flammes"],d:"Le compteur de jours consécutifs d'échanges (Snapchat, Duolingo, TikTok). Il pousse à revenir chaque jour : on peut en parler comme d'une pression, pas d'une obligation."},
+ {id:"profil-prive",t:"Compte privé",v:["compte privé","profil privé"],d:"Un compte dont les publications ne sont visibles que par les abonnés acceptés. C'est le premier réglage à faire sur un réseau social."},
+ {id:"box-filtre",t:"Filtre de la box",v:["filtre de la box","contrôle parental de la box"],d:"Le contrôle parental proposé par le fournisseur d'accès : il agit sur tout le Wi-Fi de la maison, mais plus du tout en 4G ou 5G, ni chez les amis."}
+];
+var FAQ=[
+ ["À partir de quel âge un premier téléphone ?","Il n'y a pas d'âge idéal : c'est le besoin qui décide (trajets seul, activités). Beaucoup de familles commencent par un téléphone simple, puis un smartphone préparé à l'avance avec le contrôle parental, peu d'apps, et une règle claire pour la nuit.","premier-telephone"],
+ ["Combien de temps d'écran par jour ?","Il n'existe pas de chiffre magique. Mieux vaut regarder ce que l'écran remplace (sommeil, sport, amis, devoirs) et comment l'enfant se sent après. Pas d'écran le matin avant l'école, aux repas et une heure avant de dormir sont des repères simples.","temps-ecran"],
+ ["Faut-il lire les messages de son enfant ?","La supervision montre avec qui il échange, pas le contenu. Lire en cachette abîme la confiance. Mieux vaut convenir ensemble de ce que vous pouvez voir, et dire que vous le faites. En cas de danger, c'est différent : on agit.","reseaux-sociaux"],
+ ["Mon enfant veut un réseau social avant l'âge minimum, que faire ?","L'âge fixé par l'app n'est pas une simple formalité : en dessous, l'enfant ne bénéficie pas des protections prévues et ment sur sa date de naissance. Si vous dites oui, faites-le ensemble, avec la vraie date, un compte privé et la supervision.","reseaux-sociaux"],
+ ["Plusieurs outils de contrôle se contredisent, est-ce grave ?","Ce n'est pas un problème si chaque outil a son rôle : par exemple l'un pour le temps, l'autre pour le filtrage. Le risque, ce sont des règles en double qui bloquent tout ou se contournent. Dans Jiminy, cochez « Choix assumé » quand vous gardez volontairement une configuration.",""],
+ ["Il a contourné le contrôle parental, je fais quoi ?","D'abord comprendre : est-ce une règle trop stricte, un besoin réel, un défi ? Corrigez la faille (autre navigateur, compte invité, VPN), puis rediscutez la règle. Punir sans parler pousse à mieux cacher la prochaine fois.","contournement"],
+ ["Il a reçu une image choquante, comment réagir ?","Remercier d'en avoir parlé, ne pas punir, ne pas confisquer le téléphone dans l'instant. Faire une capture si besoin, signaler, bloquer. Revenir dessus le lendemain. Si c'est un adulte qui l'envoie, signalez-le sur Pharos ou au 3018.","contenus-choquants"],
+ ["Quelqu'un fait du chantage à mon enfant avec une photo ?","Ne pas payer, ne plus répondre, garder les preuves (captures), bloquer, et appeler le 3018 qui aide à faire retirer les images. Rappelez à votre enfant qu'il est la victime, jamais le fautif.","images-chantage"],
+ ["Les jeux en ligne sont-ils dangereux ?","Les jeux eux-mêmes non, mais les discussions avec des inconnus et les achats intégrés oui. Vérifiez le PEGI, coupez ou limitez le chat vocal, exigez l'accord parental pour les achats et jouez de temps en temps avec lui.","jeux-en-ligne"],
+ ["Le téléphone doit-il dormir hors de la chambre ?","C'est la règle la plus utile pour le sommeil : notifications, envie de répondre et lumière de l'écran repoussent l'endormissement. Un chargeur commun dans le salon la rend plus facile à tenir, pour les parents aussi.","sommeil"],
+ ["Et quand les règles diffèrent entre deux maisons ?","Mettez-vous d'accord sur l'essentiel (nuit, âge des réseaux, achats) plutôt que sur tout. Jiminy peut être partagé : une sauvegarde exportée et reprise dans l'autre foyer donne les mêmes repères.","deux-maisons"],
+ ["Mon enfant utilise une IA pour ses devoirs, est-ce un problème ?","L'IA peut aider à comprendre, à réviser ou à s'entraîner. Le problème, c'est quand elle fait le travail à sa place ou qu'on la croit sur parole. Demandez-lui de vous montrer comment il l'utilise.","ia-devoirs"],
+ ["Que faire si un compte est piraté ?","Changer le mot de passe depuis un appareil sûr, activer la double authentification, déconnecter les autres appareils, prévenir les contacts. Si l'accès est perdu, passer par la procédure de récupération de la plateforme.","arnaques"],
+ ["Comment Jiminy calcule-t-il le score ?","Il combine les réglages faits ou assumés, les essentiels de l'âge de chaque enfant, votre plan de mise en place et les réponses au dernier point numérique en famille. Le score sert à voir les progrès, pas à juger.",""]
+];
+function lexById(id){ return LEX.filter(function(l){return l.id===id;})[0]; }
+var _lexRe=null;
+function lexRe(){ if(_lexRe) return _lexRe; var vs=[]; LEX.forEach(function(l){ l.v.forEach(function(v){ vs.push([v,l.id]); }); }); vs.sort(function(a,b){return b[0].length-a[0].length;});
+  _lexRe={re:new RegExp("(^|[^\\p{L}\\d])("+vs.map(function(v){return v[0].replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/'/g,"(?:'|&#39;|’)");}).join("|")+")(?![\\p{L}\\d])","giu"),map:vs}; return _lexRe; }
+function gloss(html){
+  if(!html) return html; var L=lexRe(), seen={};
+  return html.replace(L.re,function(m,pre,w){ var key=w.toLowerCase().replace(/&#39;|’/g,"'"); var hit=L.map.filter(function(v){return v[0].toLowerCase()===key;})[0]; if(!hit||seen[hit[1]]) return m; seen[hit[1]]=1; return pre+'<button type="button" class="term" data-act="term" data-t="'+hit[1]+'">'+w+'</button>'; });
+}
+function showTerm(btn){
+  var l=lexById(btn.dataset.t); if(!l) return; hideTerm();
+  var host=btn.closest("dialog[open]")||document.body, tip=document.createElement("div"); tip.id="tip"; tip.setAttribute("role","tooltip");
+  tip.innerHTML='<b>'+esc(l.t)+'</b><p>'+esc(l.d)+'</p><div class="toolbar"><button type="button" class="quiet" data-act="lex-open" data-t="'+l.id+'">Voir le lexique</button><button type="button" class="quiet" data-act="tip-close">Fermer</button></div>';
+  host.appendChild(tip); var r=btn.getBoundingClientRect(), w=Math.min(320,window.innerWidth-24); tip.style.width=w+"px";
+  var left=Math.max(12,Math.min(window.innerWidth-w-12,r.left)), top=r.bottom+8; tip.style.left=left+"px"; tip.style.top=top+"px";
+  var th=tip.offsetHeight; if(top+th>window.innerHeight-12) tip.style.top=Math.max(12,r.top-th-8)+"px";
+}
+function hideTerm(){ var t=document.getElementById("tip"); if(t) t.parentNode.removeChild(t); }
+function viewGuides(){
+  var hits=searchHits(UI.cq||"");
+  var gs=subOf("guides","mise",["mise","conseils","faq","lexique","aide"]);
+  var head='<section class="card"><label class="f" for="cq">Une question ?<input type="search" id="cq" value="'+esc(UI.cq||"")+'" placeholder="ex. sommeil, Snapchat, harcèlement, VPN…"></label></section>';
+  var nav=subnav("guides",[["mise","Mise en place","gear"],["conseils","Conseils","heart",USAGES.length],["faq","FAQ","help",FAQ.length],["lexique","Lexique","abc",LEX.length],["aide","En cas de problème","lock"]],hits?"":gs);
+  if(hits) return nav+head+'<section class="card"><h2>'+plural(hits.length,"résultat")+'</h2>'+(hits.length?'<div class="items" style="gap:6px">'+hits.map(function(h){ return h.ref==="h"?'<p class="small"><span class="pill plain">'+h.k+'</span> '+esc(h.t)+'</p>':'<button type="button" class="hit" data-act="open" data-ref="'+esc(h.ref)+'"><span class="pill plain">'+h.k+'</span> '+esc(h.t)+'</button>'; }).join("")+'</div>':'<p class="muted small">Rien trouvé. Essayez un autre mot.</p>')+'</section>';
+  if(gs==="aide") return nav+head+helpCard();
+  if(gs==="faq") return nav+head+'<section class="card"><h2>Questions fréquentes</h2><div class="faq">'+FAQ.map(function(f,i){ return '<details'+(UI.faqOpen===i?' open':'')+' data-faq="'+i+'"><summary>'+esc(f[0])+'</summary><p class="small">'+gloss(esc(f[1]))+'</p>'+(f[2]&&usage(f[2])?'<button type="button" class="chip" data-act="open" data-ref="u:'+f[2]+'">Conseil : '+esc(usage(f[2]).t)+'</button>':'')+'</details>'; }).join("")+'</div></section>';
+  if(gs==="lexique"){ var L=LEX.slice().sort(function(a,b){return a.t.localeCompare(b.t,"fr");});
+    return nav+head+'<section class="card"><h2>Lexique</h2><p class="small muted">Les mots soulignés en pointillés dans Jiminy renvoient ici : touchez-les pour une explication rapide.</p><dl class="lex">'+L.map(function(l){ return '<div id="lex-'+l.id+'"'+(UI.lexHi===l.id?' class="hi"':'')+'><dt>'+esc(l.t)+'</dt><dd>'+esc(l.d)+'</dd></div>'; }).join("")+'</dl></section>'; }
+  if(gs==="conseils"){
+    var fit=USAGES.filter(usageFits), other=USAGES.filter(function(x){return !usageFits(x);});
+    var cards=function(list){ return '<div class="grid g3">'+list.map(function(x){ return '<button type="button" class="ucard" data-act="open" data-ref="u:'+x.id+'"><b>'+esc(x.t)+'</b><span class="small muted">'+esc(x.intro)+'</span><span class="tiny muted">'+x.a[0]+' à '+x.a[1]+' ans</span></button>'; }).join("")+'</div>'; };
+    return nav+head+'<section class="grid" style="gap:12px"><h2>Pour l\'âge de vos enfants</h2>'+cards(fit)+'</section>'+(other.length?'<details class="card"><summary><b>Pour plus tard ('+other.length+')</b></summary><div style="margin-top:12px">'+cards(other)+'</div></details>':'');
+  }
+  return nav+head+viewConfigurer()+
+    '<section class="card"><h2>Vos comptes de parent</h2><p class="small muted">Le socle de tout le reste.</p>'+progressBar(PARENT.filter(function(x){return resolved("parent:"+x[0]);}).length,PARENT.length)+checklist(PARENT,"parent")+'</section>';
+}
 
 var rendering=false;
 function render(){
   if(rendering){ setTimeout(render,0); return; }
   rendering=true;
-  try { migrateColors(); applyLibEdits(); syncCustom(); renderInner(); Array.prototype.forEach.call(document.querySelectorAll(".subtabs [aria-selected=true]"),function(b){ var n=b.parentNode; if(n.scrollWidth>n.clientWidth) n.scrollLeft=Math.max(0,b.offsetLeft-(n.clientWidth-b.offsetWidth)/2); }); } finally { rendering=false; }
+  try { hideTerm(); migrateColors(); applyLibEdits(); syncCustom(); renderInner(); Array.prototype.forEach.call(document.querySelectorAll(".subtabs [aria-selected=true]"),function(b){ var n=b.parentNode; if(n.scrollWidth>n.clientWidth) n.scrollLeft=Math.max(0,b.offsetLeft-(n.clientWidth-b.offsetWidth)/2); }); } finally { rendering=false; }
 }
 function renderInner(){
   var a=document.activeElement, fid=a&&a.id, pos=null; try{ pos=a.selectionStart; }catch(e){}
@@ -1785,7 +2077,8 @@ function applyImport(mode){
   UI.pendingImport=null; UI.msg="Sauvegarde reprise."; save(); location.hash="#accueil"; render();
 }
 
-document.addEventListener("click", function(ev){
+document.addEventListener("keydown", function(ev){ if(ev.key==="Escape") hideTerm(); });
+document.addEventListener("click", function(ev){ var tp=document.getElementById("tip"); if(tp && !tp.contains(ev.target) && !(ev.target.closest&&ev.target.closest(".term"))) hideTerm();
   var t=ev.target.closest("[data-act]"); if(!t) return;
   var a=t.dataset.act, k=t.dataset.kid, i=t.dataset.item;
   switch(a){
@@ -1812,7 +2105,7 @@ document.addEventListener("click", function(ev){
     case "show-hidden": UI.showHidden=!UI.showHidden; render(); break;
     case "hide-item": S.hidden=(S.hidden||[]).concat([i]); closeDialog(); rerender(); break;
     case "unhide-item": S.hidden=(S.hidden||[]).filter(function(x){return x!==i;}); rerender(); break;
-    case "open": ev.preventDefault(); openItem(t.dataset.ref); break;
+    case "open": ev.preventDefault(); var rf=t.dataset.ref; if(rf.indexOf("faq:")===0){ UI.sub=UI.sub||{}; UI.sub.guides="faq"; UI.cq=""; UI.faqOpen=+rf.slice(4); render(); break; } if(rf.indexOf("lex:")===0){ UI.sub=UI.sub||{}; UI.sub.guides="lexique"; UI.cq=""; UI.lexHi=rf.slice(4); render(); setTimeout(function(){ var el=document.getElementById("lex-"+rf.slice(4)); if(el) el.scrollIntoView({block:"center"}); },60); break; } openItem(rf); break;
     case "assist": UI.as={k:t.dataset.k}; if(t.dataset.k==="box"){ openItem("g:box"); } else openItem("assist"); break;
     case "as-set": UI.as[t.dataset.f]=t.dataset.v; renderDialog(); break;
     case "as-add": if(UI.as.item&&UI.as.kid){ setU(UI.as.item,UI.as.kid,{s:t.dataset.s}); render(); renderDialog(); } break;
@@ -1840,7 +2133,19 @@ document.addEventListener("click", function(ev){
     case "f-used": UI.fUsed=!UI.fUsed; render(); break;
     case "f-todo": UI.fTodo=!UI.fTodo; render(); break;
     case "go-todo": UI.fKid=k; UI.fTodo=true; break;
-    case "answer": S.parent=S.parent||{}; S.parent[t.dataset.q]=t.dataset.v; rerender(); break;
+    case "answer": S.parent=S.parent||{}; var aq=QUESTIONS.filter(function(q){return q.k===t.dataset.q;})[0];
+      if(aq&&aq.multi){ var av=pVals(aq.k).slice(), none=["aucun","aucune"], vv=t.dataset.v; if(none.indexOf(vv)>=0) av=av.indexOf(vv)>=0?[]:[vv]; else { av=av.filter(function(x){return none.indexOf(x)<0;}); av=av.indexOf(vv)>=0?av.filter(function(x){return x!==vv;}):av.concat([vv]); } S.parent[aq.k]=av; }
+      else S.parent[t.dataset.q]=t.dataset.v; rerender(); break;
+    case "na": S.na=S.na||{}; var nk2=t.dataset.key; if(S.na[nk2]) delete S.na[nk2]; else S.na[nk2]=todayISO(); var nm=/^s:([^:]+):(.+):(\d+)$/.exec(nk2); if(nm){ var nit=item(nm[2]), nkd=kid(nm[1]); if(nit&&nkd){ var nr=setsOf(nit,nkd); setU(nit.id,nkd.id,{ok:nr.n===nr.t}); } } rerender(); break;
+    case "ack": S.ack=S.ack||{}; S.ack[t.dataset.key]=todayISO(); rerender(); break;
+    case "unack": Object.keys(S.ack||{}).forEach(function(kk){ if(kk.indexOf(k+":")===0) delete S.ack[kk]; }); rerender(); break;
+    case "review-start": ev.preventDefault(); UI.rv={date:todayISO(),answers:{},parent:{}}; UI.sub=UI.sub||{}; UI.sub.famille="point"; if(location.hash!=="#famille") location.hash="#famille"; else render(); window.scrollTo(0,0); break;
+    case "rv-set": var sc=t.dataset.scope, rvv=+t.dataset.v; if(sc==="parent") UI.rv.parent[t.dataset.q]=(UI.rv.parent[t.dataset.q]===rvv?null:rvv); else { var kidid=sc.slice(4); UI.rv.answers[kidid]=UI.rv.answers[kidid]||{}; UI.rv.answers[kidid][t.dataset.q]=(UI.rv.answers[kidid][t.dataset.q]===rvv?null:rvv); } render(); break;
+    case "rv-save": saveReview(); window.scrollTo(0,0); break;
+    case "rv-cancel": UI.rv=null; render(); break;
+    case "term": ev.preventDefault(); ev.stopPropagation(); showTerm(t); return;
+    case "tip-close": hideTerm(); return;
+    case "lex-open": hideTerm(); closeDialog(); UI.sub=UI.sub||{}; UI.sub.guides="lexique"; UI.cq=""; UI.lexHi=t.dataset.t; if(location.hash!=="#guides") location.hash="#guides"; else render(); setTimeout(function(){ var el=document.getElementById("lex-"+t.dataset.t); if(el) el.scrollIntoView({block:"center"}); },80); break;
     case "q-done": S.parentDone=true; UI.qEdit=false; rerender(); window.scrollTo(0,0); break;
     case "q-edit": UI.qEdit=true; render(); break;
     case "export": doExport(); break;
@@ -1867,7 +2172,7 @@ document.addEventListener("change", function(ev){
   if(ds.status){ UI.accOpen=ds.kid+":"+ds.item; setU(ds.item,ds.kid,{s:t.value, ok: t.value==="utilise"?u(ds.item,ds.kid).ok:false}); render(); return; }
   if(ds.ok){ setU(ds.item,ds.kid,{ok:t.checked}); render(); return; }
   if(ds.note){ setU(ds.item,ds.kid,{note:t.value.trim()}); return; }
-  if(ds.set!=null && ds.item){ var sit=item(ds.item), sk=kid(ds.kid); if(sit&&sk){ var sd=setsOf(sit,sk).d.filter(function(v){return v!==+ds.set;}); if(t.checked) sd.push(+ds.set); setU(ds.item,ds.kid,{set:sd,ok:sd.length===(sit.settings||[]).length}); render(); } return; }
+  if(ds.set!=null && ds.item){ var sit=item(ds.item), sk=kid(ds.kid); if(sit&&sk){ var sd=setsOf(sit,sk).d.filter(function(v){return v!==+ds.set;}); if(t.checked) sd.push(+ds.set); setU(ds.item,ds.kid,{set:sd}); var rr=setsOf(sit,sk); setU(ds.item,ds.kid,{ok:rr.n===rr.t}); render(); } return; }
   if(ds.uf){ var pp={}; pp[ds.uf]=t.value.trim(); setU(ds.item,ds.kid,pp); if(t.tagName==="SELECT") render(); return; }
   if(ds.via){ var cv=(u(ds.item,ds.kid).via||[]).filter(function(v){return v!==ds.via;}); if(t.checked) cv.push(ds.via); setU(ds.item,ds.kid,{via:cv}); render(); return; }
   if(ds.check){ if(t.checked) S.checks[ds.check]=true; else delete S.checks[ds.check]; rerender(); return; }
@@ -1878,6 +2183,7 @@ document.addEventListener("change", function(ev){
 document.addEventListener("input", function(ev){
   var t=ev.target;
   if(t.id==="q"){ UI.q=t.value; render(); }
+  else if(UI.rv && (t.id==="rv-good"||t.id==="rv-dec"||t.id==="rv-date")){ UI.rv[{"rv-good":"good","rv-dec":"dec","rv-date":"date"}[t.id]]=t.value; }
   else if(t.id==="cq"){ UI.cq=t.value; render(); }
   else if(t.id==="lq"){ UI.lq=t.value; UI.libMsg=""; var pos=t.selectionStart; renderDialog(); var l2=document.getElementById("lq"); if(l2){ l2.focus(); try{ l2.setSelectionRange(pos,pos); }catch(e){} } }
   else if(t.dataset && t.dataset.kfield==="name"){ var kk=kid(t.dataset.kid); if(kk){ kk.name=t.value; save(); } }
